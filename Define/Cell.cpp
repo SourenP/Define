@@ -13,5 +13,5 @@ int Cell::GetID()
 
 sf::Color Cell::GetColor()
 {
-	return m_color
+	return m_color;
 }
