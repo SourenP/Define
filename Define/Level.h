@@ -15,6 +15,7 @@ public:
 	Level() {};
 	bool Start(int windowSize);
 	Level(int windowSize);
+	void Update(Cell::Move);
 	void Draw(sf::RenderWindow&);
 	~Level();
 

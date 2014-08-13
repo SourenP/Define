@@ -31,6 +31,11 @@ void Level::Draw(sf::RenderWindow& rw)
 	}
 }
 
+void Level::Update(Cell::Move move)
+{
+	m_tileArray[move.tileID]->SetColor(move.targetColor);
+}
+
 Level::~Level()
 {
 	for (int i = 0; i < m_tileArray.size(); ++i)
