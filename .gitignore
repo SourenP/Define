@@ -34,3 +34,12 @@ Icon
 # Files that might appear on external disk
 .Spotlight-V100
 .Trashes
+
+#Visual Studio Files
+Define.sln
+Define.sdf
+Debug/
+Define.vcxproj.filters
+Define.vcxproj
+Define.opensdf
+Define.v12.suo
