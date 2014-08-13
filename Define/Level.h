@@ -3,6 +3,9 @@
 
 #include "SFML\Graphics.hpp"
 #include "Tile.h"
+#include <vector>
+
+using std::vector;
 
 class Level
 {
@@ -19,7 +22,7 @@ private:
 	static const int MAP_DIAMETER = (2 * MAP_SIDE_LENGTH) - 1;
 	static const int TILE_COUNT = MAP_SIDE_LENGTH * (3 * MAP_SIDE_LENGTH - 1) - MAP_DIAMETER;
 	int m_cellMap[MAP_SIDE_LENGTH][MAP_SIDE_LENGTH];
-	Tile* m_tileArray;
+	vector<Tile*> m_tileArray;
 };
 
 #endif
