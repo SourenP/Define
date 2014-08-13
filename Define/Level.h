@@ -11,9 +11,12 @@ using std::vector;
 class Level
 {
 public:
+<<<<<<< HEAD
 
 	Level() {};
 	bool Start(int windowSize);
+=======
+>>>>>>> origin/master
 	Level(int windowSize);
 	void Draw(sf::RenderWindow&);
 	~Level();

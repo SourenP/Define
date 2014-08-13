@@ -1,14 +1,11 @@
 #include "Game.h"
 
-bool Game::Start()
+Game::Game()
 {
-	if (m_gameState != Uninitialized)
-		return true;
 	m_mainWindow.create(sf::VideoMode(m_windowSize, m_windowSize, 32), "Game!");
 	//GameLoop();
 
-	m_Level = new Level();
-	m_Level->Start(m_windowSize);
+	m_Level = new Level(m_windowSize);
 	//m_gameObjectManager = new GameObjectManager();
 
 	m_gameState = ShowingMenu;
@@ -20,7 +17,6 @@ bool Game::Start()
 	}
 
 	//m_gameObjectManager->Destroy();
-	Destroy();
 	m_mainWindow.close();
 
 }
@@ -59,7 +55,7 @@ void Game::GameLoop()
 
 }
 
-bool Game::Destroy()
+Game::~Game()
 {
 	delete m_Level;
 
@@ -76,7 +72,11 @@ bool Game::Destroy()
 
 	}
 	*/
+<<<<<<< HEAD
 	return true;
 }
 
 sf::Clock Game::m_gameClock;
+=======
+}
+>>>>>>> origin/master
