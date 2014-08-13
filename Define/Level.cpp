@@ -20,15 +20,15 @@ Level::Level(int windowSize)
 			tileOffset += tileHeight;
 		}
 	}
-
+	topTileY -= tileRadius + tileRadius/2;
 	//Bottom Half
-	for (int i = MAP_SIDE_LENGTH - 1; i > 0; --i)
+	for (int i = MAP_SIDE_LENGTH - 2; i >= 0; --i)
 	{
 		float mapOffset = tileHeight / 4.0;
 		float tileOffsetAmt = (MAP_DIAMETER - MAP_SIDE_LENGTH - i) / 2.0;	// amount of tiles row is offset by 
 		float tileOffset = tileOffsetAmt * tileHeight + mapOffset;  // tileOffsetAmt + tiles already place on row (in pixels)
 
-		float botTileY = topTileY + i * (tileRadius + tileRadius / 2.0) + tileRadius / 2.0;
+		float botTileY = topTileY + (MAP_SIDE_LENGTH - i) * (tileRadius + tileRadius / 2.0);
 		for (int j = 0; j < MAP_SIDE_LENGTH + i; ++j)
 		{
 			
