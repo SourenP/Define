@@ -10,9 +10,9 @@ using std::vector;
 class Level
 {
 public:
-	bool Start(int windowSize);
+	Level(int windowSize);
 	void Draw(sf::RenderWindow&);
-	bool Destroy();
+	~Level();
 
 private:
 	Level(const Level&);
