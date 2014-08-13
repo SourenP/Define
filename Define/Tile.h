@@ -7,6 +7,7 @@ class Tile
 {
 public:
 	Tile(int radius, sf::Vector2f position);
+	void Initialize(int radius, sf::Vector2f position);
 	void Draw(sf::RenderWindow& window);
 	void SetColor(sf::Color color);
 	void SetColor(int R, int G, int B);
