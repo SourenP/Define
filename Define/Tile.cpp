@@ -1,6 +1,6 @@
 #include "Tile.h"
 
-Tile::Tile(int radius, sf::Vector2f position)
+Tile::Tile(float radius, sf::Vector2f position)
 {
 	m_hexagon.setFillColor(DEFAULT_COLOR);
 	m_hexagon.setRadius(radius);
@@ -17,10 +17,5 @@ void Tile::Draw(sf::RenderWindow& window)
 void Tile::SetColor(sf::Color color)
 {
 	m_hexagon.setFillColor(color);
-}
-
-void Tile::SetColor(int R, int G, int B)
-{
-	m_hexagon.setFillColor(sf::Color(R, G, B));
 }
 
