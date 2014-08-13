@@ -39,6 +39,7 @@ Icon
 Define.sln
 Define.sdf
 Debug/
+Define/Debug
 Define.vcxproj.filters
 Define.vcxproj
 Define.opensdf
