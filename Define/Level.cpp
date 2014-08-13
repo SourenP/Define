@@ -1,41 +1,38 @@
 #include "Level.h"
 
-bool Level::Start(int windowSize)
+Level::Level(int windowSize)
 {
-	m_tileArray = new Tile[MAP_SIDE_LENGTH];
-	double tileRadius = (windowSize / MAP_DIAMETER)/2.0;
-	double tileDiameter = 2 * tileRadius;
-	double tileHeight = sqrt(3) * tileRadius;
-	int tileIndex = 0;
+	float tileHeight = (windowSize / MAP_DIAMETER);
+	float tileRadius = tileHeight / sqrt(3);
+	float tileDiameter = 2 * tileRadius;
 
 	for (int i = 0; i < MAP_SIDE_LENGTH; ++i)
 	{
-		double tileOffsetAmt = (MAP_DIAMETER - MAP_SIDE_LENGTH - i )/2.0;	// amount of tiles row is offset by 
-		double tileOffset = tileOffsetAmt * tileHeight + tileHeight / 2.0;  // tileOffsetAmt + tiles already place on row (in pixels)
-		m_tileArray[tileIndex] = new Tile(tileRadius, sf::Vector2f(tileOffset, i * (tileRadius + tileRadius / 2) + tileRadius/2));
+		float mapOffset = tileHeight / 4.0;
+		float tileOffsetAmt = (MAP_DIAMETER - MAP_SIDE_LENGTH - i) / 2.0;	// amount of tiles row is offset by 
+		float tileOffset = tileOffsetAmt * tileHeight + mapOffset;  // tileOffsetAmt + tiles already place on row (in pixels)
 
-		tileIndex++;
-		for (int j = 1; j < MAP_SIDE_LENGTH + i; ++j) 
+		for (int j = 0; j < MAP_SIDE_LENGTH + i; ++j) 
 		{
+			m_tileArray.push_back(new Tile(tileRadius, sf::Vector2f(tileOffset, i * (tileRadius + tileRadius / 2.0) + tileRadius / 2.0)));
 			tileOffset += tileHeight;
-			m_tileArray[tileIndex] = new Tile(tileRadius, sf::Vector2f(tileOffset, i * (tileRadius + tileRadius / 2) + tileRadius / 2));
-			tileIndex++;
 		}
 	}
-
-
-	return true;
 }
 
 void Level::Draw(sf::RenderWindow& rw)
 {
-	for (int i = 0; i < TILE_COUNT; ++i)
+	for (int i = 0; i < m_tileArray.size(); ++i)
 	{
-		m_tileArray[i].Draw(rw);
+		m_tileArray[i]->Draw(rw);
 	}
 }
 
-bool Level::Destroy()
+Level::~Level()
 {
-	return true;
+	for (int i = 0; i < m_tileArray.size(); ++i)
+	{
+		delete m_tileArray[i];
+	}
+	m_tileArray.clear();
 }

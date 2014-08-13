@@ -6,11 +6,11 @@
 class Game
 {
 public:
-	bool Start();
-	bool Destroy();
+	Game();
+	~Game();
 private:
-	Game(Game&);
-	Game& operator=(Game&);
+	Game(const Game&);
+	Game& operator=(const Game&);
 
 	enum GameState { Uninitialized, Playing, ShowingMenu, Exiting };
 	int m_windowSize = 800;
