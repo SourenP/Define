@@ -19,10 +19,11 @@ private:
 	sf::RenderWindow m_mainWindow;
 	void GameLoop();
 
-	//Debug m_debug;
-	//static sf::Clock m_gameClock;
-	//const float m_minTimestep = sf::seconds(1.f / 60.f).asSeconds();
-	//int m_maxFrames = 5;
+	const float m_minTimestep = sf::seconds(1.f / 60.f).asSeconds();
+	int m_maxFrames = 5;
+	float m_remainingTime;
+	float m_time;
+	static sf::Clock m_gameClock;
 };
 
 #endif

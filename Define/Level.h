@@ -10,6 +10,7 @@ using std::vector;
 class Level
 {
 public:
+	Level() {};
 	bool Start(int windowSize);
 	void Draw(sf::RenderWindow&);
 	bool Destroy();
