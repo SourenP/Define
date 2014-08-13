@@ -58,22 +58,6 @@ void Game::GameLoop()
 Game::~Game()
 {
 	delete m_Level;
-
-	/*
-	if (m_gameObjectManager)
-	{
-	delete m_gameObjectManager;
-
-	}
-
-	if (m_gameObjectManager)
-	{
-	delete m_camera;
-
-	}
-	*/
 }
 
-sf::Clock Game::m_gameClock
-{
-}
+sf::Clock Game::m_gameClock;
