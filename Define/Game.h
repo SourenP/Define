@@ -9,6 +9,9 @@ public:
 	bool Start();
 	bool Destroy();
 private:
+	Game(Game&);
+	Game& operator=(Game&);
+
 	enum GameState { Uninitialized, Playing, ShowingMenu, Exiting };
 	int m_windowSize = 800;
 	Level *m_Level;

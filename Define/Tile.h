@@ -6,12 +6,15 @@
 class Tile
 {
 public:
-	void Create(int radius, sf::Vector2f position);
+	Tile(int radius, sf::Vector2f position);
 	void Draw(sf::RenderWindow& window);
 	void SetColor(sf::Color color);
 	void SetColor(int R, int G, int B);
 	
 private:
+	Tile(const Tile&);
+	Tile& operator=(const Tile&);
+
 	sf::CircleShape m_hexagon;
 	const sf::Color DEFAULT_COLOR = sf::Color::Cyan;
 };
