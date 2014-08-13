@@ -6,13 +6,10 @@ Level::Level(int windowSize)
 	float tileRadius = tileHeight / sqrt(3);
 	float tileDiameter = 2 * tileRadius;
 
-	for (int i = 0; i < MAP_SIDE_LENGTH*2-1; ++i)
+	for (int i = 0; i < MAP_SIDE_LENGTH; ++i)
 	{
-		int offSetCount = i;
-		if (i > MAP_SIDE_LENGTH)
-			offSetCount *= -1;	
 		float mapOffset = tileHeight / 4.0;
-		float tileOffsetAmt = (MAP_DIAMETER - MAP_SIDE_LENGTH - offSetCount) / 2.0;	// amount of tiles row is offset by 
+		float tileOffsetAmt = (MAP_DIAMETER - MAP_SIDE_LENGTH - i) / 2.0;	// amount of tiles row is offset by 
 		float tileOffset = tileOffsetAmt * tileHeight + mapOffset;  // tileOffsetAmt + tiles already place on row (in pixels)
 
 		for (int j = 0; j < MAP_SIDE_LENGTH + i; ++j) 

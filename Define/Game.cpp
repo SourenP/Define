@@ -25,33 +25,18 @@ void Game::GameLoop()
 {
 	sf::Event event;
 
-	int frames;
-	m_maxFrames = 5;
-	m_time = m_gameClock.restart().asSeconds();
+	m_mainWindow.clear();
+	m_Level->Draw(m_mainWindow);
+	m_mainWindow.display();
 
-	m_remainingTime += m_time;
-	frames = 0;
 
-	while ((m_remainingTime > m_minTimestep) && (frames < m_maxFrames))
+	while (m_mainWindow.pollEvent(event))
 	{
-
-		m_mainWindow.clear();
-		m_Level->Draw(m_mainWindow);
-		m_mainWindow.display();
-
-		while (m_mainWindow.pollEvent(event))
+		if (event.type == sf::Event::Closed)
 		{
-			if (event.type == sf::Event::Closed)
-			{
-				m_gameState = Exiting;
-			}
+			m_gameState = Exiting;
 		}
-
-		m_remainingTime -= m_minTimestep;
-		frames++;
 	}
-
-	
 
 }
 
@@ -72,11 +57,4 @@ Game::~Game()
 
 	}
 	*/
-<<<<<<< HEAD
-	return true;
 }
-
-sf::Clock Game::m_gameClock;
-=======
-}
->>>>>>> origin/master

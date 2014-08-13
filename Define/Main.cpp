@@ -14,5 +14,4 @@ int main()
 	Game *g = new Game();
 	delete g;
 	return 0;
-	//derp
 }
