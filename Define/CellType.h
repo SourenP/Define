@@ -1,6 +1,6 @@
 #include "SFML\Graphics.hpp"
 
-class Cell
+class CellType
 {
 public:
 	struct Move
@@ -9,8 +9,7 @@ public:
 		sf::Color targetColor; 
 	};
 
-	Cell(sf::Color color);
-
+	CellType(sf::Color color);
 	int GetID();
 	sf::Color GetColor();
 
