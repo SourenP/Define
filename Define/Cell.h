@@ -9,12 +9,13 @@ public:
 		sf::Color targetColor; 
 	};
 
-	Cell(int id, sf::Color color);
+	Cell(sf::Color color);
 
 	int GetID();
 	sf::Color GetColor();
 
 private:
-	int m_ID;
+	static int m_gid;
+	int m_id;
 	sf::Color m_color;
 };

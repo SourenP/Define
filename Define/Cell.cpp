@@ -1,14 +1,15 @@
 #include "Cell.h"
 
-Cell::Cell(int id, sf::Color color)
+Cell::Cell(sf::Color color)
 {
-	m_ID = id;
+	static int m_gid = 0;
+	m_id = m_gid++;
 	m_color = color;
 }
 
 int Cell::GetID()
 {
-	return m_ID;
+	return m_id;
 }
 
 sf::Color Cell::GetColor()

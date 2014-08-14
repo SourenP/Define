@@ -1,4 +1,6 @@
 #include "Game.h"
+#include <iostream>
+using namespace std;
 
 Game::Game()
 {
@@ -50,9 +52,6 @@ void Game::GameLoop()
 		m_remainingTime -= m_minTimestep;
 		frames++;
 	}
-
-
-
 }
 
 Game::~Game()
