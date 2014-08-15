@@ -1,61 +1,46 @@
 #include "Level.h"
+#include <unordered_map>
+#include <iostream>
+using namespace std;
 
 Level::Level(int windowSize)
 {
-	float tileHeight = (windowSize / MAP_DIAMETER);
+	tileTable = new unordered_map<string, Tile*>();
+	float tileHeight = 20;
 	float tileRadius = tileHeight / sqrt(3);
 	float tileDiameter = 2 * tileRadius;
-	float topTileY;
+	float xOffset = tileRadius;
+	int rowMin = 0;
+	int rowMax = MAP_SIDE_LENGTH - 1;
 
-	for (int i = 0; i < MAP_SIDE_LENGTH; ++i)
+	for (int c = 1-MAP_SIDE_LENGTH; c < MAP_SIDE_LENGTH; ++c)
 	{
-		float mapOffset = tileHeight / 4.0;
-		float tileOffsetAmt = (MAP_DIAMETER - MAP_SIDE_LENGTH - i) / 2.0;	// amount of tiles row is offset by 
-		float tileOffset = tileOffsetAmt * tileHeight + mapOffset;  // tileOffsetAmt + tiles already place on row (in pixels)
-
-		topTileY = i * (tileRadius + tileRadius / 2.0) + tileRadius / 2.0;
-		for (int j = 0; j < MAP_SIDE_LENGTH + i; ++j) 
+		for (int r = rowMin; r <= rowMax; ++r)
 		{
-			m_tileArray.push_back(new Tile(tileRadius, sf::Vector2f(tileOffset, topTileY)));
-			tileOffset += tileHeight;
+			(*tileTable)[c + "_" + r] = new Tile(tileRadius, sf::Vector2f(xOffset, (c + MAP_SIDE_LENGTH-1)*tileHeight)); // wrong x & y
 		}
-	}
-	topTileY -= tileRadius + tileRadius/2;
-	//Bottom Half
-	for (int i = MAP_SIDE_LENGTH - 2; i >= 0; --i)
-	{
-		float mapOffset = tileHeight / 4.0;
-		float tileOffsetAmt = (MAP_DIAMETER - MAP_SIDE_LENGTH - i) / 2.0;	// amount of tiles row is offset by 
-		float tileOffset = tileOffsetAmt * tileHeight + mapOffset;  // tileOffsetAmt + tiles already place on row (in pixels)
-
-		float botTileY = topTileY + (MAP_SIDE_LENGTH - i) * (tileRadius + tileRadius / 2.0);
-		for (int j = 0; j < MAP_SIDE_LENGTH + i; ++j)
-		{
-			
-			m_tileArray.push_back(new Tile(tileRadius, sf::Vector2f(tileOffset, botTileY)));
-			tileOffset += tileHeight;
-		}
+		if (c < 0)
+			rowMin--;
+		else
+			rowMax--;
+		xOffset += tileDiameter;
 	}
 }
 
 void Level::Draw(sf::RenderWindow& rw)
 {
-	for (int i = 0; i < m_tileArray.size(); ++i)
+	for (auto it = tileTable->begin(); it != tileTable->end(); ++it)
 	{
-		m_tileArray[i]->Draw(rw);
+		it->second->Draw(rw);
+		cout << "$" << endl;
 	}
-}
-
-void Level::Update(Cell::Move move)
-{
-	m_tileArray[move.tileID]->SetColor(move.targetColor);
 }
 
 Level::~Level()
 {
-	for (int i = 0; i < m_tileArray.size(); ++i)
-	{
-		delete m_tileArray[i];
+	for (auto it = tileTable->begin(); it != tileTable->end(); ++it)
+	{	
+		it = tileTable->erase(it);
 	}
-	m_tileArray.clear();
+	delete tileTable;
 }

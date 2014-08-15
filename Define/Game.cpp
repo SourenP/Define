@@ -20,7 +20,6 @@ Game::Game()
 
 	//m_gameObjectManager->Destroy();
 	m_mainWindow.close();
-
 }
 
 void Game::GameLoop()
