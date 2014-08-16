@@ -6,7 +6,7 @@ using namespace std;
 
 Level::Level(int windowSize)
 {
-	tileTable = new	unordered_map<string, Tile*>();
+	m_tileTable = new	unordered_map<string, Tile*>();
 	float tileHeight = windowSize / MAP_DIAMETER;
 	float tileRadius = tileHeight / sqrt(3);
 	float tileDiameter = 2 * tileRadius;
@@ -17,26 +17,25 @@ Level::Level(int windowSize)
 	int rowMin = 0;
 	int rowMax = MAP_SIDE_LENGTH - 1;
 
+	// c and r produce numbers matchin axial coordinates
 	for (int c = 1-MAP_SIDE_LENGTH; c < MAP_SIDE_LENGTH; ++c)
 	{
 		xOffset += tileDiameter * 3.0 / 4.0;
 		yOffset = tileHeight*((MAP_DIAMETER - abs(rowMax - rowMin)) / 2.0);	
 		for (int r = rowMin; r <= rowMax; ++r)
 		{
-			(*tileTable)[to_string(c) + "_" + to_string(r)] = new Tile(tileRadius, sf::Vector2f(xOffset + xMapOffset, yOffset + yMapOffset));
+			// Map key is based on cube coordinates x_z_y (Conversion from axial to cube: x = c  z = r  y = -x-z)
+			(*m_tileTable)[to_string(c) + "_" + to_string(r) + "_" + to_string(-c - r)] =
+				 new Tile(tileRadius, sf::Vector2f(xOffset + xMapOffset, yOffset + yMapOffset), sf::Vector3i(c, r, -c - r));
 			yOffset += tileHeight;
 		}
-		if (c < 0)
-			rowMin--;
-		else
-			rowMax--;
-		cout << endl;
+		c < 0 ? rowMin-- : rowMax--;
 	}
 }
 
 void Level::Draw(sf::RenderWindow& rw)
 {
-	for (auto it = tileTable->begin(); it != tileTable->end(); ++it)
+	for (auto it = m_tileTable->begin(); it != m_tileTable->end(); ++it)
 	{
 		it->second->Draw(rw);
 	}
@@ -44,9 +43,9 @@ void Level::Draw(sf::RenderWindow& rw)
 
 Level::~Level()
 {
-	for (auto it = tileTable->begin(); it != tileTable->end();)
+	for (auto it = m_tileTable->begin(); it != m_tileTable->end();)
 	{
-		it = tileTable->erase(it);
+		it = m_tileTable->erase(it);
 	}
-	delete tileTable;
+	delete m_tileTable;
 }
