@@ -6,7 +6,10 @@ using namespace std;
 
 Level::Level(int windowSize)
 {
-	m_tileTable = new	unordered_map<string, Tile*>();
+	m_tileTable = new unordered_map<string, Tile*>();
+	int neighborOffsets[6][3] =
+	{ { +1, -1, 0 }, { +1, 0, -1 }, { 0, +1, -1 },
+	{ -1, +1, 0 }, { -1, 0, +1 }, { 0, -1, +1 } };
 	float tileHeight = windowSize / MAP_DIAMETER;
 	float tileRadius = tileHeight / sqrt(3);
 	float tileDiameter = 2 * tileRadius;
@@ -40,6 +43,20 @@ void Level::Draw(sf::RenderWindow& rw)
 		it->second->Draw(rw);
 	}
 }
+
+int** Level::GetNeighbors(int x, int y, int z)
+{
+	int** neighborCoordinates = new int*[3];
+	for (int i = 0; i < 6; i++)
+	{
+		neighborCoordinates[i] = new int[6];
+		for (int j = 0; j < 3; j++)
+		{
+			neighborCoordinates[i][j] = neighborOffsets[i][j];
+		}
+	}
+	return neighborCoordinates;
+}	
 
 Level::~Level()
 {

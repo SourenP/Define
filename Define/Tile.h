@@ -13,11 +13,11 @@ public:
 	
 private:
 	Tile(const Tile&);
-	Tile& operator=(const Tile&);	
+	Tile& operator=(const Tile&);
 
 	sf::Vector3i m_coordinates;
 	sf::CircleShape m_hexagon;
-	const sf::Color DEFAULT_COLOR = sf::Color::White;
+	const sf::Color DEFAULT_COLOR = sf::Color::Cyan;
 };
 
 #endif

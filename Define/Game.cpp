@@ -8,6 +8,7 @@ Game::Game()
 	//GameLoop();
 
 	m_Level = new Level(m_windowSize);
+
 	//m_gameObjectManager = new GameObjectManager();
 
 	m_gameState = ShowingMenu;
@@ -36,7 +37,7 @@ void Game::GameLoop()
 	while ((m_remainingTime > m_minTimestep) && (frames < m_maxFrames))
 	{
 
-		m_mainWindow.clear();
+		m_mainWindow.clear(sf::Color::White);
 		m_Level->Draw(m_mainWindow);
 		m_mainWindow.display();
 

@@ -19,13 +19,15 @@ public:
 	Level(int windowSize);
 	//void Update(Cell::Move);
 	void Draw(sf::RenderWindow&);
+	int** GetNeighbors(int x, int y, int z);
 	~Level();
 
 private:
 	Level(const Level&);
 	Level& operator=(const Level&);
 
-	static const int MAP_SIDE_LENGTH = 6;
+	int neighborOffsets[6][3];
+	static const int MAP_SIDE_LENGTH = 30;
 	static const int MAP_DIAMETER = (2 * MAP_SIDE_LENGTH) - 1;
 	static const int TILE_COUNT = MAP_SIDE_LENGTH * (3 * MAP_SIDE_LENGTH - 1) - MAP_DIAMETER;
 	unordered_map<string, Tile*>* m_tileTable;

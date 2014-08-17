@@ -4,6 +4,8 @@ Tile::Tile(float radius, sf::Vector2f position, sf::Vector3i coordinates)
 {
 	float height = radius * sqrt(3);
 	m_hexagon.setFillColor(DEFAULT_COLOR);
+	m_hexagon.setOutlineThickness(-radius/10);
+	m_hexagon.setOutlineColor(sf::Color::White);
 	m_hexagon.setRadius(radius);
 	m_hexagon.setPointCount(6);
 	m_hexagon.setOrigin(radius / 2.0, height / 2.0);
