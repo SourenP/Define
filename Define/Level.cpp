@@ -6,10 +6,11 @@ using namespace std;
 
 Level::Level(int windowSize)
 {
-	m_tileTable = new unordered_map<string, Tile*>();
 	int neighborOffsets[6][3] =
 	{ { +1, -1, 0 }, { +1, 0, -1 }, { 0, +1, -1 },
 	{ -1, +1, 0 }, { -1, 0, +1 }, { 0, -1, +1 } };
+
+	m_tileTable = new unordered_map<string, Tile*>();
 	float tileHeight = windowSize / MAP_DIAMETER;
 	float tileRadius = tileHeight / sqrt(3);
 	float tileDiameter = 2 * tileRadius;
@@ -24,7 +25,7 @@ Level::Level(int windowSize)
 	for (int c = 1-MAP_SIDE_LENGTH; c < MAP_SIDE_LENGTH; ++c)
 	{
 		xOffset += tileDiameter * 3.0 / 4.0;
-		yOffset = tileHeight*((MAP_DIAMETER - abs(rowMax - rowMin)) / 2.0);	
+		yOffset = tileHeight*((MAP_DIAMETER - abs(rowMax - rowMin)) / 2.0);
 		for (int r = rowMin; r <= rowMax; ++r)
 		{
 			// Map key is based on cube coordinates x_z_y (Conversion from axial to cube: x = c  z = r  y = -x-z)
@@ -33,6 +34,16 @@ Level::Level(int windowSize)
 			yOffset += tileHeight;
 		}
 		c < 0 ? rowMin-- : rowMax--;
+	}
+
+	//testing
+	(*m_tileTable)["0_0_0"]->SetColor(sf::Color::Red);
+	int** n = GetNeighbors(0, 0, 0);
+	for (int i = 0; i < 6; i++)
+	{
+		for (int j = 0; j < 3; j++)
+			cout << n[i][j];
+		cout << endl;
 	}
 }
 
@@ -46,15 +57,17 @@ void Level::Draw(sf::RenderWindow& rw)
 
 int** Level::GetNeighbors(int x, int y, int z)
 {
-	int** neighborCoordinates = new int*[3];
+	int coordinates[3] = { x, y, z };
+	int** neighborCoordinates = new int*[6];
 	for (int i = 0; i < 6; i++)
 	{
-		neighborCoordinates[i] = new int[6];
+		neighborCoordinates[i] = new int[3];
 		for (int j = 0; j < 3; j++)
 		{
-			neighborCoordinates[i][j] = neighborOffsets[i][j];
+			neighborCoordinates[i][j] = coordinates[j] + neighborOffsets[i][j];
 		}
 	}
+
 	return neighborCoordinates;
 }	
 

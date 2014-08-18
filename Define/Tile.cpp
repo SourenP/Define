@@ -8,9 +8,9 @@ Tile::Tile(float radius, sf::Vector2f position, sf::Vector3i coordinates)
 	m_hexagon.setOutlineColor(sf::Color::White);
 	m_hexagon.setRadius(radius);
 	m_hexagon.setPointCount(6);
+	m_hexagon.setRotation(30); 
 	m_hexagon.setOrigin(radius / 2.0, height / 2.0);
 	m_hexagon.setPosition(position);
-	m_hexagon.setRotation(30);
 	m_coordinates.x = coordinates.x;
 	m_coordinates.y = coordinates.y;
 	m_coordinates.z = coordinates.z;

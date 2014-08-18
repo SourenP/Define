@@ -1,3 +1,5 @@
+#ifndef CELLTYPE_H
+#define CELLTYPE_H
 #include "SFML\Graphics.hpp"
 
 class CellType
@@ -18,3 +20,5 @@ private:
 	int m_id;
 	sf::Color m_color;
 };
+
+#endif

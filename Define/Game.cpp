@@ -8,7 +8,6 @@ Game::Game()
 	//GameLoop();
 
 	m_Level = new Level(m_windowSize);
-
 	//m_gameObjectManager = new GameObjectManager();
 
 	m_gameState = ShowingMenu;
