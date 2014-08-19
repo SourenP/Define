@@ -1,6 +1,7 @@
 #ifndef CELLTYPE_H
 #define CELLTYPE_H
 #include "SFML\Graphics.hpp"
+using namespace std;
 
 class CellType
 {
@@ -11,13 +12,14 @@ public:
 		sf::Color targetColor; 
 	};
 
-	CellType(sf::Color color);
+	CellType();
 	int GetID();
 	sf::Color GetColor();
 
 private:
-	static int m_gid;
-	int m_id;
+	static int m_gid;	// increasing global cell id
+	static vector < sf::Color > typeColors;
+	int m_id;			// specific cell id
 	sf::Color m_color;
 };
 
