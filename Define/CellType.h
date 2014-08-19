@@ -12,15 +12,17 @@ public:
 		sf::Color targetColor; 
 	};
 
-	CellType();
+	CellType(int priority);
 	int GetID();
 	sf::Color GetColor();
+	int GetPriority();
 
 private:
 	static int m_gid;	// increasing global cell id
-	static vector < sf::Color > typeColors;
+	vector <sf::Color> typeColors; // can we make this static???
 	int m_id;			// specific cell id
 	sf::Color m_color;
+	int m_priority;
 };
 
 #endif

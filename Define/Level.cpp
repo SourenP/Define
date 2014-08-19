@@ -2,6 +2,10 @@
 #include <unordered_map>
 #include <iostream>
 using namespace std;
+#include "CellType.h"
+#include "Cell.h"
+#include "comparisons.h"
+#include "SFML\Graphics.hpp"
 
 
 Level::Level(int windowSize)
@@ -39,14 +43,22 @@ Level::Level(int windowSize)
 	}
 
 	//testing
-	(*m_tileTable)["0_0_0"]->SetColor(sf::Color::Red);
-	vector<vector<int>> n = GetNeighbors(0, 0, 0);
-	for (int i = 0; i < 6; i++)
-	{
-		for (int j = 0; j < 3; j++)
-			cout << n[i][j] << " ";
-		cout << endl;
-	}
+	CellType *red = new CellType(10);
+	CellType *green = new CellType(20);
+
+	vector<Cell> v = vector<Cell>();
+	Cell test1 = Cell(red, sf::Vector3i(0, 0, 0));
+	Cell test2 = Cell(green, sf::Vector3i(0, 0, 0));
+	v.push_back(test2);
+	v.push_back(test1);
+
+	cout << "redID= " << red->GetID() << endl;
+	cout << "greenID= " << green->GetID() << endl;
+	cout << "v[0] = green & v[1] = red" << endl;
+	sort(v.begin(), v.end(), orderByPriority);
+	cout << "post sort: " << endl;
+	cout << "v[0]" << "==" << v[0].GetTypeID() << endl;
+	cout << "v[1]" << "==" << v[1].GetTypeID() << endl;
 }
 
 void Level::Draw(sf::RenderWindow& rw)

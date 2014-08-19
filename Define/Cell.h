@@ -6,11 +6,16 @@
 class Cell
 {
 public:
-	Cell(CellType celltype);
+	Cell(CellType *celltype, sf::Vector3i startLocation);
 	sf::Color GetColor();
-
+	bool setLocation(sf::Vector3i newLocation);
+	int ComparePriority(const Cell& cell) const;
+	int GetPriority();
+	int GetTypeID();
 private:
-	CellType type;
+	CellType *m_type;
+	sf::Vector3i m_location;
+	int m_priority;
 };
 
 #endif
