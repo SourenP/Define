@@ -6,9 +6,11 @@ using namespace std;
 
 Level::Level(int windowSize)
 {
-	int neighborOffsets[6][3] =
-	{ { +1, -1, 0 }, { +1, 0, -1 }, { 0, +1, -1 },
-	{ -1, +1, 0 }, { -1, 0, +1 }, { 0, -1, +1 } };
+	// Set up neighborOffsets array to use in GetNeighbors
+	int neighborNumbers[6][3] = { { +1, -1, 0 }, { +1, 0, -1 }, { 0, +1, -1 }, { -1, +1, 0 }, { -1, 0, +1 }, { 0, -1, +1 } };
+	for (int i = 0; i < 6; i++)
+		for (int j = 0; j < 3; j++)
+			neighborOffsets[i][j] = neighborNumbers[i][j];
 
 	m_tileTable = new unordered_map<string, Tile*>();
 	float tileHeight = windowSize / MAP_DIAMETER;
@@ -38,11 +40,11 @@ Level::Level(int windowSize)
 
 	//testing
 	(*m_tileTable)["0_0_0"]->SetColor(sf::Color::Red);
-	int** n = GetNeighbors(0, 0, 0);
+	vector<vector<int>> n = GetNeighbors(0, 0, 0);
 	for (int i = 0; i < 6; i++)
 	{
 		for (int j = 0; j < 3; j++)
-			cout << n[i][j];
+			cout << n[i][j] << " ";
 		cout << endl;
 	}
 }
@@ -55,20 +57,19 @@ void Level::Draw(sf::RenderWindow& rw)
 	}
 }
 
-int** Level::GetNeighbors(int x, int y, int z)
+// returnes by reference (might cause memory issues)
+vector<vector<int>>& Level::GetNeighbors(int x, int y, int z)
 {
 	int coordinates[3] = { x, y, z };
-	int** neighborCoordinates = new int*[6];
+	vector<vector<int>>* neighborCoordinates = new vector<vector<int>>(6, vector<int>(3));
 	for (int i = 0; i < 6; i++)
 	{
-		neighborCoordinates[i] = new int[3];
 		for (int j = 0; j < 3; j++)
 		{
-			neighborCoordinates[i][j] = coordinates[j] + neighborOffsets[i][j];
+			(*neighborCoordinates)[i][j] = (coordinates[j] + neighborOffsets[i][j]);
 		}
 	}
-
-	return neighborCoordinates;
+	return *neighborCoordinates;
 }	
 
 Level::~Level()

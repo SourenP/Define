@@ -19,7 +19,7 @@ public:
 	Level(int windowSize);
 	//void Update(Cell::Move);
 	void Draw(sf::RenderWindow&);
-	int** GetNeighbors(int x, int y, int z);
+	vector<vector<int>>& GetNeighbors(int x, int y, int z);
 	~Level();
 
 private:
