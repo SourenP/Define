@@ -10,13 +10,17 @@ using namespace std;
 
 Level::Level(int windowSize)
 {
-	// Set up neighborOffsets array to use in GetNeighbors
+	m_tiles = new vector<Tile*>;
+
+	// Set up neighborOffsets array to use in GetNeighbors & fill m_tileIDs with -1 
 	int neighborNumbers[6][3] = { { +1, -1, 0 }, { +1, 0, -1 }, { 0, +1, -1 }, { -1, +1, 0 }, { -1, 0, +1 }, { 0, -1, +1 } };
 	for (int i = 0; i < 6; i++)
 		for (int j = 0; j < 3; j++)
 			neighborOffsets[i][j] = neighborNumbers[i][j];
+	for (int i = 0; i < MAP_DIAMETER; i++)
+		for (int j = 0; j < MAP_DIAMETER; j++)
+			m_tileIDs[i][j] = -1;
 
-	m_tileTable = new unordered_map<string, Tile*>();
 	float tileHeight = windowSize / MAP_DIAMETER;
 	float tileRadius = tileHeight / sqrt(3);
 	float tileDiameter = 2 * tileRadius;
@@ -26,6 +30,7 @@ Level::Level(int windowSize)
 	float yOffset;
 	int rowMin = 0;
 	int rowMax = MAP_SIDE_LENGTH - 1;
+	int tileID = 0;
 
 	// c and r produce numbers matchin axial coordinates
 	for (int c = 1-MAP_SIDE_LENGTH; c < MAP_SIDE_LENGTH; ++c)
@@ -34,39 +39,21 @@ Level::Level(int windowSize)
 		yOffset = tileHeight*((MAP_DIAMETER - abs(rowMax - rowMin)) / 2.0);
 		for (int r = rowMin; r <= rowMax; ++r)
 		{
-			// Map key is based on cube coordinates x_z_y (Conversion from axial to cube: x = c  z = r  y = -x-z)
-			(*m_tileTable)[to_string(c) + "_" + to_string(r) + "_" + to_string(-c - r)] =
-				 new Tile(tileRadius, sf::Vector2f(xOffset + xMapOffset, yOffset + yMapOffset), sf::Vector3i(c, r, -c - r));
+			m_tiles->push_back(new Tile(tileRadius, sf::Vector2f(xOffset + xMapOffset, yOffset + yMapOffset), sf::Vector3i(c, r, -c - r)));
+			cout << "r: " << r + MAP_SIDE_LENGTH - 1 << "    c: " << c + MAP_SIDE_LENGTH - 1 << endl;
+			m_tileIDs[r + MAP_SIDE_LENGTH - 1][c + MAP_SIDE_LENGTH - 1] = tileID;
+			tileID++;
+
 			yOffset += tileHeight;
 		}
 		c < 0 ? rowMin-- : rowMax--;
 	}
-
-	//testing
-	CellType *red = new CellType(10);
-	CellType *green = new CellType(20);
-
-	vector<Cell> v = vector<Cell>();
-	Cell test1 = Cell(red, sf::Vector3i(0, 0, 0));
-	Cell test2 = Cell(green, sf::Vector3i(0, 0, 0));
-	v.push_back(test2);
-	v.push_back(test1);
-
-	cout << "redID= " << red->GetID() << endl;
-	cout << "greenID= " << green->GetID() << endl;
-	cout << "v[0] = green & v[1] = red" << endl;
-	sort(v.begin(), v.end(), orderByPriority);
-	cout << "post sort: " << endl;
-	cout << "v[0]" << "==" << v[0].GetTypeID() << endl;
-	cout << "v[1]" << "==" << v[1].GetTypeID() << endl;
 }
 
 void Level::Draw(sf::RenderWindow& rw)
 {
-	for (auto it = m_tileTable->begin(); it != m_tileTable->end(); ++it)
-	{
-		it->second->Draw(rw);
-	}
+	for (int i = 0; i < m_tiles->size(); i++)
+		(*m_tiles)[i]->Draw(rw);
 }
 
 // returnes by reference (might cause memory issues)
@@ -82,13 +69,23 @@ vector<vector<int>>& Level::GetNeighbors(int x, int y, int z)
 		}
 	}
 	return *neighborCoordinates;
-}	
+}
+
+sf::Vector2i Level::indexFromCoordinates(sf::Vector3i coordinates)
+{	
+	return sf::Vector2i(coordinates.x, coordinates.z);
+}
+
+Tile* Level::GetTile(sf::Vector3i coordinates)
+{
+	sf::Vector2i indices = indexFromCoordinates(coordinates);
+	return (*m_tiles)[m_tileIDs[indices.x][indices.y]];
+}
 
 Level::~Level()
 {
-	for (auto it = m_tileTable->begin(); it != m_tileTable->end();)
-	{
-		it = m_tileTable->erase(it);
-	}
-	delete m_tileTable;
+	for (std::vector<Tile*>::iterator it = m_tiles->begin(); it != m_tiles->end(); ++it) 
+		delete *it;
+	m_tiles->clear();
+	delete m_tiles;
 }
