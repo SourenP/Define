@@ -75,20 +75,6 @@ void Level::Draw(sf::RenderWindow& rw)
 }
 
 // returnes by reference (might cause memory issues)
-vector<vector<int>>& Level::GetNeighbors(int x, int y, int z)
-{
-	int coordinates[3] = { x, y, z };
-	vector<vector<int>>* neighborCoordinates = new vector<vector<int>>(6, vector<int>(3));
-	for (int i = 0; i < 6; i++)
-	{
-		for (int j = 0; j < 3; j++)
-		{
-			(*neighborCoordinates)[i][j] = (coordinates[j] + neighborOffsets[i][j]);
-		}
-	}
-	return *neighborCoordinates;
-}
-
 sf::Vector2i Level::indexFromCoordinates(sf::Vector3i coordinates)
 {	
 	return sf::Vector2i(coordinates.x + MAP_SIDE_LENGTH - 1, coordinates.z + MAP_SIDE_LENGTH - 1);

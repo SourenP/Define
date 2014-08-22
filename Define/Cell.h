@@ -11,12 +11,12 @@ public:
 
 	sf::Color GetColor() const;
 	bool setLocation(sf::Vector3i newLocation);
-<<<<<<< HEAD
+
 	sf::Vector3i GetLocation();
-=======
+
 	sf::Vector3i GetLocation() const;
 	int ComparePriority(const Cell& cell) const;
->>>>>>> origin/master
+
 	int GetPriority();
 	int GetTypeID();
 	bool IsAlive();

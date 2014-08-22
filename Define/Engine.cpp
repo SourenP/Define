@@ -1,7 +1,5 @@
 #include "Engine.h"
-#include "define_structs.h"
-#include "Cell.h"
-#include "Tile.h"
+
 
 int neighborOffsets[6][3] = { { +1, -1, 0 }, { +1, 0, -1 }, { 0, +1, -1 }, { -1, +1, 0 }, { -1, 0, +1 }, { 0, -1, +1 } };
 

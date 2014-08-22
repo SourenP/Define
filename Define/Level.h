@@ -24,7 +24,6 @@ public:
 	Level(int windowSize);
 	//void Update(Cell::Move);
 	void Draw(sf::RenderWindow&);
-	vector<vector<int>>& GetNeighbors(int x, int y, int z);
 	sf::Vector2i indexFromCoordinates(sf::Vector3i coordinates);
 	Tile* GetTile(sf::Vector3i coordinates);
 	const Cell* GetNextCell();

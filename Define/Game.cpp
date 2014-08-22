@@ -4,14 +4,13 @@ using namespace std;
 
 Game::Game()
 {
-<<<<<<< HEAD
+
 	m_mainWindow.create(sf::VideoMode(m_windowSize, m_windowSize, 32), "Game!");
 
-=======
 	sf::ContextSettings settings;
 	settings.antialiasingLevel = 8;
 	m_mainWindow.create(sf::VideoMode(m_windowSize, m_windowSize, 32), "Game!", sf::Style::Default, settings);
->>>>>>> origin/master
+
 	//GameLoop();
 
 	m_Level = new Level(m_windowSize);		
