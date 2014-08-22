@@ -2,6 +2,7 @@
 #define GAME_H
 
 #include "Level.h"
+#include "Engine.h"
 
 class Game
 {

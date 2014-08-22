@@ -49,12 +49,16 @@ Level::Level(int windowSize)
 	m_cells.push_back(test3);
 
 	HeapNode node;
+
 	node.cellIndex = 0;
 	node.priority = red->GetPriority();
 	m_priorityHeap.push(node);
+	GetTile(test1->GetLocation())->SetCellIndex(0);
+
 	node.cellIndex = 1;
 	node.priority = green->GetPriority();
 	m_priorityHeap.push(node);
+
 	node.cellIndex = 2;
 	node.priority = blue->GetPriority();
 	m_priorityHeap.push(node);
@@ -113,9 +117,19 @@ const vector<Tile*> Level::GetTileContainer() const
 
 void Level::Update(Changes changes)
 {
-	while (!changes.moves.empty)
+	for (int i = 0; i < changes.moves.size(); i++)
 	{
+		sf::Vector3i origin = changes.moves[i][0];
+		sf::Vector3i target = changes.moves[i][1];
 
+		Tile* originTile = GetTile(origin);
+		Tile* targetTile = GetTile(target);
+		
+		targetTile->SetCellIndex(originTile->GetCellIndex());
+		targetTile->SetColor(m_cells[originTile->GetCellIndex()]->GetColor());
+		originTile->SetColor(sf::Color::Cyan);
+
+		//originTile->SetCellIndex(-1);
 	}
 }
 

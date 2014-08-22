@@ -29,4 +29,13 @@ sf::Vector3i Tile::GetCoordinates()
 	return m_coordinates;
 }
 
+void Tile::SetCellIndex(int index)
+{
+	m_cellIndex = index;
+}
+
+int Tile::GetCellIndex()
+{
+	return m_cellIndex;
+}
 

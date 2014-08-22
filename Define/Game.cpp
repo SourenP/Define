@@ -43,7 +43,10 @@ void Game::GameLoop()
 	{
 
 		const Cell* n = m_Level->GetNextCell();
-		
+		vector<Cell*> m = m_Level->GetCellContainer();
+		vector<Tile*> k = m_Level->GetTileContainer();
+
+		m_Level->Update(getResult(*n, m, k));
 
 		m_mainWindow.clear(sf::Color::White);
 		m_Level->Draw(m_mainWindow);
