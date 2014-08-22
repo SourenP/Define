@@ -60,13 +60,13 @@ Level::Level(int windowSize)
 	m_cells.push_back(test2);
 	m_cells.push_back(test3);
 
-	/*for (size_t i = 0; i < m_cells.size(); i++)
+	for (size_t i = 0; i < m_cells.size(); i++)
 	{
 		cout << i << endl;
 		sf::Vector3i currentLoc = m_cells[i]->GetLocation();
 		Tile* currentTile = GetTile(currentLoc);
 		currentTile->SetColor(m_cells[i]->GetColor());
-	}*/
+	}
 }
 
 void Level::Draw(sf::RenderWindow& rw)
