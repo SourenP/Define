@@ -6,12 +6,6 @@ using namespace std;
 class CellType
 {
 public:
-	struct Move
-	{
-		int tileID;
-		sf::Color targetColor; 
-	};
-
 	CellType(int priority);
 	int GetID();
 	sf::Color GetColor();

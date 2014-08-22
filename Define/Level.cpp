@@ -52,6 +52,17 @@ Level::Level(int windowSize)
 	m_cells.push_back(test2);
 	m_cells.push_back(test3);
 
+	HeapNode node;
+	node.cellIndex = 0;
+	node.priority = red->GetPriority();
+	m_priorityHeap.push(node);
+	node.cellIndex = 1;
+	node.priority = green->GetPriority();
+	m_priorityHeap.push(node);
+	node.cellIndex = 2;
+	node.priority = blue->GetPriority();
+	m_priorityHeap.push(node);
+
 	for (size_t i = 0; i < m_cells.size(); i++)
 	{
 		cout << i << endl;
@@ -94,7 +105,7 @@ Tile* Level::GetTile(sf::Vector3i coordinates)
 	return m_tiles[currID];
 }
 
-Cell* Level::GetNextCell()
+const Cell* Level::GetNextCell()
 {
 	int nextCellIndex = m_priorityHeap.top().cellIndex;
 
@@ -105,7 +116,17 @@ Cell* Level::GetNextCell()
 		nextCellIndex = m_priorityHeap.top().cellIndex;
 	}
 
-	return m_cells[nextCellIndex];
+	return (m_cells[nextCellIndex]);
+}
+
+const vector<Cell*> Level::GetCellContainer() const
+{
+	return m_cells;
+}
+
+const vector<Tile*> Level::GetTileContainer() const
+{
+	return m_tiles;
 }
 
 Level::~Level()

@@ -12,7 +12,6 @@ public:
 	sf::Color GetColor();
 	bool setLocation(sf::Vector3i newLocation);
 	sf::Vector3i GetLocation();
-	int ComparePriority(const Cell& cell) const;
 	int GetPriority();
 	int GetTypeID();
 	bool IsAlive();
@@ -22,7 +21,6 @@ private:
 	CellType *m_type;
 	bool m_alive;
 	sf::Vector3i m_location;
-	int m_priority;
 };
 
 #endif

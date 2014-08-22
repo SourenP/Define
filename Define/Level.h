@@ -10,6 +10,7 @@
 #include "Cell.h"
 #include "CellType.h"
 #include "comparisons.h"
+#include "define_structs.h"
 
 using std::vector;
 using std::priority_queue;
@@ -26,15 +27,13 @@ public:
 	vector<vector<int>>& GetNeighbors(int x, int y, int z);
 	sf::Vector2i indexFromCoordinates(sf::Vector3i coordinates);
 	Tile* GetTile(sf::Vector3i coordinates);
-	Cell* GetNextCell();
+	const Cell* GetNextCell();
+	const vector<Cell*> GetCellContainer() const;
+	const vector<Tile*> GetTileContainer() const;
+
 	~Level();
 
 private:
-	struct HeapNode
-	{
-		int priority;
-		int cellIndex;
-	};
 
 	Level(const Level&);
 	Level& operator=(const Level&);

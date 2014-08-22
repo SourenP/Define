@@ -11,7 +11,7 @@ public:
 private:
 	Game(const Game&);
 	Game& operator=(const Game&);
-
+	
 	enum GameState { Uninitialized, Playing, ShowingMenu, Exiting };
 	int m_windowSize = 800;
 	Level *m_Level;
@@ -19,6 +19,7 @@ private:
 	sf::RenderWindow m_mainWindow;
 	void GameLoop();
 
+	
 	const float m_minTimestep = sf::seconds(1.f / 60.f).asSeconds();
 	int m_maxFrames = 5;
 	float m_remainingTime;

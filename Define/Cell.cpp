@@ -5,7 +5,6 @@ Cell::Cell(CellType *celltype, sf::Vector3i startLocation)
 {
 	m_type = celltype;
 	m_location = startLocation;
-	m_priority = m_type->GetPriority();
 
 	SetIsAlive(true);
 }
@@ -41,23 +40,9 @@ sf::Vector3i Cell::GetLocation()
 {
 	return m_location;
 }
-
-int Cell::ComparePriority(const Cell& cell) const
-{
-	if (m_priority < cell.m_priority) 
-	{
-		return -1;
-	}
-	else if (m_priority > cell.m_priority) 
-	{
-		return 1;
-	}
-	return 0;
-}
-
 int Cell::GetPriority()
 {
-	return m_priority;
+	return m_type->GetPriority();
 }
 
 int Cell::GetTypeID()

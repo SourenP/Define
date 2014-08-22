@@ -37,6 +37,9 @@ void Game::GameLoop()
 	while ((m_remainingTime > m_minTimestep) && (frames < m_maxFrames))
 	{
 
+		const Cell* n = m_Level->GetNextCell();
+		
+
 		m_mainWindow.clear(sf::Color::White);
 		m_Level->Draw(m_mainWindow);
 		m_mainWindow.display();
