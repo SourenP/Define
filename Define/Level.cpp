@@ -66,9 +66,7 @@ Level::Level(int windowSize)
 	{
 		cout << i << endl;
 		sf::Vector3i currentLoc = m_cells[i]->GetLocation();
-		cout << "Got cell locaiotn" << endl;
 		Tile* currentTile = GetTile(currentLoc);
-		cout << "Got tile" << endl;
 		currentTile->SetColor(m_cells[i]->GetColor());
 	}
 }
