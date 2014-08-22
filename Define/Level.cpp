@@ -25,7 +25,7 @@ Level::Level(int windowSize)
 		yOffset = tileHeight*((MAP_DIAMETER - abs(rowMax - rowMin)) / 2.0);
 		for (int r = rowMin; r <= rowMax; ++r)
 		{
-			m_tiles.push_back(new Tile(tileRadius, sf::Vector2f(xOffset + xMapOffset, yOffset + yMapOffset), sf::Vector3i(c, r, -c - r)));
+			m_tiles.push_back(new Tile(tileRadius, sf::Vector2f(xOffset + xMapOffset, yOffset + yMapOffset), sf::Vector3i(c, -c - r, r)));
 			//cout << "r: " << r + MAP_SIDE_LENGTH - 1 << "    c: " << c + MAP_SIDE_LENGTH - 1 << endl;
 			m_tileIDs[r + MAP_SIDE_LENGTH - 1][c + MAP_SIDE_LENGTH - 1] = tileID;
 			tileID++;
@@ -81,7 +81,7 @@ void Level::Draw(sf::RenderWindow& rw)
 // returnes by reference (might cause memory issues)
 sf::Vector2i Level::indexFromCoordinates(sf::Vector3i coordinates)
 {	
-	return sf::Vector2i(coordinates.x + MAP_SIDE_LENGTH - 1, coordinates.z + MAP_SIDE_LENGTH - 1);
+	return sf::Vector2i(coordinates.z + MAP_SIDE_LENGTH - 1, coordinates.x + MAP_SIDE_LENGTH - 1);
 }
 
 Tile* Level::GetTile(sf::Vector3i coordinates)
