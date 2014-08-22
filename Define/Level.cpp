@@ -48,17 +48,17 @@ Level::Level(int windowSize)
 	}
 
 	//testing
-	CellType red(10);
-	CellType green(20);
-	CellType blue(30);
+	CellType *red = new CellType(10);
+	CellType *green = new CellType(20);
+	CellType *blue = new CellType(30);
 	
-	Cell test1(&red, sf::Vector3i(0,0,0));
-	Cell test2(&green, sf::Vector3i(-1, 0, 1));
-	Cell test3(&blue, sf::Vector3i(-2, 0 , 2));
+	Cell *test1 = new Cell(red, sf::Vector3i(0,0,0));
+	Cell *test2 = new Cell(green, sf::Vector3i(-1, 0, 1));
+	Cell *test3 = new Cell(blue, sf::Vector3i(-2, 0, 2));
 
-	m_cells.push_back(&test1);
-	m_cells.push_back(&test2);
-	m_cells.push_back(&test3);
+	m_cells.push_back(test1);
+	m_cells.push_back(test2);
+	m_cells.push_back(test3);
 
 	/*for (size_t i = 0; i < m_cells.size(); i++)
 	{
@@ -104,7 +104,28 @@ Tile* Level::GetTile(sf::Vector3i coordinates)
 
 Level::~Level()
 {
-	for (std::vector<Tile*>::iterator it = m_tiles.begin(); it != m_tiles.end(); ++it) 
-		delete *it;
+	for (int i = 0; i < m_tiles.size(); ++i)
+	{
+		delete m_tiles[i];
+	}
 	m_tiles.clear();
+
+	for (int j = 0; j < m_cells.size(); ++j)
+	{
+		delete m_cells[j];
+	}
+	m_cells.clear();
+	/*for (std::vector<Tile*>::iterator it = m_tiles.begin(); it != m_tiles.end(); ++it)
+	{
+		delete *it;
+	}
+
+	m_tiles.clear();
+
+	for (std::vector<Cell*>::iterator it2 = m_cells.begin(); it2 != m_cells.end(); ++it2)
+	{
+		delete *it2;
+	}
+	m_cells.clear();*/
+
 }

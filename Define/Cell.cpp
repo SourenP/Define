@@ -8,6 +8,11 @@ Cell::Cell(CellType *celltype, sf::Vector3i startLocation)
 	m_priority = m_type->GetPriority();
 }
 
+Cell::~Cell()
+{
+	delete m_type;
+}
+
 sf::Color Cell::GetColor()
 {
 	return m_type->GetColor();

@@ -7,6 +7,8 @@ class Cell
 {
 public:
 	Cell(CellType *celltype, sf::Vector3i startLocation);
+	~Cell();
+
 	sf::Color GetColor();
 	bool setLocation(sf::Vector3i newLocation);
 	sf::Vector3i GetLocation();

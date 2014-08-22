@@ -11,6 +11,11 @@
 
 int main()
 {
+#ifdef _DEBUG
+	int flag = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG);
+	flag |= _CRTDBG_LEAK_CHECK_DF; // Turn on leak-checking bit
+	_CrtSetDbgFlag(flag);
+#endif
 	Game *g = new Game();
 	delete g;
 	return 0;
