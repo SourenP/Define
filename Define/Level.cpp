@@ -1,12 +1,4 @@
 #include "Level.h"
-#include <unordered_map>
-#include <iostream>
-using namespace std;
-#include "CellType.h"
-#include "Cell.h"
-#include "comparisons.h"
-#include "SFML\Graphics.hpp"
-
 
 Level::Level(int windowSize)
 {
@@ -60,13 +52,13 @@ Level::Level(int windowSize)
 	m_cells.push_back(test2);
 	m_cells.push_back(test3);
 
-	/*for (size_t i = 0; i < m_cells.size(); i++)
+	for (size_t i = 0; i < m_cells.size(); i++)
 	{
 		cout << i << endl;
 		sf::Vector3i currentLoc = m_cells[i]->GetLocation();
 		Tile* currentTile = GetTile(currentLoc);
 		currentTile->SetColor(m_cells[i]->GetColor());
-	}*/
+	}
 }
 
 void Level::Draw(sf::RenderWindow& rw)
@@ -102,6 +94,20 @@ Tile* Level::GetTile(sf::Vector3i coordinates)
 	return m_tiles[currID];
 }
 
+Cell* Level::GetNextCell()
+{
+	int nextCellIndex = m_priorityHeap.top().cellIndex;
+
+	//Continuing popping from heap until live cell is found
+	while (!m_priorityHeap.empty() && !m_cells[nextCellIndex]->IsAlive())
+	{
+		m_priorityHeap.pop();
+		nextCellIndex = m_priorityHeap.top().cellIndex;
+	}
+
+	return m_cells[nextCellIndex];
+}
+
 Level::~Level()
 {
 	for (int i = 0; i < m_tiles.size(); ++i)
@@ -115,17 +121,4 @@ Level::~Level()
 		delete m_cells[j];
 	}
 	m_cells.clear();
-	/*for (std::vector<Tile*>::iterator it = m_tiles.begin(); it != m_tiles.end(); ++it)
-	{
-		delete *it;
-	}
-
-	m_tiles.clear();
-
-	for (std::vector<Cell*>::iterator it2 = m_cells.begin(); it2 != m_cells.end(); ++it2)
-	{
-		delete *it2;
-	}
-	m_cells.clear();*/
-
 }

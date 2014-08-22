@@ -15,8 +15,12 @@ public:
 	int ComparePriority(const Cell& cell) const;
 	int GetPriority();
 	int GetTypeID();
+	bool IsAlive();
+	void SetIsAlive(bool status);
+
 private:
 	CellType *m_type;
+	bool m_alive;
 	sf::Vector3i m_location;
 	int m_priority;
 };

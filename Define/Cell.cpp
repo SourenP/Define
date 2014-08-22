@@ -6,6 +6,8 @@ Cell::Cell(CellType *celltype, sf::Vector3i startLocation)
 	m_type = celltype;
 	m_location = startLocation;
 	m_priority = m_type->GetPriority();
+
+	SetIsAlive(true);
 }
 
 Cell::~Cell()
@@ -16,6 +18,16 @@ Cell::~Cell()
 sf::Color Cell::GetColor()
 {
 	return m_type->GetColor();
+}
+
+void Cell::SetIsAlive(bool status)
+{
+	m_alive = status;
+}
+
+bool Cell::IsAlive()
+{
+	return m_alive;
 }
 
 bool Cell::setLocation(sf::Vector3i newLocation)
