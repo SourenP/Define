@@ -10,11 +10,7 @@ using namespace std;
 
 Level::Level(int windowSize)
 {
-	// Set up neighborOffsets array to use in GetNeighbors & fill m_tileIDs with -1 
-	int neighborNumbers[6][3] = { { +1, -1, 0 }, { +1, 0, -1 }, { 0, +1, -1 }, { -1, +1, 0 }, { -1, 0, +1 }, { 0, -1, +1 } };
-	for (int i = 0; i < 6; i++)
-		for (int j = 0; j < 3; j++)
-			neighborOffsets[i][j] = neighborNumbers[i][j];
+	// Fill m_tileIDs with -1 
 	for (int i = 0; i < MAP_DIAMETER; i++)
 		for (int j = 0; j < MAP_DIAMETER; j++)
 			m_tileIDs[i][j] = -1;

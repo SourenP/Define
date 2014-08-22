@@ -13,7 +13,7 @@ Cell::~Cell()
 	delete m_type;
 }
 
-sf::Color Cell::GetColor()
+sf::Color Cell::GetColor() const
 {
 	return m_type->GetColor();
 }
@@ -25,7 +25,7 @@ bool Cell::setLocation(sf::Vector3i newLocation)
 	return 1; // should return success/failer based on destination being free/occupied
 }
 
-sf::Vector3i Cell::GetLocation()
+sf::Vector3i Cell::GetLocation() const
 {
 	return m_location;
 }
