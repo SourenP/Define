@@ -111,6 +111,14 @@ const vector<Tile*> Level::GetTileContainer() const
 	return m_tiles;
 }
 
+void Level::Update(Changes changes)
+{
+	while (!changes.moves.empty)
+	{
+
+	}
+}
+
 Level::~Level()
 {
 	for (int i = 0; i < m_tiles.size(); ++i)

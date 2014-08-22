@@ -29,7 +29,7 @@ public:
 	const Cell* GetNextCell();
 	const vector<Cell*> GetCellContainer() const;
 	const vector<Tile*> GetTileContainer() const;
-
+	void Update(Changes changes);
 	~Level();
 
 private:
