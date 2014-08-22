@@ -22,9 +22,10 @@ Level::Level(int windowSize)
 	float tileHeight = windowSize / MAP_DIAMETER;
 	float tileRadius = tileHeight / sqrt(3);
 	float tileDiameter = 2 * tileRadius;
-	float xMapOffset = 0;
+	float xThickness = (MAP_DIAMETER - 1) * tileDiameter * 3.0 / 4.0 + tileDiameter;
+	float xMapOffset = (windowSize - xThickness) / 2.0;
 	float yMapOffset = 0;
-	float xOffset = 0;
+	float xOffset = tileRadius;
 	float yOffset;
 	int rowMin = 0;
 	int rowMax = MAP_SIDE_LENGTH - 1;
@@ -33,7 +34,6 @@ Level::Level(int windowSize)
 	// c and r produce numbers matchin axial coordinates
 	for (int c = 1-MAP_SIDE_LENGTH; c < MAP_SIDE_LENGTH; ++c)
 	{
-		xOffset += tileDiameter * 3.0 / 4.0;
 		yOffset = tileHeight*((MAP_DIAMETER - abs(rowMax - rowMin)) / 2.0);
 		for (int r = rowMin; r <= rowMax; ++r)
 		{
@@ -41,9 +41,9 @@ Level::Level(int windowSize)
 			//cout << "r: " << r + MAP_SIDE_LENGTH - 1 << "    c: " << c + MAP_SIDE_LENGTH - 1 << endl;
 			m_tileIDs[r + MAP_SIDE_LENGTH - 1][c + MAP_SIDE_LENGTH - 1] = tileID;
 			tileID++;
-
 			yOffset += tileHeight;
 		}
+		xOffset += tileDiameter * 3.0 / 4.0;
 		c < 0 ? rowMin-- : rowMax--;
 	}
 
