@@ -125,6 +125,8 @@ void Level::Update(Changes changes)
 		Tile* originTile = GetTile(origin);
 		Tile* targetTile = GetTile(target);
 		
+		m_cells[originTile->GetCellIndex()]->setLocation(target);
+
 		targetTile->SetCellIndex(originTile->GetCellIndex());
 		targetTile->SetColor(m_cells[originTile->GetCellIndex()]->GetColor());
 		originTile->SetColor(sf::Color::Cyan);

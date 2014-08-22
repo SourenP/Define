@@ -37,7 +37,7 @@ private:
 	Level(const Level&);
 	Level& operator=(const Level&);
 
-	static const int MAP_SIDE_LENGTH = 30;
+	static const int MAP_SIDE_LENGTH = 3;
 	static const int MAP_DIAMETER = (2 * MAP_SIDE_LENGTH) - 1;
 	static const int TILE_COUNT = MAP_SIDE_LENGTH * (3 * MAP_SIDE_LENGTH - 1) - MAP_DIAMETER;
 	int m_tileIDs[MAP_DIAMETER][MAP_DIAMETER]; // on the stack?

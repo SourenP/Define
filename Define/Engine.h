@@ -8,7 +8,7 @@
 static const Changes getResult(const Cell& thisCell, const std::vector<Cell*>, const std::vector<Tile*>)
 {
 	sf::Vector3i location = thisCell.GetLocation();
-	sf::Vector3i destination;
+	sf::Vector3i destination = location;
 	destination.y--;
 	destination.z++;
 	std::vector<std::vector<sf::Vector3i>> moves;

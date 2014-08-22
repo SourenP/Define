@@ -21,7 +21,7 @@ private:
 	void GameLoop();
 
 	
-	const float m_minTimestep = sf::seconds(1.f / 60.f).asSeconds();
+	const float m_minTimestep = sf::seconds(1.f / 2.f).asSeconds();
 	int m_maxFrames = 5;
 	float m_remainingTime;
 	float m_time;
