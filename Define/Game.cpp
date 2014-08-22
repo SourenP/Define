@@ -16,7 +16,7 @@ Game::Game()
 	//m_debug.Initialize();
 
 	while (m_gameState != Exiting)
-	{
+	{	
 		GameLoop();
 	}
 
