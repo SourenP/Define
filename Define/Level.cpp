@@ -10,8 +10,6 @@ using namespace std;
 
 Level::Level(int windowSize)
 {
-	m_tiles = new vector<Tile*>;
-
 	// Set up neighborOffsets array to use in GetNeighbors & fill m_tileIDs with -1 
 	int neighborNumbers[6][3] = { { +1, -1, 0 }, { +1, 0, -1 }, { 0, +1, -1 }, { -1, +1, 0 }, { -1, 0, +1 }, { 0, -1, +1 } };
 	for (int i = 0; i < 6; i++)
@@ -39,8 +37,8 @@ Level::Level(int windowSize)
 		yOffset = tileHeight*((MAP_DIAMETER - abs(rowMax - rowMin)) / 2.0);
 		for (int r = rowMin; r <= rowMax; ++r)
 		{
-			m_tiles->push_back(new Tile(tileRadius, sf::Vector2f(xOffset + xMapOffset, yOffset + yMapOffset), sf::Vector3i(c, r, -c - r)));
-			cout << "r: " << r + MAP_SIDE_LENGTH - 1 << "    c: " << c + MAP_SIDE_LENGTH - 1 << endl;
+			m_tiles.push_back(new Tile(tileRadius, sf::Vector2f(xOffset + xMapOffset, yOffset + yMapOffset), sf::Vector3i(c, r, -c - r)));
+			//cout << "r: " << r + MAP_SIDE_LENGTH - 1 << "    c: " << c + MAP_SIDE_LENGTH - 1 << endl;
 			m_tileIDs[r + MAP_SIDE_LENGTH - 1][c + MAP_SIDE_LENGTH - 1] = tileID;
 			tileID++;
 
@@ -62,7 +60,7 @@ Level::Level(int windowSize)
 	m_cells.push_back(&test2);
 	m_cells.push_back(&test3);
 
-	for (size_t i = 0; i < m_cells.size(); i++)
+	/*for (size_t i = 0; i < m_cells.size(); i++)
 	{
 		cout << i << endl;
 		sf::Vector3i currentLoc = m_cells[i]->GetLocation();
@@ -70,13 +68,13 @@ Level::Level(int windowSize)
 		Tile* currentTile = GetTile(currentLoc);
 		cout << "Got tile" << endl;
 		currentTile->SetColor(m_cells[i]->GetColor());
-	}
+	}*/
 }
 
 void Level::Draw(sf::RenderWindow& rw)
 {
-	for (int i = 0; i < m_tiles->size(); i++)
-		(*m_tiles)[i]->Draw(rw);
+	for (int i = 0; i < m_tiles.size(); i++)
+		m_tiles[i]->Draw(rw);
 }
 
 // returnes by reference (might cause memory issues)
@@ -103,13 +101,12 @@ Tile* Level::GetTile(sf::Vector3i coordinates)
 {
 	sf::Vector2i indices = indexFromCoordinates(coordinates);
 	int currID = m_tileIDs[indices.x][indices.y];
-	return (*m_tiles)[currID];
+	return m_tiles[currID];
 }
 
 Level::~Level()
 {
-	for (std::vector<Tile*>::iterator it = m_tiles->begin(); it != m_tiles->end(); ++it) 
+	for (std::vector<Tile*>::iterator it = m_tiles.begin(); it != m_tiles.end(); ++it) 
 		delete *it;
-	m_tiles->clear();
-	delete m_tiles;
+	m_tiles.clear();
 }
