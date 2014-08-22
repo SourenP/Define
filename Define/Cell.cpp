@@ -20,6 +20,11 @@ bool Cell::setLocation(sf::Vector3i newLocation)
 	return 1; // should return success/failer based on destination being free/occupied
 }
 
+sf::Vector3i Cell::GetLocation()
+{
+	return m_location;
+}
+
 int Cell::ComparePriority(const Cell& cell) const
 {
 	if (m_priority < cell.m_priority) 

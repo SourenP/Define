@@ -3,9 +3,7 @@
 
 #include "SFML\Graphics.hpp"
 #include "Tile.h"
-//#include "Cell.h"
-#include <vector>
-#include <unordered_map>
+#include "Cell.h"
 using namespace std;
 
 using std::vector;
@@ -35,7 +33,7 @@ private:
 	int m_tileIDs[MAP_DIAMETER][MAP_DIAMETER]; // on the stack?
 	vector<Tile*>* m_tiles;
 	
-	//vector<Cell*> m_cellArray;
+	vector<Cell*> m_cells;
 };
 
 #endif

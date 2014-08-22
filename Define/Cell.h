@@ -9,6 +9,7 @@ public:
 	Cell(CellType *celltype, sf::Vector3i startLocation);
 	sf::Color GetColor();
 	bool setLocation(sf::Vector3i newLocation);
+	sf::Vector3i GetLocation();
 	int ComparePriority(const Cell& cell) const;
 	int GetPriority();
 	int GetTypeID();

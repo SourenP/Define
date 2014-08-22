@@ -7,7 +7,7 @@ Game::Game()
 	m_mainWindow.create(sf::VideoMode(m_windowSize, m_windowSize, 32), "Game!");
 	//GameLoop();
 
-	m_Level = new Level(m_windowSize);	
+	m_Level = new Level(m_windowSize);		
 	//m_gameObjectManager = new GameObjectManager();
 
 	m_gameState = ShowingMenu;

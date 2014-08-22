@@ -48,6 +48,29 @@ Level::Level(int windowSize)
 		}
 		c < 0 ? rowMin-- : rowMax--;
 	}
+
+	//testing
+	CellType red(10);
+	CellType green(20);
+	CellType blue(30);
+	
+	Cell test1(&red, sf::Vector3i(0,0,0));
+	Cell test2(&green, sf::Vector3i(-1, 0, 1));
+	Cell test3(&blue, sf::Vector3i(-2, 0 , 2));
+
+	m_cells.push_back(&test1);
+	m_cells.push_back(&test2);
+	m_cells.push_back(&test3);
+
+	for (size_t i = 0; i < m_cells.size(); i++)
+	{
+		cout << i << endl;
+		sf::Vector3i currentLoc = m_cells[i]->GetLocation();
+		cout << "Got cell locaiotn" << endl;
+		Tile* currentTile = GetTile(currentLoc);
+		cout << "Got tile" << endl;
+		currentTile->SetColor(m_cells[i]->GetColor());
+	}
 }
 
 void Level::Draw(sf::RenderWindow& rw)
@@ -73,13 +96,14 @@ vector<vector<int>>& Level::GetNeighbors(int x, int y, int z)
 
 sf::Vector2i Level::indexFromCoordinates(sf::Vector3i coordinates)
 {	
-	return sf::Vector2i(coordinates.x, coordinates.z);
+	return sf::Vector2i(coordinates.x + MAP_SIDE_LENGTH - 1, coordinates.z + MAP_SIDE_LENGTH - 1);
 }
 
 Tile* Level::GetTile(sf::Vector3i coordinates)
 {
 	sf::Vector2i indices = indexFromCoordinates(coordinates);
-	return (*m_tiles)[m_tileIDs[indices.x][indices.y]];
+	int currID = m_tileIDs[indices.x][indices.y];
+	return (*m_tiles)[currID];
 }
 
 Level::~Level()
