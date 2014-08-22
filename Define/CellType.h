@@ -12,9 +12,9 @@ public:
 	int GetPriority();
 
 private:
-	static int m_gid;	// increasing global cell id
+	static int m_gid;	// increasing global celltype id
 	vector <sf::Color> typeColors; // can we make this static???
-	int m_id;			// specific cell id
+	int m_id;			// specific celltype id
 	sf::Color m_color;
 	int m_priority;
 };
