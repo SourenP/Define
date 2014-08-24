@@ -23,4 +23,13 @@ struct HeapNode
 	};
 };
 
+class compareHeapNodes
+{
+public:
+	bool operator() (const HeapNode &a, const HeapNode &b) const
+	{
+		return a.priority < b.priority;
+	}
+};
+
 #endif

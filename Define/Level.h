@@ -9,7 +9,6 @@
 #include "Tile.h"
 #include "Cell.h"
 #include "CellType.h"
-#include "comparisons.h"
 #include "define_structs.h"
 
 using std::vector;

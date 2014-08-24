@@ -127,6 +127,7 @@ bool Level::MoveCell(sf::Vector3i origin, sf::Vector3i destination)
 
 const Cell* Level::GetNextCell()
 {
+	cout << "Heapsize: " << m_priorityHeap.size() << endl;
 	HeapNode nextNode = m_priorityHeap.top();
 
 	//Continuing popping from heap until live cell is found
@@ -135,7 +136,6 @@ const Cell* Level::GetNextCell()
 		m_priorityHeap.pop();
 		nextNode = m_priorityHeap.top();
 	}
-	cout << "index=" << nextNode.cellIndex << " priority=" << nextNode.priority << endl;
  	m_priorityHeap.pop(); // pop the alive cell
 	nextNode.priority -= 1; // reduce priority based on action
 	m_priorityHeap.push(nextNode); // push the alive cell back
