@@ -6,7 +6,7 @@ using namespace std;
 class CellType
 {
 public:
-	CellType(int priority);
+	CellType();
 	int GetID();
 	sf::Color GetColor();
 	int GetPriority();
@@ -16,7 +16,6 @@ private:
 	vector <sf::Color> typeColors; // can we make this static???
 	int m_id;			// specific celltype id
 	sf::Color m_color;
-	int m_priority;
 };
 
 #endif

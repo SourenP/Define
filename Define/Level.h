@@ -27,6 +27,7 @@ public:
 	sf::Vector2i indexFromCoordinates(sf::Vector3i coordinates);
 	Tile* GetTile(sf::Vector3i coordinates);
 	const Cell* GetNextCell();
+	bool MoveCell(sf::Vector3i origin, sf::Vector3i destination);
 	const vector<Cell*> GetCellContainer() const;
 	const vector<Tile*> GetTileContainer() const;
 	void Update(Changes changes);
@@ -41,6 +42,8 @@ private:
 	static const int MAP_DIAMETER = (2 * MAP_SIDE_LENGTH) - 1;
 	static const int TILE_COUNT = MAP_SIDE_LENGTH * (3 * MAP_SIDE_LENGTH - 1) - MAP_DIAMETER;
 	int m_tileIDs[MAP_DIAMETER][MAP_DIAMETER]; // on the stack?
+
+	void InitializeCells();
 
 	priority_queue<HeapNode, vector<HeapNode>, compareHeapNodes> m_priorityHeap;
 	vector<Tile*> m_tiles;

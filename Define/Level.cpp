@@ -26,7 +26,6 @@ Level::Level(int windowSize)
 		for (int r = rowMin; r <= rowMax; ++r)
 		{
 			m_tiles.push_back(new Tile(tileRadius, sf::Vector2f(xOffset + xMapOffset, yOffset + yMapOffset), sf::Vector3i(c, -c - r, r)));
-			//cout << "r: " << r + MAP_SIDE_LENGTH - 1 << "    c: " << c + MAP_SIDE_LENGTH - 1 << endl;
 			m_tileIDs[r + MAP_SIDE_LENGTH - 1][c + MAP_SIDE_LENGTH - 1] = tileID;
 			tileID++;
 			yOffset += tileHeight;
@@ -36,39 +35,14 @@ Level::Level(int windowSize)
 	}
 
 	//testing
-	CellType *red = new CellType(10);
-	CellType *green = new CellType(20);
-	CellType *blue = new CellType(30);
-	
-	Cell *test1 = new Cell(red, sf::Vector3i(0,0,0));
-	Cell *test2 = new Cell(green, sf::Vector3i(-1, 0, 1));
-	Cell *test3 = new Cell(blue, sf::Vector3i(-2, 0, 2));
+	InitializeCells();
 
-	m_cells.push_back(test1);
-	m_cells.push_back(test2);
-	m_cells.push_back(test3);
-
-	HeapNode node;
-
-	node.cellIndex = 0;
-	node.priority = red->GetPriority();
-	m_priorityHeap.push(node);
-	GetTile(test1->GetLocation())->SetCellIndex(0);
-
-	node.cellIndex = 1;
-	node.priority = green->GetPriority();
-	m_priorityHeap.push(node);
-
-	node.cellIndex = 2;
-	node.priority = blue->GetPriority();
-	m_priorityHeap.push(node);
-
+	// Initialize Tiles based on Cells
 	for (size_t i = 0; i < m_cells.size(); i++)
 	{
-		cout << i << endl;
 		sf::Vector3i currentLoc = m_cells[i]->GetLocation();
 		Tile* currentTile = GetTile(currentLoc);
-		currentTile->SetColor(m_cells[i]->GetColor());
+		currentTile->SetCell(*m_cells[i], i);
 	}
 }
 
@@ -91,20 +65,6 @@ Tile* Level::GetTile(sf::Vector3i coordinates)
 	return m_tiles[currID];
 }
 
-const Cell* Level::GetNextCell()
-{
-	int nextCellIndex = m_priorityHeap.top().cellIndex;
-
-	//Continuing popping from heap until live cell is found
-	while (!m_priorityHeap.empty() && !m_cells[nextCellIndex]->IsAlive())
-	{
-		m_priorityHeap.pop();
-		nextCellIndex = m_priorityHeap.top().cellIndex;
-	}
-
-	return (m_cells[nextCellIndex]);
-}
-
 const vector<Cell*> Level::GetCellContainer() const
 {
 	return m_cells;
@@ -113,6 +73,74 @@ const vector<Cell*> Level::GetCellContainer() const
 const vector<Tile*> Level::GetTileContainer() const
 {
 	return m_tiles;
+}
+
+void Level::InitializeCells()
+{
+	CellType *red = new CellType();
+	CellType *green = new CellType();
+	CellType *blue = new CellType();
+
+	Cell *test1 = new Cell(red, sf::Vector3i(0, 0, 0));
+	Cell *test2 = new Cell(green, sf::Vector3i(-1, 0, 1));
+	Cell *test3 = new Cell(blue, sf::Vector3i(-2, 0, 2));
+
+	m_cells.push_back(test1);
+	m_cells.push_back(test2);
+	m_cells.push_back(test3);
+
+	HeapNode node;
+
+	node.cellIndex = 0;
+	node.priority = m_cells[0]->GetPriority();
+	m_priorityHeap.push(node);
+
+	node.cellIndex = 1;
+	node.priority = m_cells[1]->GetPriority();
+	m_priorityHeap.push(node);
+
+	node.cellIndex = 2;
+	node.priority = m_cells[2]->GetPriority();
+	m_priorityHeap.push(node);
+}
+
+
+bool Level::MoveCell(sf::Vector3i origin, sf::Vector3i destination)
+{
+	Tile* originTile = GetTile(origin);
+	Tile* destinationTile = GetTile(destination);
+
+	if (destinationTile->GetCellIndex() != -1)
+		return 0;
+	else
+	{
+		int originCellIndex = originTile->GetCellIndex();
+
+		originTile->SetEmpty();
+		destinationTile->SetCell(*m_cells[originCellIndex], originCellIndex);
+
+		m_cells[originCellIndex]->setLocation(destination);
+		
+		return 1;
+	}
+}
+
+const Cell* Level::GetNextCell()
+{
+	HeapNode nextNode = m_priorityHeap.top();
+
+	//Continuing popping from heap until live cell is found
+	while (!m_priorityHeap.empty() && !m_cells[nextNode.cellIndex]->IsAlive())
+	{
+		m_priorityHeap.pop();
+		nextNode = m_priorityHeap.top();
+	}
+	cout << "index=" << nextNode.cellIndex << " priority=" << nextNode.priority << endl;
+ 	m_priorityHeap.pop(); // pop the alive cell
+	nextNode.priority -= 1; // reduce priority based on action
+	m_priorityHeap.push(nextNode); // push the alive cell back
+
+	return (m_cells[nextNode.cellIndex]);
 }
 
 void Level::Update(Changes changes)
@@ -124,14 +152,11 @@ void Level::Update(Changes changes)
 
 		Tile* originTile = GetTile(origin);
 		Tile* targetTile = GetTile(target);
-		
+
 		m_cells[originTile->GetCellIndex()]->setLocation(target);
 
-		targetTile->SetCellIndex(originTile->GetCellIndex());
-		targetTile->SetColor(m_cells[originTile->GetCellIndex()]->GetColor());
-		originTile->SetColor(sf::Color::Cyan);
-
-		//originTile->SetCellIndex(-1);
+		targetTile->SetCell(*m_cells[originTile->GetCellIndex()], originTile->GetCellIndex());
+		originTile->SetEmpty();
 	}
 }
 

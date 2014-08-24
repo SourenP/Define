@@ -42,11 +42,11 @@ void Game::GameLoop()
 	while ((m_remainingTime > m_minTimestep) && (frames < m_maxFrames))
 	{
 
-		const Cell* n = m_Level->GetNextCell();
-		vector<Cell*> m = m_Level->GetCellContainer();
-		vector<Tile*> k = m_Level->GetTileContainer();
+		const Cell* nextCell = m_Level->GetNextCell();
+		vector<Cell*> cells = m_Level->GetCellContainer();
+		vector<Tile*> tiles = m_Level->GetTileContainer();
 
-		m_Level->Update(getResult(*n, m, k));
+		m_Level->Update(getResult(*nextCell, cells, tiles));
 
 		m_mainWindow.clear(sf::Color::White);
 		m_Level->Draw(m_mainWindow);
