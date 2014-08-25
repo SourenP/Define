@@ -13,14 +13,6 @@ struct HeapNode
 {
 	int priority;
 	int cellIndex;
-
-	class compareHeapNode
-	{
-		bool operator() (const HeapNode& a, const HeapNode& b)
-		{
-			return a.priority > b.priority;
-		}
-	};
 };
 
 class compareHeapNodes

@@ -17,20 +17,23 @@ using std::priority_queue;
 class Level
 {
 public:
-
-	Level() {};
-	bool Start(int windowSize);
 	Level(int windowSize);
-	//void Update(Cell::Move);
+	~Level();
+	
 	void Draw(sf::RenderWindow&);
-	sf::Vector2i indexFromCoordinates(sf::Vector3i coordinates);
+	void Update(Changes changes);
+	
+	bool CreateCell(CellType *celltype, sf::Vector3i location, int team);
+	bool MoveCell(sf::Vector3i origin, sf::Vector3i destination);
+
 	Tile* GetTile(sf::Vector3i coordinates);
 	const Cell* GetNextCell();
-	bool MoveCell(sf::Vector3i origin, sf::Vector3i destination);
+
 	const vector<Cell*> GetCellContainer() const;
 	const vector<Tile*> GetTileContainer() const;
-	void Update(Changes changes);
-	~Level();
+	
+	sf::Vector2i indexFromCoordinates(sf::Vector3i coordinates);
+	
 
 private:
 
@@ -47,6 +50,9 @@ private:
 	priority_queue<HeapNode, vector<HeapNode>, compareHeapNodes> m_priorityHeap;
 	vector<Tile*> m_tiles;
 	vector<Cell*> m_cells;
+	vector<CellType*> m_cellTypes;
+
+	int cellCount = 0;
 };
 
 #endif

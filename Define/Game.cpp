@@ -14,7 +14,6 @@ Game::Game()
 	//GameLoop();
 
 	m_Level = new Level(m_windowSize);		
-	//m_gameObjectManager = new GameObjectManager();
 
 	m_gameState = ShowingMenu;
 	//m_debug.Initialize();
@@ -24,7 +23,6 @@ Game::Game()
 		GameLoop();
 	}
 
-	//m_gameObjectManager->Destroy();
 	m_mainWindow.close();
 }
 

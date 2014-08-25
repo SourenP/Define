@@ -1,18 +1,18 @@
 #include "Cell.h"
 #include "CellType.h"
 
-Cell::Cell(CellType *celltype, sf::Vector3i startLocation)
+Cell::Cell(CellType *celltype, sf::Vector3i startLocation, int team)
 {
 	m_type = celltype;
 	m_location = startLocation;
 	SetIsAlive(true);
 	m_currentPriority = 5;
+	m_team = team;
 }
 
-Cell::~Cell()
-{
-	delete m_type;
-}
+//Cell::~Cell()
+//{
+//}
 
 sf::Color Cell::GetColor() const
 {

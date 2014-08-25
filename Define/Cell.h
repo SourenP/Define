@@ -6,8 +6,8 @@
 class Cell
 {
 public:
-	Cell(CellType *celltype, sf::Vector3i startLocation);
-	~Cell();
+	Cell(CellType *celltype, sf::Vector3i startLocation, int team);
+	//~Cell();
 
 	sf::Color GetColor() const;
 	bool setLocation(sf::Vector3i newLocation);
@@ -24,6 +24,7 @@ private:
 	bool m_alive;
 	sf::Vector3i m_location;
 	int m_currentPriority;
+	int m_team;
 };
 
 #endif
