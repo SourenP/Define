@@ -11,7 +11,8 @@ public:
 	void Draw(sf::RenderWindow& window);
 	void SetCell(const Cell& cell, int index);
 	void Tile::SetEmpty();
-	int GetCellIndex();
+	int GetCellIndex() const;
+	int Tile::GetCellTeam() const;
 	sf::Vector3i GetCoordinates();
 	const sf::Color DEFAULT_COLOR = sf::Color::White;
 	

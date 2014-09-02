@@ -4,9 +4,6 @@ using namespace std;
 
 Game::Game()
 {
-
-	m_mainWindow.create(sf::VideoMode(m_windowSize, m_windowSize, 32), "Game!");
-
 	sf::ContextSettings settings;
 	settings.antialiasingLevel = 8;
 	m_mainWindow.create(sf::VideoMode(m_windowSize, m_windowSize, 32), "Game!", sf::Style::Default, settings);
@@ -40,15 +37,7 @@ void Game::GameLoop()
 	while ((m_remainingTime > m_minTimestep) && (frames < m_maxFrames))
 	{
 
-		const Cell* nextCell = m_Level->GetNextCell();
-		vector<Cell*> cells = m_Level->GetCellContainer();
-		vector<Tile*> tiles = m_Level->GetTileContainer();
-
-		m_Level->Update(getResult(*nextCell, cells, tiles));
-
-		m_mainWindow.clear(sf::Color::White);
-		m_Level->Draw(m_mainWindow);
-		m_mainWindow.display();
+		Step();
 
 		while (m_mainWindow.pollEvent(event))
 		{
@@ -61,6 +50,25 @@ void Game::GameLoop()
 		m_remainingTime -= m_minTimestep;
 		frames++;
 	}
+}
+
+void Game::Step()
+{
+	const Cell* nextCell = m_Level->GetNextCell();
+	if (nextCell->GetTeam() == 2)
+	{
+		vector<int> neighbors = getNeighborsByTeam(nextCell->GetLocation(), *m_Level);
+
+		for (size_t i = 0; i < neighbors.size(); i++)
+			cout << neighbors[i] << " ";
+		cout << endl;
+	}
+	m_Level->Update(getResult(*nextCell, *m_Level));
+	
+	m_mainWindow.clear(sf::Color::White);
+	m_Level->Draw(m_mainWindow);
+	m_mainWindow.display();
+
 }
 
 Game::~Game()

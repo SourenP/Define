@@ -19,7 +19,7 @@ private:
 	GameState m_gameState = Uninitialized;
 	sf::RenderWindow m_mainWindow;
 	void GameLoop();
-
+	void Step();
 	
 	const float m_minTimestep = sf::seconds(1.f / 2.f).asSeconds();
 	int m_maxFrames = 5;

@@ -3,9 +3,13 @@
 Level::Level(int windowSize)
 {
 	// Fill m_tileIDs with -1 
+	m_tileIDs = new int*[MAP_DIAMETER];
 	for (int i = 0; i < MAP_DIAMETER; i++)
+	{
+		m_tileIDs[i] = new int[MAP_DIAMETER];
 		for (int j = 0; j < MAP_DIAMETER; j++)
 			m_tileIDs[i][j] = -1;
+	}
 
 	float tileHeight = windowSize / MAP_DIAMETER;
 	float tileRadius = tileHeight / sqrt(3);
@@ -49,7 +53,7 @@ void Level::InitializeCells()
 
 	CreateCell(red, sf::Vector3i(0, 0, 0), 1);
 	CreateCell(red, sf::Vector3i(-1, 0, 1), 1);
-	CreateCell(green, sf::Vector3i(1, 0, -1), 1);
+	CreateCell(green, sf::Vector3i(1, 0, -1), 2);
 
 }
 
@@ -84,8 +88,11 @@ void Level::Update(Changes changes)
 bool Level::CreateCell(CellType* celltype, sf::Vector3i location, int team)
 {
 	// check if tile is full
-	if (GetTile(location)->GetCellIndex() == -1)
+	if (GetTile(location)->GetCellIndex() != -1)
+	{
+		cout << "Tried to create cell where one existed" << endl;
 		return 0;
+	}
 
 	Cell *cell = new Cell(celltype, location, team);
 
@@ -131,6 +138,18 @@ Tile* Level::GetTile(sf::Vector3i coordinates)
 	return m_tiles[currID];
 }
 
+const Tile* Level::GetConstTile(sf::Vector3i coordinates) const
+{
+	sf::Vector2i indices = indexFromCoordinates(coordinates);
+	int currID = m_tileIDs[indices.x][indices.y];
+	return m_tiles[currID];
+}
+
+int Level::GetCellIndex(sf::Vector3i coordinates) const
+{
+	return GetConstTile(coordinates)->GetCellIndex();
+}
+
 
 const Cell* Level::GetNextCell()
 {
@@ -152,22 +171,25 @@ const Cell* Level::GetNextCell()
 
 
 
-const vector<Cell*> Level::GetCellContainer() const
+const vector<Cell*>& Level::GetCellContainer() const
 {
 	return m_cells;
 }
 
-const vector<Tile*> Level::GetTileContainer() const
+const vector<Tile*>& Level::GetTileContainer() const
 {
 	return m_tiles;
 }
 
-sf::Vector2i Level::indexFromCoordinates(sf::Vector3i coordinates)
+int** Level::GetTileIDs() const
+{
+	return m_tileIDs;
+}
+
+sf::Vector2i Level::indexFromCoordinates(sf::Vector3i coordinates) const
 {
 	return sf::Vector2i(coordinates.z + MAP_SIDE_LENGTH - 1, coordinates.x + MAP_SIDE_LENGTH - 1);
 }
-
-
 
 Level::~Level()
 {
@@ -188,4 +210,10 @@ Level::~Level()
 		delete m_cellTypes[k];
 	}
 	m_cellTypes.clear();
+
+	for (int m = 0; m < MAP_DIAMETER; ++m)
+	{
+		delete[] m_tileIDs[m];
+	}
+	delete[] m_tileIDs;
 }

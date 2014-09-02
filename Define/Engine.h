@@ -7,8 +7,11 @@
 
 static int neighborOffsets[6][3] = { { +1, -1, 0 }, { +1, 0, -1 }, { 0, +1, -1 }, { -1, +1, 0 }, { -1, 0, +1 }, { 0, -1, +1 } };
 
-static const Changes getResult(const Cell& thisCell, const std::vector<Cell*>, const std::vector<Tile*>)
+static const Changes getResult(const Cell& thisCell, const Level& level)
 {
+	vector<Tile*> tiles = level.GetTileContainer();
+	vector<Cell*> cells = level.GetCellContainer();
+
 	sf::Vector3i location = thisCell.GetLocation();
 	sf::Vector3i destination = location;
 	destination.y--;
@@ -23,14 +26,20 @@ static const Changes getResult(const Cell& thisCell, const std::vector<Cell*>, c
 	return changes;
 }
 
-static vector<sf::Vector3i> getNeighbors(sf::Vector3i coordinates)
+static vector<int> getNeighborsByTeam(sf::Vector3i origin, const Level& level)
 {
-	vector<sf::Vector3i> neighborCoordinates;
+	vector<Tile*> tiles = level.GetTileContainer();
+	vector<Cell*> cells = level.GetCellContainer();
+	int** tileIDs = level.GetTileIDs();
+
+	vector<int> neighbors;
 	for (int i = 0; i < 6; i++)
 	{
-		sf::Vector3i currentV = { coordinates.x + neighborOffsets[i][0], coordinates.y + neighborOffsets[i][1], coordinates.z + neighborOffsets[i][2] };
-		neighborCoordinates.push_back(currentV);
+		sf::Vector3i currNCoordinates(origin.x + neighborOffsets[i][0], origin.y + neighborOffsets[i][1], origin.z + neighborOffsets[i][2]);
+		int currCellIndex = (level.GetConstTile(currNCoordinates)->GetCellIndex());
+		neighbors.push_back(currCellIndex == -1 ? 0 : cells[currCellIndex]->GetTeam());
 	}
-	return neighborCoordinates;
+	return neighbors;
 }
-#endif
+
+#endif 

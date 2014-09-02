@@ -19,6 +19,10 @@ class Level
 public:
 	Level(int windowSize);
 	~Level();
+
+	static const int MAP_SIDE_LENGTH = 30;
+	static const int MAP_DIAMETER = (2 * MAP_SIDE_LENGTH) - 1;
+	static const int TILE_COUNT = MAP_SIDE_LENGTH * (3 * MAP_SIDE_LENGTH - 1) - MAP_DIAMETER;
 	
 	void Draw(sf::RenderWindow&);
 	void Update(Changes changes);
@@ -26,24 +30,20 @@ public:
 	bool CreateCell(CellType *celltype, sf::Vector3i location, int team);
 	bool MoveCell(sf::Vector3i origin, sf::Vector3i destination);
 
-	Tile* GetTile(sf::Vector3i coordinates);
+	const Tile* GetConstTile(sf::Vector3i coordinates) const;
+	int GetCellIndex(sf::Vector3i coordinates) const;
 	const Cell* GetNextCell();
 
-	const vector<Cell*> GetCellContainer() const;
-	const vector<Tile*> GetTileContainer() const;
+	const vector<Cell*>& GetCellContainer() const;
+	const vector<Tile*>& GetTileContainer() const;
+	int** GetTileIDs() const;
 	
-	sf::Vector2i indexFromCoordinates(sf::Vector3i coordinates);
-	
+	sf::Vector2i indexFromCoordinates(sf::Vector3i coordinates) const;
 
 private:
 
 	Level(const Level&);
 	Level& operator=(const Level&);
-
-	static const int MAP_SIDE_LENGTH = 30;
-	static const int MAP_DIAMETER = (2 * MAP_SIDE_LENGTH) - 1;
-	static const int TILE_COUNT = MAP_SIDE_LENGTH * (3 * MAP_SIDE_LENGTH - 1) - MAP_DIAMETER;
-	int m_tileIDs[MAP_DIAMETER][MAP_DIAMETER]; // on the stack?
 
 	void InitializeCells();
 
@@ -51,6 +51,8 @@ private:
 	vector<Tile*> m_tiles;
 	vector<Cell*> m_cells;
 	vector<CellType*> m_cellTypes;
+	int **m_tileIDs;
+	Tile* GetTile(sf::Vector3i coordinates);
 
 	int cellCount = 0;
 };

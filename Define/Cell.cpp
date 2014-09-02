@@ -24,7 +24,7 @@ void Cell::SetIsAlive(bool status)
 	m_alive = status;
 }
 
-bool Cell::IsAlive()
+bool Cell::IsAlive() const
 {
 	return m_alive;
 }
@@ -40,12 +40,18 @@ sf::Vector3i Cell::GetLocation() const
 {
 	return m_location;
 }
-int Cell::GetPriority()
+
+int Cell::GetPriority() const
 {
 	return m_currentPriority;
 }
 
-int Cell::GetTypeID()
+int Cell::GetTypeID() const
 {
 	return m_type->GetID();
+}
+
+int Cell::GetTeam() const
+{
+	return m_team;
 }

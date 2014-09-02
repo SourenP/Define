@@ -9,15 +9,17 @@ public:
 	Cell(CellType *celltype, sf::Vector3i startLocation, int team);
 	//~Cell();
 
-	sf::Color GetColor() const;
-	bool setLocation(sf::Vector3i newLocation);
-	sf::Vector3i GetLocation() const;
 	int ComparePriority(const Cell& cell) const;
 
-	int GetPriority();
-	int GetTypeID();
-	bool IsAlive();
+	sf::Vector3i GetLocation() const;
+	sf::Color GetColor() const;
+	int GetPriority() const;
+	int GetTypeID() const;
+	int GetTeam() const;
+	bool IsAlive() const;
+
 	void SetIsAlive(bool status);
+	bool setLocation(sf::Vector3i newLocation);
 
 private:
 	CellType *m_type;

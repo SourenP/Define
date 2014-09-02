@@ -1,4 +1,5 @@
 #include "Tile.h"
+#include <iostream>
 
 Tile::Tile(float radius, sf::Vector2f position, sf::Vector3i coordinates)
 {
@@ -12,6 +13,7 @@ Tile::Tile(float radius, sf::Vector2f position, sf::Vector3i coordinates)
 	m_hexagon.setRotation(30); 
 	m_hexagon.setPosition(position);
 	m_coordinates = coordinates;
+	SetEmpty();
 }
 
 void Tile::Draw(sf::RenderWindow& window)
@@ -38,7 +40,7 @@ void Tile::SetEmpty()
 
 }
 
-int Tile::GetCellIndex()
+int Tile::GetCellIndex() const
 {
 	return m_cellIndex;
 }
