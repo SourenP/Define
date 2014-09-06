@@ -73,13 +73,7 @@ void Level::Update(Changes changes)
 		sf::Vector3i origin = changes.moves[i][0];
 		sf::Vector3i target = changes.moves[i][1];
 
-		Tile* originTile = GetTile(origin);
-		Tile* targetTile = GetTile(target);
-
-		m_cells[originTile->GetCellIndex()]->setLocation(target); // set cells new location
-
-		targetTile->SetCell(*m_cells[originTile->GetCellIndex()], originTile->GetCellIndex()); // set target tile index/color
-		originTile->SetEmpty();	// set origin tile index/color
+		MoveCell(origin, target);
 	}
 }
 
@@ -128,8 +122,6 @@ bool Level::MoveCell(sf::Vector3i origin, sf::Vector3i destination)
 		return 1;
 	}
 }
-
-
 
 Tile* Level::GetTile(sf::Vector3i coordinates)
 {
