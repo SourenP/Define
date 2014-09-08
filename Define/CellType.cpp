@@ -1,11 +1,10 @@
 #include "CellType.h"
 
-CellType::CellType()
+CellType::CellType(int ID, CellRule rule, sf::Color color)
 {
-	static int m_gid = 0;
-	typeColors = { sf::Color::Red, sf::Color::Green, sf::Color::Blue, sf::Color::Magenta }; // limited to 4 cell types for now
-	m_id = m_gid++;
-	m_color = typeColors[m_id];
+	m_id = ID;
+	m_rule = rule;
+	m_color = color;
 }
 
 int CellType::GetID()
@@ -16,4 +15,9 @@ int CellType::GetID()
 sf::Color CellType::GetColor()
 {
 	return m_color;
+}
+
+CellRule CellType::GetRule()
+{
+	return m_rule;
 }

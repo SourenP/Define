@@ -14,10 +14,11 @@ private:
 	Game& operator=(const Game&);
 	
 	enum GameState { Uninitialized, Playing, ShowingMenu, Exiting };
-	int m_windowSize = 800;
-	Level *m_Level;
 	GameState m_gameState = Uninitialized;
+	
 	sf::RenderWindow m_mainWindow;
+	int m_windowSize = 800;
+
 	void GameLoop();
 	void Step();
 	
@@ -26,6 +27,8 @@ private:
 	float m_remainingTime;
 	float m_time;
 	static sf::Clock m_gameClock;
+
+	Level *m_Level;
 };
 
 #endif

@@ -37,34 +37,135 @@ Level::Level(int windowSize)
 		xOffset += tileDiameter * 3.0 / 4.0;
 		c < 0 ? rowMin-- : rowMax--;
 	}
+	
+	m_cellTypeFile.open("files/CellTypes.txt");
+	LoadCellTypes(m_cellTypeFile);
+	m_cellTypeFile.close();
 
 	//testing
 	InitializeCells();
 }
 
+void Level::LoadCellTypes(ifstream& file)
+{
+	int code = 0, R, G, B, rank = 11;
+	bool noColor = false;
+	ActionType actionType;
+	char trash;
+	CellType* newCellType;
+
+	while (!file.eof())
+	{
+		file >> trash;
+		while (trash != ':')
+		{
+			file >> trash;
+		}
+		
+		/*
+		Iterate over binary code, converting into an int
+		*/
+		while (trash != 'A')
+		{
+			file >> trash;
+			if (trash == '1')
+			{
+				code += pow(2, rank);
+			}
+			rank--;
+		}
+
+		while (trash != ':')
+		{
+			file >> trash;
+		}
+
+		/*
+		Assign ActionType
+		*/
+		int temp;
+		file >> temp;
+		actionType = static_cast<ActionType>(temp);
+		file >> trash;
+		while (trash != ':')
+		{
+			file >> trash;
+			if (file.eof())
+			{
+				noColor = true;
+				break;
+			}
+				
+		}
+		/*
+		If no color  was chosen break loop
+		*/
+		if (noColor)
+			break;
+		/*
+		Read R, G, B
+		*/
+		file >> R;
+		file >> trash;
+		while (trash != ':')
+		{
+			file >> trash;
+		}
+
+		file >> G;
+		file >> trash;
+		while (trash != ':')
+		{
+			file >> trash;
+		}
+		
+		file >> B;
+		file >> trash;
+		if (file.eof())
+			break;
+		while (trash != '\n')
+		{
+			file >> trash;
+		}
+	}
+
+	CellRule rule;
+	rule.code = code;
+	rule.actionType = actionType;
+
+	if (noColor)
+	{
+		newCellType = new CellType(m_cellTypes.size(), rule);
+	}
+	else
+		newCellType = new CellType(m_cellTypes.size(), rule, sf::Color(R, G, B));
+
+	m_cellTypes.push_back(newCellType);
+}
 
 void Level::InitializeCells()
 {
-	CellType *red = new CellType();
-	CellType *green = new CellType();
+	CellRule rule;
+	rule.code = 72;
+	rule.actionType = ActionType::Move;
+
+	CellType *red = new CellType(m_cellTypes.size(), rule, sf::Color::Red);
+	CellType *green = new CellType(m_cellTypes.size(), rule);
 
 	m_cellTypes.push_back(red);
 	m_cellTypes.push_back(green);
 
-	CreateCell(red, sf::Vector3i(0, 0, 0), 1);
+	CreateCell(m_cellTypes[0], sf::Vector3i(0, 0, 0), 1);
 	CreateCell(red, sf::Vector3i(-1, 0, 1), 1);
 	CreateCell(green, sf::Vector3i(1, 0, -1), 2);
 
 }
-
-
 
 void Level::Draw(sf::RenderWindow& rw)
 {
 	for (int i = 0; i < m_tiles.size(); i++)
 		m_tiles[i]->Draw(rw);
 }
-
 
 void Level::Update(Changes changes)
 {
@@ -77,14 +178,12 @@ void Level::Update(Changes changes)
 	}
 }
 
-
-
 bool Level::CreateCell(CellType* celltype, sf::Vector3i location, int team)
 {
 	// check if tile is full
 	if (GetTile(location)->GetCellIndex() != -1)
 	{
-		cout << "Tried to create cell where one existed" << endl;
+		//cout << "Tried to create cell where one existed" << endl;
 		return 0;
 	}
 
@@ -101,7 +200,6 @@ bool Level::CreateCell(CellType* celltype, sf::Vector3i location, int team)
 
 	return 1;
 }
-
 
 bool Level::MoveCell(sf::Vector3i origin, sf::Vector3i destination)
 {
@@ -160,8 +258,6 @@ const Cell* Level::GetNextCell()
 
 	return (m_cells[nextNode.cellIndex]);
 }
-
-
 
 const vector<Cell*>& Level::GetCellContainer() const
 {

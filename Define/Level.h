@@ -3,6 +3,7 @@
 
 #include <unordered_map>
 #include <iostream>
+#include <fstream>
 #include <queue>
 
 #include "SFML\Graphics.hpp"
@@ -13,6 +14,8 @@
 
 using std::vector;
 using std::priority_queue;
+using std::cin;
+using std::ifstream;
 
 class Level
 {
@@ -46,6 +49,7 @@ private:
 	Level& operator=(const Level&);
 
 	void InitializeCells();
+	void LoadCellTypes(ifstream& file);
 
 	priority_queue<HeapNode, vector<HeapNode>, compareHeapNodes> m_priorityHeap;
 	vector<Tile*> m_tiles;
@@ -55,6 +59,7 @@ private:
 	Tile* GetTile(sf::Vector3i coordinates);
 
 	int cellCount = 0;
+	ifstream m_cellTypeFile;
 };
 
 #endif
