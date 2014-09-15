@@ -54,17 +54,18 @@ void Game::GameLoop()
 
 void Game::Step()
 {
-	const Cell* nextCell = m_Level->GetNextCell();
-	if (nextCell->GetTeam() == 2)
+	const Cell nextCell = m_Level->GetNextCell();
+	if (nextCell.GetTeam() == 2)
 	{
-		vector<int> neighbors = Engine::GetInstance().GetNeighborsByTeam(nextCell->GetLocation(), *m_Level);
+		vector<int> neighbors = Engine::GetInstance().GetNeighborsByTeam(nextCell.GetLocation(), *m_Level);
 
 		for (size_t i = 0; i < neighbors.size(); i++)
 			cout << neighbors[i] << " ";
 		cout << endl;
 	}
-	m_Level->Update(Engine::GetInstance().GetResult(*nextCell, *m_Level));
+	m_Level->Update(Engine::GetInstance().PerformMove(nextCell, *m_Level));
 	
+
 	m_mainWindow.clear(sf::Color::White);
 	m_Level->Draw(m_mainWindow);
 	m_mainWindow.display();

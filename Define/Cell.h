@@ -6,7 +6,7 @@
 class Cell
 {
 public:
-	Cell(CellType *celltype, sf::Vector3i startLocation, int team);
+	Cell(CellType& celltype, sf::Vector3i startLocation, int team);
 	//~Cell();
 
 	int ComparePriority(const Cell& cell) const;
@@ -15,14 +15,17 @@ public:
 	sf::Color GetColor() const;
 	int GetPriority() const;
 	int GetTypeID() const;
+
+	const CellType& GetCellType() const;
+
 	int GetTeam() const;
 	bool IsAlive() const;
 
 	void SetIsAlive(bool status);
-	bool setLocation(sf::Vector3i newLocation);
+	bool SetLocation(sf::Vector3i newLocation);
 
 private:
-	CellType *m_type;
+	CellType& m_type;
 	bool m_alive;
 	sf::Vector3i m_location;
 	int m_currentPriority;

@@ -1,9 +1,8 @@
 #include "Cell.h"
 #include "CellType.h"
 
-Cell::Cell(CellType *celltype, sf::Vector3i startLocation, int team)
+Cell::Cell(CellType& celltype, sf::Vector3i startLocation, int team) : m_type(celltype)
 {
-	m_type = celltype;
 	m_location = startLocation;
 	SetIsAlive(true);
 	m_currentPriority = 5;
@@ -16,7 +15,7 @@ Cell::Cell(CellType *celltype, sf::Vector3i startLocation, int team)
 
 sf::Color Cell::GetColor() const
 {
-	return m_type->GetColor();
+	return m_type.GetColor();
 }
 
 void Cell::SetIsAlive(bool status)
@@ -29,7 +28,7 @@ bool Cell::IsAlive() const
 	return m_alive;
 }
 
-bool Cell::setLocation(sf::Vector3i newLocation)
+bool Cell::SetLocation(sf::Vector3i newLocation)
 {
 	m_location = newLocation;
 	// if tileFree(newLocation)
@@ -48,7 +47,12 @@ int Cell::GetPriority() const
 
 int Cell::GetTypeID() const
 {
-	return m_type->GetID();
+	return m_type.GetID();
+}
+
+const CellType& Cell::GetCellType() const
+{
+	return m_type;
 }
 
 int Cell::GetTeam() const

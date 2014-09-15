@@ -155,9 +155,9 @@ void Level::InitializeCells()
 	m_cellTypes.push_back(red);
 	m_cellTypes.push_back(green);
 
-	CreateCell(m_cellTypes[0], sf::Vector3i(0, 0, 0), 1);
-	CreateCell(red, sf::Vector3i(-1, 0, 1), 1);
-	CreateCell(green, sf::Vector3i(1, 0, -1), 2);
+	CreateCell(*m_cellTypes[0], sf::Vector3i(4, 4, 4), 1);
+	CreateCell(*red, sf::Vector3i(-1, 0, 1), 1);
+	CreateCell(*green, sf::Vector3i(1, 0, -1), 2);
 
 }
 
@@ -178,7 +178,7 @@ void Level::Update(Changes changes)
 	}
 }
 
-bool Level::CreateCell(CellType* celltype, sf::Vector3i location, int team)
+bool Level::CreateCell(CellType& celltype, sf::Vector3i location, int team)
 {
 	// check if tile is full
 	if (GetTile(location)->GetCellIndex() != -1)
@@ -193,7 +193,7 @@ bool Level::CreateCell(CellType* celltype, sf::Vector3i location, int team)
 	HeapNode cellNode;
 	cellNode.cellIndex = cellCount;
 	cellNode.priority = cell->GetPriority();
-	m_priorityHeap.push(cellNode);
+	m_turnHeap.push(cellNode);
 
 	m_cells.push_back(cell);
 	GetTile(location)->SetCell(*cell, cellCount++);
@@ -215,7 +215,7 @@ bool Level::MoveCell(sf::Vector3i origin, sf::Vector3i destination)
 		originTile->SetEmpty();
 		destinationTile->SetCell(*m_cells[originCellIndex], originCellIndex);
 
-		m_cells[originCellIndex]->setLocation(destination);
+		m_cells[originCellIndex]->SetLocation(destination);
 
 		return 1;
 	}
@@ -223,40 +223,44 @@ bool Level::MoveCell(sf::Vector3i origin, sf::Vector3i destination)
 
 Tile* Level::GetTile(sf::Vector3i coordinates)
 {
-	sf::Vector2i indices = indexFromCoordinates(coordinates);
+	sf::Vector2i indices = IndexFromCoordinates(coordinates);
 	int currID = m_tileIDs[indices.x][indices.y];
 	return m_tiles[currID];
 }
 
-const Tile* Level::GetConstTile(sf::Vector3i coordinates) const
+const Tile& Level::GetConstTile(sf::Vector3i coordinates) const
 {
-	sf::Vector2i indices = indexFromCoordinates(coordinates);
+	sf::Vector2i indices = IndexFromCoordinates(coordinates);
 	int currID = m_tileIDs[indices.x][indices.y];
-	return m_tiles[currID];
+	return *m_tiles[currID];
 }
 
 int Level::GetCellIndex(sf::Vector3i coordinates) const
 {
-	return GetConstTile(coordinates)->GetCellIndex();
+	return GetConstTile(coordinates).GetCellIndex();
 }
 
-
-const Cell* Level::GetNextCell()
+const Cell& Level::GetNextCell()
 {
-	HeapNode nextNode = m_priorityHeap.top();
+	HeapNode nextNode = m_turnHeap.top();
 
 	//Continuing popping from heap until live cell is found
-	while (!m_priorityHeap.empty() && !m_cells[nextNode.cellIndex]->IsAlive())
+	while (!m_turnHeap.empty() && !m_cells[nextNode.cellIndex]->IsAlive())
 	{
-		m_priorityHeap.pop();
-		nextNode = m_priorityHeap.top();
+		m_turnHeap.pop();
+		nextNode = m_turnHeap.top();
 	}
-	m_priorityHeap.pop(); // pop the alive cell
+	m_turnHeap.pop(); // pop the alive cell
 	nextNode.priority -= 1; // reduce priority based on action
 	
-	m_priorityHeap.push(nextNode); // push the alive cell back
+	m_turnHeap.push(nextNode); // push the alive cell back
 
-	return (m_cells[nextNode.cellIndex]);
+	return (*m_cells[nextNode.cellIndex]);
+}
+
+const Cell& Level::GetCellByIndex(int index) const
+{
+	return *m_cells[index];
 }
 
 const vector<Cell*>& Level::GetCellContainer() const
@@ -274,7 +278,7 @@ int** Level::GetTileIDs() const
 	return m_tileIDs;
 }
 
-sf::Vector2i Level::indexFromCoordinates(sf::Vector3i coordinates) const
+sf::Vector2i Level::IndexFromCoordinates(sf::Vector3i coordinates) const
 {
 	return sf::Vector2i(coordinates.z + MAP_SIDE_LENGTH - 1, coordinates.x + MAP_SIDE_LENGTH - 1);
 }

@@ -23,43 +23,46 @@ public:
 	Level(int windowSize);
 	~Level();
 
-	static const int MAP_SIDE_LENGTH = 30;
-	static const int MAP_DIAMETER = (2 * MAP_SIDE_LENGTH) - 1;
-	static const int TILE_COUNT = MAP_SIDE_LENGTH * (3 * MAP_SIDE_LENGTH - 1) - MAP_DIAMETER;
+	static const int MAP_SIDE_LENGTH = 30; //Number of tiles on side of map
+	static const int MAP_DIAMETER = (2 * MAP_SIDE_LENGTH) - 1; //Diameter of map
+	static const int TILE_COUNT = MAP_SIDE_LENGTH * (3 * MAP_SIDE_LENGTH - 1) - MAP_DIAMETER; //Total number of tiles
 	
-	void Draw(sf::RenderWindow&);
-	void Update(Changes changes);
+	void Draw(sf::RenderWindow&); //Draws tiles
+	void Update(Changes changes); //Updates cells and tiles based on most recent changes
 	
-	bool CreateCell(CellType *celltype, sf::Vector3i location, int team);
-	bool MoveCell(sf::Vector3i origin, sf::Vector3i destination);
+	bool CreateCell(CellType& celltype, sf::Vector3i location, int team); //Creates a new Cell
+	bool MoveCell(sf::Vector3i origin, sf::Vector3i destination); //Moves cell using x,y,z coordinates
 
-	const Tile* GetConstTile(sf::Vector3i coordinates) const;
-	int GetCellIndex(sf::Vector3i coordinates) const;
-	const Cell* GetNextCell();
-
-	const vector<Cell*>& GetCellContainer() const;
-	const vector<Tile*>& GetTileContainer() const;
-	int** GetTileIDs() const;
+	const Tile& GetConstTile(sf::Vector3i coordinates) const; //Returns a tile from m_tiles
 	
-	sf::Vector2i indexFromCoordinates(sf::Vector3i coordinates) const;
+	int GetCellIndex(sf::Vector3i coordinates) const; //Returns cells index in m_cells
+	const Cell& GetNextCell(); //Returns next cell on m_turnHeap
+	const Cell& GetCellByIndex(int index) const; //Returns a cell from m_cells by index
+
+	const vector<Cell*>& GetCellContainer() const; //Retrurns m_cells
+	const vector<Tile*>& GetTileContainer() const; //Returns m_tiles
+	int** GetTileIDs() const; //Return m_tileIDs
+	
+	sf::Vector2i IndexFromCoordinates(sf::Vector3i coordinates) const; //Converts coordinates from x,y,z to i,j for 
+																	  //use with m_tileID's
 
 private:
 
 	Level(const Level&);
 	Level& operator=(const Level&);
 
-	void InitializeCells();
-	void LoadCellTypes(ifstream& file);
+	void InitializeCells(); //TEST CASE INITALIZER
+	void LoadCellTypes(ifstream& file); //Reads cell types from file
 
-	priority_queue<HeapNode, vector<HeapNode>, compareHeapNodes> m_priorityHeap;
-	vector<Tile*> m_tiles;
-	vector<Cell*> m_cells;
-	vector<CellType*> m_cellTypes;
-	int **m_tileIDs;
-	Tile* GetTile(sf::Vector3i coordinates);
+	priority_queue<HeapNode, vector<HeapNode>, compareHeapNodes> m_turnHeap; //Heap for storing cell turns
+	vector<Tile*> m_tiles; //Stores tiles
+	vector<Cell*> m_cells; //Stores cells
+	vector<CellType*> m_cellTypes; //Stores CellTypes
+	int **m_tileIDs; //Matrix that is used to keep track of which cell is where. Each ID is the index of the cell in m_cells
+	Tile* GetTile(sf::Vector3i coordinates); //Uses x,y,z to retrieve a tile
 
 	int cellCount = 0;
-	ifstream m_cellTypeFile;
+	ifstream m_cellTypeFile; //File containing CellTypes
 };
 
 #endif

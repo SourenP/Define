@@ -5,12 +5,13 @@
 #include "Cell.h"
 #include "Tile.h"
 #include "Level.h"
+#include "CellType.h"
 
 static int neighborOffsets[6][3] = { { +1, -1, 0 }, { +1, 0, -1 }, { 0, +1, -1 }, { -1, +1, 0 }, { -1, 0, +1 }, { 0, -1, +1 } };
 class Engine
 {
 public:
-	const Changes GetResult(const Cell& thisCell, const Level& level);
+	const Changes PerformMove(const Cell& thisCell, const Level& level);
 
 	vector<int> GetNeighborsByTeam(sf::Vector3i origin, const Level& level);
 
