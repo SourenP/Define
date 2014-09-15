@@ -3,12 +3,9 @@
 Level::Level(int windowSize)
 {
 	// Fill m_tileIDs with -1 
-	m_tileIDs = new int*[MAP_DIAMETER];
 	for (int i = 0; i < MAP_DIAMETER; i++)
 	{
-		m_tileIDs[i] = new int[MAP_DIAMETER];
-		for (int j = 0; j < MAP_DIAMETER; j++)
-			m_tileIDs[i][j] = -1;
+		m_tileIDs.push_back(vector<int>(MAP_DIAMETER, -1));
 	}
 
 	float tileHeight = windowSize / MAP_DIAMETER;
@@ -61,7 +58,7 @@ void Level::LoadCellTypes(ifstream& file)
 		{
 			file >> trash;
 		}
-		
+
 		/*
 		Iterate over binary code, converting into an int
 		*/
@@ -95,7 +92,7 @@ void Level::LoadCellTypes(ifstream& file)
 				noColor = true;
 				break;
 			}
-				
+
 		}
 		/*
 		If no color  was chosen break loop
@@ -118,46 +115,38 @@ void Level::LoadCellTypes(ifstream& file)
 		{
 			file >> trash;
 		}
-		
+
 		file >> B;
-		file >> trash;
+		CellRule rule;
+		rule.code = code;
+		rule.actionType = actionType;
+
+		if (noColor)
+		{
+			newCellType = new CellType(m_cellTypes.size(), rule);
+		}
+		else
+			newCellType = new CellType(m_cellTypes.size(), rule, sf::Color(R, G, B));
+
+		m_cellTypes.push_back(newCellType);
 		if (file.eof())
 			break;
-		while (trash != '\n')
-		{
-			file >> trash;
-		}
 	}
-
-	CellRule rule;
-	rule.code = code;
-	rule.actionType = actionType;
-
-	if (noColor)
-	{
-		newCellType = new CellType(m_cellTypes.size(), rule);
-	}
-	else
-		newCellType = new CellType(m_cellTypes.size(), rule, sf::Color(R, G, B));
-
-	m_cellTypes.push_back(newCellType);
 }
 
 void Level::InitializeCells()
 {
-	CellRule rule;
+	/*CellRule rule;
 	rule.code = 72;
 	rule.actionType = ActionType::Move;
 
 	CellType *red = new CellType(m_cellTypes.size(), rule, sf::Color::Red);
 	CellType *green = new CellType(m_cellTypes.size(), rule);
+	*/
+	//CreateCell(*m_cellTypes[0], sf::Vector3i(4, 4, 4), 1);
 
-	m_cellTypes.push_back(red);
-	m_cellTypes.push_back(green);
-
-	CreateCell(*m_cellTypes[0], sf::Vector3i(4, 4, 4), 1);
-	CreateCell(*red, sf::Vector3i(-1, 0, 1), 1);
-	CreateCell(*green, sf::Vector3i(1, 0, -1), 2);
+	//CreateCell(*m_cellTypes[1], sf::Vector3i(-1, 0, 1), 1);
+	CreateCell(*m_cellTypes[2], sf::Vector3i(1, 0, -1), 2);
 
 }
 
@@ -204,12 +193,12 @@ bool Level::CreateCell(CellType& celltype, sf::Vector3i location, int team)
 bool Level::MoveCell(sf::Vector3i origin, sf::Vector3i destination)
 {
 	Tile* originTile = GetTile(origin);
-	Tile* destinationTile = GetTile(destination);
 
-	if (destinationTile->GetCellIndex() != -1)
+	if (IsOutOfBounds(destination))
 		return 0;
 	else
 	{
+		Tile* destinationTile = GetTile(destination);
 		int originCellIndex = originTile->GetCellIndex();
 
 		originTile->SetEmpty();
@@ -219,6 +208,15 @@ bool Level::MoveCell(sf::Vector3i origin, sf::Vector3i destination)
 
 		return 1;
 	}
+}
+
+const bool Level::IsOutOfBounds(sf::Vector3i coordinates) const
+{
+	sf::Vector2i ij = IndexFromCoordinates(coordinates);
+	
+	if (ij.x < 0 || ij.x > MAP_DIAMETER - 1 || ij.y < 0 || ij.y > MAP_DIAMETER - 1 || (m_tileIDs[ij.x][ij.y] == -1))
+		return true;
+	return false;
 }
 
 Tile* Level::GetTile(sf::Vector3i coordinates)
@@ -273,7 +271,7 @@ const vector<Tile*>& Level::GetTileContainer() const
 	return m_tiles;
 }
 
-int** Level::GetTileIDs() const
+vector<vector<int>> Level::GetTileIDs() const
 {
 	return m_tileIDs;
 }
@@ -302,10 +300,4 @@ Level::~Level()
 		delete m_cellTypes[k];
 	}
 	m_cellTypes.clear();
-
-	for (int m = 0; m < MAP_DIAMETER; ++m)
-	{
-		delete[] m_tileIDs[m];
-	}
-	delete[] m_tileIDs;
 }

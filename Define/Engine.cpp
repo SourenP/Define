@@ -15,16 +15,17 @@ const Changes Engine::PerformMove(const Cell& currentCell, const Level& level)
 	{
 		if (rule.actionType == ActionType::Attack)
 		{
+
+		}
+		else if (rule.actionType == ActionType::Move)
+		{
+			destination.x--;
+			destination.y++;
+			destination.z++;
 		}
 	
 	}
-	else
-	{
-		destination.x--;
-		destination.y++;
-		destination.z++;
-	}
-	
+
 	std::vector<std::vector<sf::Vector3i>> moves;
 	std::vector<sf::Vector3i> move;
 	move.push_back(origin);
@@ -41,10 +42,18 @@ vector<int> Engine::GetNeighborsByTeam(sf::Vector3i origin, const Level& level)
 	vector<int> neighbors;
 	for (int i = 0; i < 6; i++)
 	{
-		sf::Vector3i currNCoordinates(origin.x + neighborOffsets[i][0], origin.y + neighborOffsets[i][1], 
+		sf::Vector3i currNeighborCoordinates(origin.x + neighborOffsets[i][0], origin.y + neighborOffsets[i][1],
 									origin.z + neighborOffsets[i][2]);
-		int currCellIndex = (level.GetConstTile(currNCoordinates).GetCellIndex());
-		neighbors.push_back(currCellIndex == -1 ? 0 : level.GetCellByIndex(currCellIndex).GetTeam());
+		if (!level.IsOutOfBounds(currNeighborCoordinates))
+		{
+			int currCellIndex = (level.GetConstTile(currNeighborCoordinates).GetCellIndex());
+			neighbors.push_back(currCellIndex == -1 ? 0 : level.GetCellByIndex(currCellIndex).GetTeam());
+		}
+		else
+		{
+			neighbors.push_back(0);
+		}
+		
 	}
 	vector<int> testVec = { 1, 2, 0, 0, 1, 2 };
 	int test = GenerateBinaryFormOfNeighbors(testVec, 1);

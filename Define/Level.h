@@ -23,7 +23,7 @@ public:
 	Level(int windowSize);
 	~Level();
 
-	static const int MAP_SIDE_LENGTH = 30; //Number of tiles on side of map
+	static const int MAP_SIDE_LENGTH = 10; //Number of tiles on side of map
 	static const int MAP_DIAMETER = (2 * MAP_SIDE_LENGTH) - 1; //Diameter of map
 	static const int TILE_COUNT = MAP_SIDE_LENGTH * (3 * MAP_SIDE_LENGTH - 1) - MAP_DIAMETER; //Total number of tiles
 	
@@ -39,9 +39,11 @@ public:
 	const Cell& GetNextCell(); //Returns next cell on m_turnHeap
 	const Cell& GetCellByIndex(int index) const; //Returns a cell from m_cells by index
 
+	const bool IsOutOfBounds(sf::Vector3i coordinates) const;//Checks if position is out of bounds
+
 	const vector<Cell*>& GetCellContainer() const; //Retrurns m_cells
 	const vector<Tile*>& GetTileContainer() const; //Returns m_tiles
-	int** GetTileIDs() const; //Return m_tileIDs
+	vector<vector<int>> GetTileIDs() const; //Return m_tileIDs
 	
 	sf::Vector2i IndexFromCoordinates(sf::Vector3i coordinates) const; //Converts coordinates from x,y,z to i,j for 
 																	  //use with m_tileID's
@@ -58,7 +60,7 @@ private:
 	vector<Tile*> m_tiles; //Stores tiles
 	vector<Cell*> m_cells; //Stores cells
 	vector<CellType*> m_cellTypes; //Stores CellTypes
-	int **m_tileIDs; //Matrix that is used to keep track of which cell is where. Each ID is the index of the cell in m_cells
+	vector<vector<int>> m_tileIDs; //Matrix that is used to keep track of which cell is where. Each ID is the index of the cell in m_cells
 	Tile* GetTile(sf::Vector3i coordinates); //Uses x,y,z to retrieve a tile
 
 	int cellCount = 0;
