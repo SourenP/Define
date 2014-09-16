@@ -19,6 +19,7 @@ Used by Engine and Level
 struct Changes
 {
 	std::vector<std::vector<sf::Vector3i>> moves; // [[origin, dest], ... ]
+	std::vector<sf::Vector3i> kills;
 };
 
 /*
@@ -43,6 +44,7 @@ Used by CellType, Level and Engine
 struct CellRule
 {
 	int code;
+	int direction;
 	ActionType actionType;
 };
 

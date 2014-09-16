@@ -4,26 +4,22 @@ const Changes Engine::PerformMove(const Cell& currentCell, const Level& level)
 {
 	sf::Vector3i origin = currentCell.GetLocation();
 	sf::Vector3i destination = origin;
-	
+	Changes changes;	
 	CellType type = currentCell.GetCellType();
 	CellRule rule = type.GetRule();
 	
 	int surroundings = GenerateBinaryFormOfNeighbors(GetNeighborsByTeam(origin, level), currentCell.GetTeam());
-	int result = surroundings & rule.code;
 
-	if (result == rule.code)
+	if (surroundings == rule.code)
 	{
+		destination.x += neighborOffsets[rule.direction][0];
+		destination.y += neighborOffsets[rule.direction][1];
+		destination.z += neighborOffsets[rule.direction][2];
 		if (rule.actionType == ActionType::Attack)
 		{
-
-		}
-		else if (rule.actionType == ActionType::Move)
-		{
-			destination.x--;
-			destination.y++;
-			destination.z++;
-		}
-	
+			sf::Vector3i kill = destination;
+			changes.kills.push_back(kill);
+		}		
 	}
 
 	std::vector<std::vector<sf::Vector3i>> moves;
@@ -32,7 +28,6 @@ const Changes Engine::PerformMove(const Cell& currentCell, const Level& level)
 	move.push_back(destination);
 	moves.push_back(move);
 
-	Changes changes;
 	changes.moves = moves;
 	return changes;
 }
@@ -47,7 +42,7 @@ vector<int> Engine::GetNeighborsByTeam(sf::Vector3i origin, const Level& level)
 		if (!level.IsOutOfBounds(currNeighborCoordinates))
 		{
 			int currCellIndex = (level.GetConstTile(currNeighborCoordinates).GetCellIndex());
-			neighbors.push_back(currCellIndex == -1 ? 0 : level.GetCellByIndex(currCellIndex).GetTeam());
+			neighbors.push_back(currCellIndex == -1 ? 0 : level.GetCell(currCellIndex).GetTeam());
 		}
 		else
 		{

@@ -31,13 +31,13 @@ public:
 	void Update(Changes changes); //Updates cells and tiles based on most recent changes
 	
 	bool CreateCell(CellType& celltype, sf::Vector3i location, int team); //Creates a new Cell
-	bool MoveCell(sf::Vector3i origin, sf::Vector3i destination); //Moves cell using x,y,z coordinates
 
 	const Tile& GetConstTile(sf::Vector3i coordinates) const; //Returns a tile from m_tiles
 	
 	int GetCellIndex(sf::Vector3i coordinates) const; //Returns cells index in m_cells
 	const Cell& GetNextCell(); //Returns next cell on m_turnHeap
-	const Cell& GetCellByIndex(int index) const; //Returns a cell from m_cells by index
+	const Cell& GetCell(int index) const; //Returns a cell from m_cells by index
+	const Cell& GetCell(sf::Vector3i coordinates) const; //Returns a cell from m_cells using sf::Vector3i coordiantes
 
 	const bool IsOutOfBounds(sf::Vector3i coordinates) const;//Checks if position is out of bounds
 
@@ -52,6 +52,9 @@ private:
 
 	Level(const Level&);
 	Level& operator=(const Level&);
+
+	bool MoveCell(sf::Vector3i origin, sf::Vector3i destination); //Moves cell using x,y,z coordinates
+	void KillCell(sf::Vector3i targetCell); //Kills cell by setting m_alive to false
 
 	void InitializeCells(); //TEST CASE INITALIZER
 	void LoadCellTypes(ifstream& file); //Reads cell types from file

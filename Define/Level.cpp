@@ -45,7 +45,7 @@ Level::Level(int windowSize)
 
 void Level::LoadCellTypes(ifstream& file)
 {
-	int code = 0, R, G, B, rank = 11;
+	int code = 0, direction, R, G, B, rank = 11;
 	bool noColor = false;
 	ActionType actionType;
 	char trash;
@@ -62,6 +62,7 @@ void Level::LoadCellTypes(ifstream& file)
 		/*
 		Iterate over binary code, converting into an int
 		*/
+		rank = 11;
 		while (trash != 'A')
 		{
 			file >> trash;
@@ -71,7 +72,9 @@ void Level::LoadCellTypes(ifstream& file)
 			}
 			rank--;
 		}
-
+		/*
+		Read until ActionType
+		*/
 		while (trash != ':')
 		{
 			file >> trash;
@@ -83,6 +86,16 @@ void Level::LoadCellTypes(ifstream& file)
 		int temp;
 		file >> temp;
 		actionType = static_cast<ActionType>(temp);
+		/*
+		Read direction of action
+		*/
+		file >> trash;
+		while (trash != ':')
+		{
+			file >> trash;
+		}
+		file >> direction;
+
 		file >> trash;
 		while (trash != ':')
 		{
@@ -120,6 +133,7 @@ void Level::LoadCellTypes(ifstream& file)
 		CellRule rule;
 		rule.code = code;
 		rule.actionType = actionType;
+		rule.direction = direction - 1;
 
 		if (noColor)
 		{
@@ -143,28 +157,12 @@ void Level::InitializeCells()
 	CellType *red = new CellType(m_cellTypes.size(), rule, sf::Color::Red);
 	CellType *green = new CellType(m_cellTypes.size(), rule);
 	*/
-	//CreateCell(*m_cellTypes[0], sf::Vector3i(4, 4, 4), 1);
 
-	//CreateCell(*m_cellTypes[1], sf::Vector3i(-1, 0, 1), 1);
-	CreateCell(*m_cellTypes[2], sf::Vector3i(1, 0, -1), 2);
-
-}
-
-void Level::Draw(sf::RenderWindow& rw)
-{
-	for (int i = 0; i < m_tiles.size(); i++)
-		m_tiles[i]->Draw(rw);
-}
-
-void Level::Update(Changes changes)
-{
-	for (int i = 0; i < changes.moves.size(); i++)
-	{
-		sf::Vector3i origin = changes.moves[i][0];
-		sf::Vector3i target = changes.moves[i][1];
-
-		MoveCell(origin, target);
-	}
+	CreateCell(*m_cellTypes[2], sf::Vector3i(0, 0, 0), 1);
+	CreateCell(*m_cellTypes[1], sf::Vector3i(-1, 0, 1), 2);
+	//CreateCell(*m_cellTypes[2], sf::Vector3i(1, 0, -1), 2);
+	//CreateCell(*m_cellTypes[3], sf::Vector3i(3, 3, -2), 1);
+	//CreateCell(*m_cellTypes[4], sf::Vector3i(-3, -3, 2), 1);
 }
 
 bool Level::CreateCell(CellType& celltype, sf::Vector3i location, int team)
@@ -190,6 +188,27 @@ bool Level::CreateCell(CellType& celltype, sf::Vector3i location, int team)
 	return 1;
 }
 
+void Level::Draw(sf::RenderWindow& rw)
+{
+	for (int i = 0; i < m_tiles.size(); i++)
+		m_tiles[i]->Draw(rw);
+}
+
+void Level::Update(Changes changes)
+{
+	for (int i = 0; i < changes.kills.size(); i++)
+	{
+		KillCell(changes.kills[i]);
+	}
+	for (int i = 0; i < changes.moves.size(); i++)
+	{
+		sf::Vector3i origin = changes.moves[i][0];
+		sf::Vector3i target = changes.moves[i][1];
+
+		MoveCell(origin, target);
+	}
+}
+
 bool Level::MoveCell(sf::Vector3i origin, sf::Vector3i destination)
 {
 	Tile* originTile = GetTile(origin);
@@ -208,6 +227,17 @@ bool Level::MoveCell(sf::Vector3i origin, sf::Vector3i destination)
 
 		return 1;
 	}
+}
+
+void Level::KillCell(sf::Vector3i targetCell)
+{
+	sf::Vector2i tileIndex = IndexFromCoordinates(targetCell);
+
+	int tileID = m_tileIDs[tileIndex.x][tileIndex.y];
+	int cellIndex = m_tiles[tileID]->GetCellIndex();
+
+	m_cells[cellIndex]->SetIsAlive(false);
+	m_tiles[tileID]->SetEmpty();
 }
 
 const bool Level::IsOutOfBounds(sf::Vector3i coordinates) const
@@ -256,8 +286,14 @@ const Cell& Level::GetNextCell()
 	return (*m_cells[nextNode.cellIndex]);
 }
 
-const Cell& Level::GetCellByIndex(int index) const
+const Cell& Level::GetCell(int index) const
 {
+	return *m_cells[index];
+}
+
+const Cell& Level::GetCell(sf::Vector3i coordinates) const
+{
+	int index = GetCellIndex(coordinates);
 	return *m_cells[index];
 }
 

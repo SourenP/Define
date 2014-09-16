@@ -7,7 +7,9 @@
 #include "Level.h"
 #include "CellType.h"
 
-static int neighborOffsets[6][3] = { { +1, -1, 0 }, { +1, 0, -1 }, { 0, +1, -1 }, { -1, +1, 0 }, { -1, 0, +1 }, { 0, -1, +1 } };
+static int neighborOffsets[6][3] = { { 0, 1, -1}, { 1, 0, -1 }, { 1, -1, 0 }, 
+									 {0, -1, 1 }, {-1, 0, 1 }, { -1, 1, 0 } 
+								   };
 class Engine
 {
 public:

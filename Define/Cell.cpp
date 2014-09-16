@@ -5,7 +5,7 @@ Cell::Cell(CellType& celltype, sf::Vector3i startLocation, int team) : m_type(ce
 {
 	m_location = startLocation;
 	SetIsAlive(true);
-	m_currentPriority = 5;
+	m_currentPriority = 4;
 	m_team = team;
 }
 
