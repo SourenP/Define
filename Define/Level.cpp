@@ -286,6 +286,29 @@ const Cell& Level::GetNextCell()
 	return (*m_cells[nextNode.cellIndex]);
 }
 
+const vector<int> Level::GetNeighborsByTeam(const Cell& cell) const
+{
+	vector<int> neighbors;
+	sf::Vector3i origin = cell.GetLocation();
+	for (int i = 0; i < 6; i++)
+	{
+		sf::Vector3i currNeighborCoordinates(origin.x + neighborOffsets[i][0], origin.y + neighborOffsets[i][1],
+									origin.z + neighborOffsets[i][2]);
+		if (!IsOutOfBounds(currNeighborCoordinates))
+		{
+			int currCellIndex = (GetConstTile(currNeighborCoordinates).GetCellIndex());
+			neighbors.push_back(currCellIndex == -1 ? 0 : GetCell(currCellIndex).GetTeam());
+		}
+		else
+		{
+			neighbors.push_back(0);
+		}
+		
+	}
+
+	return neighbors;
+}
+
 const Cell& Level::GetCell(int index) const
 {
 	return *m_cells[index];

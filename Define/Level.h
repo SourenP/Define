@@ -44,7 +44,8 @@ public:
 	const vector<Cell*>& GetCellContainer() const; //Retrurns m_cells
 	const vector<Tile*>& GetTileContainer() const; //Returns m_tiles
 	vector<vector<int>> GetTileIDs() const; //Return m_tileIDs
-	
+	const vector<int> GetNeighborsByTeam(const Cell& cell) const; //Generates a size 6 vector of the neighbors of the cell based on the cells team
+
 	sf::Vector2i IndexFromCoordinates(sf::Vector3i coordinates) const; //Converts coordinates from x,y,z to i,j for 
 																	  //use with m_tileID's
 

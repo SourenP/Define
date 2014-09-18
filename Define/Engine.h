@@ -7,15 +7,12 @@
 #include "Level.h"
 #include "CellType.h"
 
-static int neighborOffsets[6][3] = { { 0, 1, -1}, { 1, 0, -1 }, { 1, -1, 0 }, 
-									 {0, -1, 1 }, {-1, 0, 1 }, { -1, 1, 0 } 
-								   };
 class Engine
 {
 public:
-	const Changes PerformMove(const Cell& thisCell, const Level& level);
+	const Changes PerformMove(const Cell& thisCell, const vector<int> neighbors);
 
-	vector<int> GetNeighborsByTeam(sf::Vector3i origin, const Level& level);
+	//vector<int> GetNeighborsByTeam(sf::Vector3i origin, const Level& level);
 
 	static Engine& GetInstance()
 	{

@@ -5,6 +5,13 @@
 #include <vector>
 
 /*
+Offsets for get neighbors with x,y,z. First element is top and the list continues clockwise from there
+*/
+static int neighborOffsets[6][3] = { { 0, 1, -1 }, { 1, 0, -1 }, { 1, -1, 0 },
+{ 0, -1, 1 }, { -1, 0, 1 }, { -1, 1, 0 }
+};
+
+/*
 Attack - destroy cell
 Move - move towards goal
 Retreat - move towards spawn

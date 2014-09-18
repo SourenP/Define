@@ -55,7 +55,8 @@ void Game::GameLoop()
 void Game::Step()
 {
 	const Cell nextCell = m_Level->GetNextCell();
-	m_Level->Update(Engine::GetInstance().PerformMove(nextCell, *m_Level));
+	const vector<int> nextCellNeighbors = m_Level->GetNeighborsByTeam(nextCell);
+	m_Level->Update(Engine::GetInstance().PerformMove(nextCell, nextCellNeighbors));
 
 	m_mainWindow.clear(sf::Color::White);
 	m_Level->Draw(m_mainWindow);

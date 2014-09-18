@@ -1,6 +1,6 @@
 #include "Engine.h"
 
-const Changes Engine::PerformMove(const Cell& currentCell, const Level& level)
+const Changes Engine::PerformMove(const Cell& currentCell, const vector<int> neighbors)
 {
 	sf::Vector3i origin = currentCell.GetLocation();
 	sf::Vector3i destination = origin;
@@ -8,7 +8,7 @@ const Changes Engine::PerformMove(const Cell& currentCell, const Level& level)
 	CellType type = currentCell.GetCellType();
 	CellRule rule = type.GetRule();
 	
-	int surroundings = GenerateBinaryFormOfNeighbors(GetNeighborsByTeam(origin, level), currentCell.GetTeam());
+	int surroundings = GenerateBinaryFormOfNeighbors(neighbors, currentCell.GetTeam());
 
 	if (surroundings == rule.code)
 	{
@@ -32,29 +32,29 @@ const Changes Engine::PerformMove(const Cell& currentCell, const Level& level)
 	return changes;
 }
 
-vector<int> Engine::GetNeighborsByTeam(sf::Vector3i origin, const Level& level)
-{
-	vector<int> neighbors;
-	for (int i = 0; i < 6; i++)
-	{
-		sf::Vector3i currNeighborCoordinates(origin.x + neighborOffsets[i][0], origin.y + neighborOffsets[i][1],
-									origin.z + neighborOffsets[i][2]);
-		if (!level.IsOutOfBounds(currNeighborCoordinates))
-		{
-			int currCellIndex = (level.GetConstTile(currNeighborCoordinates).GetCellIndex());
-			neighbors.push_back(currCellIndex == -1 ? 0 : level.GetCell(currCellIndex).GetTeam());
-		}
-		else
-		{
-			neighbors.push_back(0);
-		}
-		
-	}
-	vector<int> testVec = { 1, 2, 0, 0, 1, 2 };
-	int test = GenerateBinaryFormOfNeighbors(testVec, 1);
-
-	return neighbors;
-}
+//vector<int> Engine::GetNeighborsByTeam(sf::Vector3i origin, const Level& level)
+//{
+//	vector<int> neighbors;
+//	for (int i = 0; i < 6; i++)
+//	{
+//		sf::Vector3i currNeighborCoordinates(origin.x + neighborOffsets[i][0], origin.y + neighborOffsets[i][1],
+//									origin.z + neighborOffsets[i][2]);
+//		if (!level.IsOutOfBounds(currNeighborCoordinates))
+//		{
+//			int currCellIndex = (level.GetConstTile(currNeighborCoordinates).GetCellIndex());
+//			neighbors.push_back(currCellIndex == -1 ? 0 : level.GetCell(currCellIndex).GetTeam());
+//		}
+//		else
+//		{
+//			neighbors.push_back(0);
+//		}
+//		
+//	}
+//	vector<int> testVec = { 1, 2, 0, 0, 1, 2 };
+//	int test = GenerateBinaryFormOfNeighbors(testVec, 1);
+//
+//	return neighbors;
+//}
 
 int Engine::GenerateBinaryFormOfNeighbors(vector<int> neighbors, int team)
 {
