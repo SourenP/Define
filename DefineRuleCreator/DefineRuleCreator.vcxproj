@@ -76,7 +76,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Helper_Functions.cpp" />
+    <ClCompile Include="Hexagon.cpp" />
+    <ClCompile Include="HexagonGenerator.cpp" />
     <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Helper_Functions.h" />
+    <ClInclude Include="Hexagon.h" />
+    <ClInclude Include="HexagonGenerator.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

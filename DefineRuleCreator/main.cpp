@@ -4,24 +4,25 @@
 #include <string>
 #include <tchar.h>
 
+#include "HexagonGenerator.h"
+
+static int windowWidth = 500;
+static int windowHeight = 500;
+
+
+
 //LPCWSTR szWindowClass = L"test";
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	PAINTSTRUCT ps;
 	HDC hdc;
-	TCHAR greeting[] = _T("Hello, World!");
-
+	HexagonGenerator hc;
+	hc.GenerateHexagons(500, 500, 25, 1);
 	switch(message)
 	{
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
-		// Here your application is laid out.
-		// For this introduction, we just print out "Hello, World!"
-		// in the top left corner.
-		TextOut(hdc,
-			5, 5,
-			greeting, _tcslen(greeting));
-		// End application-specific layout section.
+		hc.DrawHexagons(hdc);
 
 		EndPaint(hWnd, &ps);
 		break;
@@ -78,7 +79,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		szTitle,
 		WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT, CW_USEDEFAULT,
-		500, 100,
+		windowWidth, windowHeight,
 		NULL,
 		NULL,
 		hInstance,
@@ -100,6 +101,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	ShowWindow(hWnd,
 		nCmdShow);
 	UpdateWindow(hWnd);
+	
+
 
 	MSG msg;
 	while (GetMessage(&msg, NULL, 0, 0))
