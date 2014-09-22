@@ -8,7 +8,7 @@
 
 static int windowWidth = 500;
 static int windowHeight = 500;
-
+static HexagonGenerator* hc;
 
 
 //LPCWSTR szWindowClass = L"test";
@@ -16,13 +16,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	PAINTSTRUCT ps;
 	HDC hdc;
-	HexagonGenerator hc;
-	hc.GenerateHexagons(500, 500, 25, 1);
 	switch(message)
 	{
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
-		hc.DrawHexagons(hdc);
+		hc->DrawHexagons(hdc);
 
 		EndPaint(hWnd, &ps);
 		break;
@@ -42,7 +40,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	WNDCLASSEX wcex;
 	static TCHAR szWindowClass[] = _T("Test");
 	static TCHAR szTitle[] = _T("Win32 tour");
-
+	
 	wcex.cbSize			= sizeof(WNDCLASSEX);
 	wcex.style			= CS_HREDRAW | CS_VREDRAW;
 	wcex.lpfnWndProc	= WndProc;
@@ -95,6 +93,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		return 1;
 	}
 
+	//Debug
+	FILE *conin, *conout;
+	AllocConsole();
+	freopen_s(&conin, "conin$", "r", stdin);
+	freopen_s(&conout, "conout$", "w", stdout);
+	freopen_s(&conout, "conout$", "w", stderr);
+	hc = new HexagonGenerator;
+	hc->GenerateHexagons(500, 500, 25, 5);
+
 	// The parameters to ShowWindow explained:
 	// hWnd: the value returned from CreateWindow
 	// nCmdShow: the fourth parameter from WinMain
@@ -102,15 +109,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		nCmdShow);
 	UpdateWindow(hWnd);
 	
-
-
 	MSG msg;
 	while (GetMessage(&msg, NULL, 0, 0))
 	{
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 	}
-
+	delete hc;
 	return (int)msg.wParam;
 }
 

@@ -3,13 +3,17 @@
 
 #include <Windows.h>
 #include <vector>
-
+#include <queue>
+#include <iostream>
 #include "Hexagon.h"
 
+//using std::cout;
+using std::endl;
 using std::vector;
 using std::pair;
+using std::queue;
 
-static const int hexNeighbors[6][2] = { { 0, -1 }, { 1, -1 }, { 1, 0 }, { 0, 1 }, { -1, 1 }, { -1, 0 } };
+static const int hexNeighbors[6][2] = { { -1, 0 }, { -1, 1 }, { 0, 1 }, { 1, 0 }, { 1, -1 }, { 0, -1 } };
 
 class HexagonGenerator
 {
@@ -20,19 +24,34 @@ public:
 
 	void DrawHexagons(HDC& hdc) const; //Draws all hexagons
 private:
-	
+	struct HexNode //Structure used to populate map, hold the coordinates, the indicies inside m_hexMap and the ring depth of a hexagon
+	{
+		HexNode();
+		HexNode(POINT p, pair<int, int> i, int d)
+		{
+			coordinates = p;
+			indicies = i;
+			depth = d;
+		}
+		POINT coordinates;
+		pair<int, int> indicies;
+		int depth;
+	};
 
 	HexagonGenerator& operator=(HexagonGenerator& hexGen);
 	HexagonGenerator(HexagonGenerator& hexGen);
-	void SeedHexagon(const POINT& origin, pair<int, int> indicies, int depth);
+
+	void SeedHexagon(const HexNode&); //Recursive method for populating map
 
 	static const unsigned int DEFAULT_RINGS = 1;
 	static const double DEFAULT_RADIUS;
 	int m_rings; //How many "rings" of neightbors to draw
-	double m_hexagonRadius;
-	double m_ringDistance;
-	vector<Hexagon*> m_hexagons;
+	double m_hexagonRadius; //Hexagon radius
+	double m_ringDistance; //Distance between rings
+	vector<Hexagon*> m_hexagons; //Container for hexagons
 	vector<vector<int>> m_hexMap; //Map denoting filled hexes
+
+	queue<HexNode> m_toBeSeeded; //Queue used by SeedHexagon to create map
 };
 
 #endif
