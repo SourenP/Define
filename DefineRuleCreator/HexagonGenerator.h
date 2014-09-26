@@ -7,7 +7,7 @@
 #include <iostream>
 #include "Hexagon.h"
 
-//using std::cout;
+using std::cout;
 using std::endl;
 using std::vector;
 using std::pair;
@@ -20,6 +20,8 @@ class HexagonGenerator
 public:
 	HexagonGenerator() {};
 	~HexagonGenerator();
+
+	void CycleHexagon();
 	void GenerateHexagons(int screenWidth, int screenHeight, double radius = DEFAULT_RADIUS, unsigned int rings = DEFAULT_RINGS); //Creates hexigons, centered in the middle of the window. The number of rings of hexagons is based on the rings varaiable. 
 
 	void DrawHexagons(HDC& hdc) const; //Draws all hexagons
@@ -41,7 +43,7 @@ private:
 	HexagonGenerator& operator=(HexagonGenerator& hexGen);
 	HexagonGenerator(HexagonGenerator& hexGen);
 
-	void SeedHexagon(const HexNode&); //Recursive method for populating map
+	void SeedHexagon(const HexNode& currentSeed);//, queue<HexNode>& seedQueue); //Recursive method for populating map. Requires currentSeed and the queue vector
 
 	static const unsigned int DEFAULT_RINGS = 1;
 	static const double DEFAULT_RADIUS;
@@ -50,8 +52,7 @@ private:
 	double m_ringDistance; //Distance between rings
 	vector<Hexagon*> m_hexagons; //Container for hexagons
 	vector<vector<int>> m_hexMap; //Map denoting filled hexes
-
-	queue<HexNode> m_toBeSeeded; //Queue used by SeedHexagon to create map
+	queue<HexNode> seedQueue;
 };
 
 #endif

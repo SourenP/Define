@@ -16,12 +16,21 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	PAINTSTRUCT ps;
 	HDC hdc;
+	RECT* wind = new RECT;
 	switch(message)
 	{
+	case WM_LBUTTONDOWN:
+		hc->CycleHexagon();
+		
+		wind->left = 224;
+		wind->top = 224;
+		wind->right = 150;
+		wind->bottom = 150;
+		InvalidateRect(hWnd, wind, true);
+		break;
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
 		hc->DrawHexagons(hdc);
-
 		EndPaint(hWnd, &ps);
 		break;
 	case WM_DESTROY:
@@ -31,7 +40,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		return DefWindowProc(hWnd, message, wParam, lParam);
 		break;
 	}
-
+	delete wind;
 	return 0;
 }
 
@@ -99,8 +108,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	freopen_s(&conin, "conin$", "r", stdin);
 	freopen_s(&conout, "conout$", "w", stdout);
 	freopen_s(&conout, "conout$", "w", stderr);
+
 	hc = new HexagonGenerator;
-	hc->GenerateHexagons(500, 500, 25, 5);
+	hc->GenerateHexagons(500, 500, 25, 2);
 
 	// The parameters to ShowWindow explained:
 	// hWnd: the value returned from CreateWindow

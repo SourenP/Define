@@ -3,7 +3,13 @@
 
 #include <Windows.h>
 #include <math.h>
+#include <string>
+#include<tchar.h>
+
 #include "Helper_Functions.h"
+
+
+using std::string;
 
 class Hexagon
 {
@@ -14,10 +20,22 @@ public:
 
 	void Draw(HDC& hdc) const;
 
-private:	
+	void CycleState();
+	
+private:
+	static const LPCWSTR m_labels[3];
+
+	static const enum  HexagonState
+	{
+		Empty = 0,
+		Ally = 1,
+		Enemy = 2,
+	};
+	
 	POINT m_origin;
 	double m_radius;
 	POINT m_vertices[6];
+	HexagonState m_state;
 };
 
 #endif
