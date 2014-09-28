@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string>
 #include <tchar.h>
+#include <fstream>
 
 #include "HexagonGenerator.h"
 
@@ -10,26 +11,52 @@ static int windowWidth = 500;
 static int windowHeight = 500;
 static HexagonGenerator* hc;
 
+void GenerateCellType()
+{
+	std::ofstream file;
+	file.open("../Define/files/CellTypes.txt", std::ios_base::app | std::ofstream::out);
+	if (!file)
+	{
+		cout << "whoops";
+	}
+	
+	string newRule = hc->GetRule();
+	file << newRule;
+	file.close();
+}
+
+void ActivateConsole()
+{
+	FILE *conin, *conout;
+	AllocConsole();
+	freopen_s(&conin, "conin$", "r", stdin);
+	freopen_s(&conout, "conout$", "w", stdout);
+	freopen_s(&conout, "conout$", "w", stderr);
+}
 
 //LPCWSTR szWindowClass = L"test";
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	PAINTSTRUCT ps;
 	HDC hdc;
-	RECT* wind = new RECT;
+	RECT wind;
+	POINT mouse;
 	switch(message)
 	{
+	case WM_KEYDOWN:
+		GenerateCellType();
+		break;
 	case WM_LBUTTONDOWN:
-		hc->CycleHexagon();
-		
-		wind->left = 224;
-		wind->top = 224;
-		wind->right = 150;
-		wind->bottom = 150;
-		InvalidateRect(hWnd, wind, true);
+		GetCursorPos(&mouse);
+		ScreenToClient(hWnd, &mouse);
+		wind = hc->CycleClickedHexagon(mouse);
+		InvalidateRect(hWnd,&wind, true);
 		break;
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
+		GetCursorPos(&mouse);
+		ScreenToClient(hWnd, &mouse);
+		SetPixel(hdc, mouse.x, mouse.y, RGB(255, 55, 5));
 		hc->DrawHexagons(hdc);
 		EndPaint(hWnd, &ps);
 		break;
@@ -40,7 +67,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		return DefWindowProc(hWnd, message, wParam, lParam);
 		break;
 	}
-	delete wind;
 	return 0;
 }
 
@@ -69,7 +95,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		
 		return 1;
 	}
-
 	
 	// The parameters to CreateWindow explained:
 	// szWindowClass: the name of the application
@@ -102,19 +127,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		return 1;
 	}
 
-	//Debug
-	FILE *conin, *conout;
-	AllocConsole();
-	freopen_s(&conin, "conin$", "r", stdin);
-	freopen_s(&conout, "conout$", "w", stdout);
-	freopen_s(&conout, "conout$", "w", stderr);
+	ActivateConsole();
 
 	hc = new HexagonGenerator;
-	hc->GenerateHexagons(500, 500, 25, 2);
+	hc->GenerateHexagons(500, 500, 25, 1);
 
-	// The parameters to ShowWindow explained:
-	// hWnd: the value returned from CreateWindow
-	// nCmdShow: the fourth parameter from WinMain
 	ShowWindow(hWnd,
 		nCmdShow);
 	UpdateWindow(hWnd);
@@ -128,5 +145,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	delete hc;
 	return (int)msg.wParam;
 }
+
 
 

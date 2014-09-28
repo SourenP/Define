@@ -19,15 +19,24 @@ const POINT Hexagon::GetOrigin() const
 	return m_origin;
 }
 
+const Hexagon::HexagonState Hexagon::GetState() const
+{
+	return m_state;
+}
+
 void Hexagon::Draw(HDC& hdc) const
 {
 	Polygon(hdc, m_vertices, 6);
-	if (m_state == Enemy)
-	{
-		LPCWSTR text2 = L"Hi";
-	}
-	LPCWSTR text = m_labels[m_state];
-	TextOut(hdc, m_origin.x - 20, m_origin.y - 10, text, _tclen(text));
+
+/*	std::wstring mywstring(m_labels[m_state]);
+	std::wstring myString = std::to_wstring(m_origin.x) + L", " + std::to_wstring(m_origin.y);
+	std::wstring concatted_stdstr =myString;
+	LPCWSTR text  = concatted_stdstr.c_str();
+	HFONT hFont, hTmp;
+	hFont = CreateFont(12, 0, 0, 0, FW_BOLD, 0, 0, 0, 0, 0, 0, 2, 0, L"SYSTEM_FIXED_FONT");
+	hTmp = (HFONT)SelectObject(hdc, hFont);*/
+	LPCWSTR text = m_labels[m_state] ;
+	TextOut(hdc, m_origin.x - 5, m_origin.y - 8, text, 1);
 }
 
 void Hexagon::CycleState()

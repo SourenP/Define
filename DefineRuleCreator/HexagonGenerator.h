@@ -13,7 +13,7 @@ using std::vector;
 using std::pair;
 using std::queue;
 
-static const int hexNeighbors[6][2] = { { -1, 0 }, { -1, 1 }, { 0, 1 }, { 1, 0 }, { 1, -1 }, { 0, -1 } };
+static const int hexNeighbors[6][2] = { { 1, 0 }, { 1, -1 }, { 0, -1 }, { -1, 0 }, { -1, 1 }, { 0, 1 } };
 
 class HexagonGenerator
 {
@@ -21,9 +21,9 @@ public:
 	HexagonGenerator() {};
 	~HexagonGenerator();
 
-	void CycleHexagon();
 	void GenerateHexagons(int screenWidth, int screenHeight, double radius = DEFAULT_RADIUS, unsigned int rings = DEFAULT_RINGS); //Creates hexigons, centered in the middle of the window. The number of rings of hexagons is based on the rings varaiable. 
-
+	RECT& CycleClickedHexagon(const POINT& mouseCoordinates);
+	string GetRule();
 	void DrawHexagons(HDC& hdc) const; //Draws all hexagons
 private:
 	struct HexNode //Structure used to populate map, hold the coordinates, the indicies inside m_hexMap and the ring depth of a hexagon
@@ -40,9 +40,11 @@ private:
 		int depth;
 	};
 
+	pair<int, int> RoundToNearestHexagon(double i, double j);
+
 	HexagonGenerator& operator=(HexagonGenerator& hexGen);
 	HexagonGenerator(HexagonGenerator& hexGen);
-
+	void CycleHexagon();
 	void SeedHexagon(const HexNode& currentSeed);//, queue<HexNode>& seedQueue); //Recursive method for populating map. Requires currentSeed and the queue vector
 
 	static const unsigned int DEFAULT_RINGS = 1;
