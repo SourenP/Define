@@ -100,7 +100,25 @@ RECT& HexagonGenerator::CycleClickedHexagon(const POINT& mouseCoordinates)
 	double realIndexI = (((-1 * (mouseX - 225))/ 3) + ((sqrt(3) * (mouseY - 225)) / 3)) / m_hexagonRadius;
 	double realIndexJ = (2 * (mouseX - 225) / (3 * m_hexagonRadius));
 	pair<int, int> roundedIndicies = RoundToNearestHexagon(realIndexI, realIndexJ);
+
+	if (IsOutOfMapBounds(roundedIndicies))
+	{
+		repaintRect.left = 0;
+		repaintRect.top = 0;
+		repaintRect.bottom = 0;
+		repaintRect.right = 0;
+		return repaintRect;
+	}
+
 	int targetI = roundedIndicies.first, targetJ = roundedIndicies.second;
+	if (m_hexMap[targetI][targetJ] - 1 < 0)
+	{
+		repaintRect.left = 0;
+		repaintRect.top = 0;
+		repaintRect.bottom = 0;
+		repaintRect.right = 0;
+		return repaintRect;
+	}
 	target = m_hexagons[m_hexMap[targetI][targetJ] - 1];
 	POINT targetOrigin = target->GetOrigin();
 
@@ -115,20 +133,17 @@ RECT& HexagonGenerator::CycleClickedHexagon(const POINT& mouseCoordinates)
 	{
 		targetI = (roundedIndicies.first + hexNeighbors[i][0]);
 		targetJ = (roundedIndicies.second + hexNeighbors[i][1]);
-		if (!(targetJ < 0 || targetJ > m_hexMap.size() - 1))
+		if (!IsOutOfMapBounds(pair<int, int>(targetI, targetJ)))
 		{
-			if (!(targetI < 0 || targetI > m_hexMap.size() - 1))
+			if (m_hexMap[targetI][targetJ] != 0)
 			{
-				if (m_hexMap[targetI][targetJ] != 0)
-				{
-					targetOrigin = m_hexagons[m_hexMap[targetI][targetJ] - 1]->GetOrigin();
-					currDist = CalculateAbsDistance(targetOrigin, mouseCoordinates);
+				targetOrigin = m_hexagons[m_hexMap[targetI][targetJ] - 1]->GetOrigin();
+				currDist = CalculateAbsDistance(targetOrigin, mouseCoordinates);
 
-					if (currDist < minDist)
-					{
-						minDist = currDist;
-						target = m_hexagons[m_hexMap[targetI][targetJ] - 1];
-					}
+				if (currDist < minDist)
+				{
+					minDist = currDist;
+					target = m_hexagons[m_hexMap[targetI][targetJ] - 1];
 				}
 			}
 		}
@@ -141,6 +156,15 @@ RECT& HexagonGenerator::CycleClickedHexagon(const POINT& mouseCoordinates)
 	repaintRect.bottom = 500;
 	
 	return repaintRect;
+}
+
+bool HexagonGenerator::IsOutOfMapBounds(pair<int, int> indicies)
+{
+	if (indicies.first < 0 || indicies.first > m_hexMap.size() - 1)
+		return true;
+	if (indicies.second < 0 || indicies.second > m_hexMap.size() - 1)
+		return true;
+	return false;
 }
 
 pair<int, int> HexagonGenerator::RoundToNearestHexagon(double i, double j)

@@ -130,7 +130,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	ActivateConsole();
 
 	hc = new HexagonGenerator;
-	hc->GenerateHexagons(500, 500, 25, 1);
+	hc->GenerateHexagons(500, 500, 25, 5);
 
 	ShowWindow(hWnd,
 		nCmdShow);

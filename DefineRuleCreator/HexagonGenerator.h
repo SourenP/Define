@@ -41,7 +41,7 @@ private:
 	};
 
 	pair<int, int> RoundToNearestHexagon(double i, double j);
-
+	bool IsOutOfMapBounds( pair<int, int> indicies);
 	HexagonGenerator& operator=(HexagonGenerator& hexGen);
 	HexagonGenerator(HexagonGenerator& hexGen);
 	void CycleHexagon();
