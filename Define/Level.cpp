@@ -158,8 +158,8 @@ void Level::InitializeCells()
 	CellType *green = new CellType(m_cellTypes.size(), rule);
 	*/
 
-	CreateCell(*m_cellTypes[2], sf::Vector3i(0, 0, 0), 1);
-	CreateCell(*m_cellTypes[1], sf::Vector3i(-1, 0, 1), 2);
+	CreateCell(*m_cellTypes[0], sf::Vector3i(0, 0, 0), 1);
+	//CreateCell(*m_cellTypes[1], sf::Vector3i(-1, 0, 1), 2);
 	//CreateCell(*m_cellTypes[2], sf::Vector3i(1, 0, -1), 2);
 	//CreateCell(*m_cellTypes[3], sf::Vector3i(3, 3, -2), 1);
 	//CreateCell(*m_cellTypes[4], sf::Vector3i(-3, -3, 2), 1);
@@ -235,9 +235,12 @@ void Level::KillCell(sf::Vector3i targetCell)
 
 	int tileID = m_tileIDs[tileIndex.x][tileIndex.y];
 	int cellIndex = m_tiles[tileID]->GetCellIndex();
-
-	m_cells[cellIndex]->SetIsAlive(false);
-	m_tiles[tileID]->SetEmpty();
+	if (cellIndex != -1)
+	{
+		m_cells[cellIndex]->SetIsAlive(false);
+		m_tiles[tileID]->SetEmpty();
+	}
+	
 }
 
 const bool Level::IsOutOfBounds(sf::Vector3i coordinates) const
