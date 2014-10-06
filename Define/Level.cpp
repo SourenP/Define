@@ -53,6 +53,7 @@ void Level::LoadCellTypes(ifstream& file)
 
 	while (!file.eof())
 	{
+		code = 0;
 		file >> trash;
 		while (trash != ':')
 		{
