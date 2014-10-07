@@ -195,25 +195,44 @@ string HexagonGenerator::GetRule()
 {
 	string result;
 	result += "C:";
-	for (int i = 0; i < m_hexagons.size(); ++i)
+	for (int i = 1; i < m_hexagons.size(); ++i)
 	{
 		if (m_hexagons[i]->GetState() == Hexagon::HexagonState::Empty)
 		{
-			result += "00";
+			result += "0";
 		}
 		else if (m_hexagons[i]->GetState() == Hexagon::HexagonState::Enemy)
 		{
-			result += "01";
+			result += "1";
 		}
 		else
 		{
-			result += "10";
+			result += "2";
 		}
 	}
 
 	result += " A:1 D:2 R:0 G:0 B:255 \n";
 
 	return result;
+}
+
+void HexagonGenerator::SaveRule()
+{
+	/*CellRule newRule;
+	newRule.actionType = ActionType::Move;
+	newRule.direction = 1;
+	int code;
+	for (int i = 1; i < m_hexagons.size(); ++i)
+	{
+		if (m_hexagons[i]->GetState() == Hexagon::HexagonState::Enemy)
+		{
+			code += 
+		}
+		else
+		{
+			result += "10";
+		}
+	}*/
 }
 
 void HexagonGenerator::CycleHexagon()

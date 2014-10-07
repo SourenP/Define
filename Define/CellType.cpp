@@ -1,9 +1,9 @@
 #include "CellType.h"
 
-CellType::CellType(int ID, CellRule rule, sf::Color color)
+CellType::CellType(int ID, vector<CellRule> rule, sf::Color color)
 {
 	m_id = ID;
-	m_rule = rule;
+	m_rules = rule;
 	m_color = color;
 }
 
@@ -17,7 +17,12 @@ sf::Color CellType::GetColor()
 	return m_color;
 }
 
-CellRule CellType::GetRule()
+int CellType::GetNumberOfRules()
 {
-	return m_rule;
+	return m_rules.size();
+}
+
+CellRule CellType::GetRule(int index)
+{
+	return m_rules[index];
 }

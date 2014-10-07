@@ -5,10 +5,17 @@
 #include <tchar.h>
 #include <fstream>
 
+#include "tinyxml2.h"
 #include "HexagonGenerator.h"
 
-static int windowWidth = 500;
-static int windowHeight = 500;
+#define ACCEPT_RULE_BUTTON 101
+#define ACCEPT_CELLTYPE_BUTTON 102
+
+HWND hAcceptRuleButton;
+HWND hAcceptCellTypeButton;
+int windowWidth = 500;
+int windowHeight = 500;
+
 static HexagonGenerator* hc;
 
 void GenerateCellType()
@@ -43,8 +50,29 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	POINT mouse;
 	switch(message)
 	{
-	case WM_KEYDOWN:
-		GenerateCellType();
+	case WM_CREATE:
+		hAcceptRuleButton = CreateWindowEx(WS_EX_WINDOWEDGE, L"BUTTON", L"Accept Rule",
+			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 20, 50, 80, 30, hWnd, (HMENU)ACCEPT_RULE_BUTTON,
+			GetModuleHandle(NULL), NULL);
+		hAcceptCellTypeButton = CreateWindowEx(WS_EX_WINDOWEDGE, L"BUTTON", L"Accept Cell Type",
+			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 20, 90, 80, 30, hWnd, (HMENU)ACCEPT_CELLTYPE_BUTTON,
+			GetModuleHandle(NULL), NULL);
+		break;
+	case WM_COMMAND:
+		switch LOWORD(wParam) //the ID is is wParam
+		{
+			case ACCEPT_CELLTYPE_BUTTON: //check for our button ID
+			{
+				// Static labels dont do messages
+				//we can set the text directly though
+				GenerateCellType();
+				break;
+			}
+			case ACCEPT_RULE_BUTTON:
+			{
+
+			}
+		}
 		break;
 	case WM_LBUTTONDOWN:
 		GetCursorPos(&mouse);
@@ -127,15 +155,18 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		return 1;
 	}
 
+	
+
 	ActivateConsole();
 
 	hc = new HexagonGenerator;
-	hc->GenerateHexagons(500, 500, 25, 5);
+	hc->GenerateHexagons(500, 500, 25, 2);
 
 	ShowWindow(hWnd,
 		nCmdShow);
 	UpdateWindow(hWnd);
-	
+
+
 	MSG msg;
 	while (GetMessage(&msg, NULL, 0, 0))
 	{

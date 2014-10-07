@@ -158,9 +158,10 @@ void Level::InitializeCells()
 	CellType *green = new CellType(m_cellTypes.size(), rule);
 	*/
 
-	CreateCell(*m_cellTypes[0], sf::Vector3i(0, 0, 0), 1);
-	CreateCell(*m_cellTypes[1], sf::Vector3i(0, 1, -1), 2);
-	CreateCell(*m_cellTypes[2], sf::Vector3i(0, 5, -5), 3);
+	CreateCell(*m_cellTypes[0], sf::Vector3i(-3, -3, -3), 1);
+	CreateCell(*m_cellTypes[1], sf::Vector3i(0, 2, -2), 2);
+	CreateCell(*m_cellTypes[2], sf::Vector3i(0, 5, -5), 1);
+
 	//CreateCell(*m_cellTypes[3], sf::Vector3i(3, 3, -2), 1);
 	//CreateCell(*m_cellTypes[4], sf::Vector3i(-3, -3, 2), 1);
 }

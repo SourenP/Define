@@ -52,6 +52,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\Zareh\Documents\GitHub\Define;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -76,12 +77,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\tinyxml2-master\tinyxml2.cpp" />
     <ClCompile Include="Helper_Functions.cpp" />
     <ClCompile Include="Hexagon.cpp" />
     <ClCompile Include="HexagonGenerator.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\tinyxml2-master\tinyxml2.h" />
     <ClInclude Include="Helper_Functions.h" />
     <ClInclude Include="Hexagon.h" />
     <ClInclude Include="HexagonGenerator.h" />
