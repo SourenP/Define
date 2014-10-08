@@ -1,5 +1,6 @@
 #ifndef CELLTYPE_H
 #define CELLTYPE_H
+
 #include "SFML\Graphics.hpp"
 
 #include "define_structs.h"
@@ -10,7 +11,6 @@ class CellType
 {
 public:
 	CellType(int ID, vector<CellRule> rule, sf::Color color = sf::Color::Green);
-
 	int GetID();
 	sf::Color GetColor();
 	int GetPriority();

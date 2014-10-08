@@ -7,7 +7,7 @@
 #include <iostream>
 
 #include "Hexagon.h"
-//#include "Define\CellType.h"
+#include "Define\CellType.h"
 
 using std::cout;
 using std::endl;
@@ -25,9 +25,12 @@ public:
 
 	void GenerateHexagons(int screenWidth, int screenHeight, double radius = DEFAULT_RADIUS, unsigned int rings = DEFAULT_RINGS); //Creates hexigons, centered in the middle of the window. The number of rings of hexagons is based on the rings varaiable. 
 	RECT& CycleClickedHexagon(const POINT& mouseCoordinates);
-	void SaveRule();
-	string GetRule();
+
+	void SaveRule(); //Saves rule to CellType
+	string GenerateCellType(); //Save CellType
+
 	void DrawHexagons(HDC& hdc) const; //Draws all hexagons
+
 private:
 	struct HexNode //Structure used to populate map, hold the coordinates, the indicies inside m_hexMap and the ring depth of a hexagon
 	{
@@ -59,8 +62,8 @@ private:
 	vector<vector<int>> m_hexMap; //Map denoting filled hexes
 	queue<HexNode> seedQueue;
 	
-	//vector<CellType> m_cellTypes; //Stores all created Cell Types. A Cell Type is created when the "Accept Cell Type" button is clicked
-	//vector<CellRule> m_storedRules; //Stores all the rules created. A CellRule is created when the "Accept Rule" button is clicked.
+	vector<CellType*> m_cellTypes; //Stores all created Cell Types. A Cell Type is created when the "Accept Cell Type" button is clicked
+	vector<CellRule> m_storedRules; //Stores all the rules created. A CellRule is created when the "Accept Rule" button is clicked.
 									//When the "Accept Cell Type" button is clicked all CellRules are aded to the new CellType and this vector is emptied
 };
 

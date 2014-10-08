@@ -138,10 +138,10 @@ void Level::LoadCellTypes(ifstream& file)
 
 		if (noColor)
 		{
-			newCellType = new CellType(m_cellTypes.size(), rule);
+			//newCellType = new CellType(m_cellTypes.size(), rule);
 		}
 		else
-			newCellType = new CellType(m_cellTypes.size(), rule, sf::Color(R, G, B));
+			//newCellType = new CellType(m_cellTypes.size(), rule, sf::Color(R, G, B));
 
 		m_cellTypes.push_back(newCellType);
 		if (file.eof())

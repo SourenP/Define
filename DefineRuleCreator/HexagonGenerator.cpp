@@ -191,48 +191,61 @@ pair<int, int> HexagonGenerator::RoundToNearestHexagon(double i, double j)
 	return pair<int, int>(rx + m_hexMap.size()/2, rz + m_hexMap.size()/2);
 }
 
-string HexagonGenerator::GetRule()
+string HexagonGenerator::GenerateCellType()
 {
+	CellType* newCellType  = new CellType(m_cellTypes.size(), m_storedRules);
 	string result;
 	result += "C:";
 	for (int i = 1; i < m_hexagons.size(); ++i)
 	{
 		if (m_hexagons[i]->GetState() == Hexagon::HexagonState::Empty)
 		{
-			result += "0";
+			result += "00";
 		}
 		else if (m_hexagons[i]->GetState() == Hexagon::HexagonState::Enemy)
 		{
-			result += "1";
+			result += "01";
 		}
 		else
 		{
-			result += "2";
+			result += "10";
 		}
 	}
 
-	result += " A:1 D:2 R:0 G:0 B:255 \n";
+	result = newCellType->GetID();
+
+	m_cellTypes.push_back(newCellType);
+	m_storedRules.empty();
+
 
 	return result;
 }
 
 void HexagonGenerator::SaveRule()
 {
-	/*CellRule newRule;
+	CellRule newRule;
+	int code =0 ;
+	int index = 0;
+
 	newRule.actionType = ActionType::Move;
 	newRule.direction = 1;
-	int code;
+
 	for (int i = 1; i < m_hexagons.size(); ++i)
 	{
 		if (m_hexagons[i]->GetState() == Hexagon::HexagonState::Enemy)
 		{
-			code += 
+			code += pow(2, index);
 		}
-		else
+		else if (m_hexagons[i]->GetState() == Hexagon::HexagonState::Ally)
 		{
-			result += "10";
+			code += pow(2, index + 1);
 		}
-	}*/
+		index += 2;
+	}
+
+	newRule.code = code;
+	
+	m_storedRules.push_back(newRule);
 }
 
 void HexagonGenerator::CycleHexagon()

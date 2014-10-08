@@ -27,7 +27,7 @@ void GenerateCellType()
 		cout << "whoops";
 	}
 	
-	string newRule = hc->GetRule();
+	string newRule = hc->GenerateCellType();
 	file << newRule;
 	file.close();
 }
@@ -70,7 +70,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			}
 			case ACCEPT_RULE_BUTTON:
 			{
-
+				hc->SaveRule();
+				break;
 			}
 		}
 		break;
@@ -160,7 +161,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	ActivateConsole();
 
 	hc = new HexagonGenerator;
-	hc->GenerateHexagons(500, 500, 25, 2);
+	hc->GenerateHexagons(500, 500, 25, 1);
 
 	ShowWindow(hWnd,
 		nCmdShow);
