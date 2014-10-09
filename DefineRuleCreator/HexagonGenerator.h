@@ -8,6 +8,7 @@
 
 #include "Hexagon.h"
 #include "Define\CellType.h"
+#include "tinyxml2.h"
 
 using std::cout;
 using std::endl;

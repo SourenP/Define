@@ -1,0 +1,6 @@
+<CellTypeDoc>
+    <CellTypes>
+        <CellType Code="101010101010" Action="2" Direction="1"></CellType>
+        <CellType Code="101010101010" Action="2" Direction="1"></CellType>
+    </CellTypes>
+</CellTypeDoc>

@@ -88,7 +88,6 @@ void HexagonGenerator::SeedHexagon(const HexNode& nextNode)//, queue<HexNode>& s
 	}
 }
 
-
 RECT& HexagonGenerator::CycleClickedHexagon(const POINT& mouseCoordinates)
 {
 	RECT repaintRect;
@@ -192,10 +191,53 @@ pair<int, int> HexagonGenerator::RoundToNearestHexagon(double i, double j)
 }
 
 string HexagonGenerator::GenerateCellType()
-{
-	CellType* newCellType  = new CellType(m_cellTypes.size(), m_storedRules);
+{		
+
+	tinyxml2::XMLDocument xmlDoc;
+	
+	tinyxml2::XMLNode * pRoot = xmlDoc.NewElement("CellTypeDoc");
+	xmlDoc.InsertFirstChild(pRoot);
+
+	tinyxml2::XMLElement * pElement = xmlDoc.NewElement("CellTypes");
+	for (unsigned int i = 0; i < m_storedRules.size(); ++i)
+	{
+		tinyxml2::XMLElement * pListElement = xmlDoc.NewElement("CellType");
+		string bitCode = "";
+		long decimalCode = m_storedRules[i].code, multiplier = 1, remainder;
+		do
+		{
+			if ((decimalCode & 1) == 0)
+				bitCode += "0";
+			else
+				bitCode += "1";
+
+			decimalCode >>= 1;
+		} while (decimalCode);
+
+		int missingBits = ((m_hexagons.size() - 1) * 2) - bitCode.size();
+		if (missingBits > 0)
+		{
+			bitCode.append(missingBits, '0');
+		}
+
+		char *cstr = &bitCode[0];
+		pListElement->SetAttribute("Code", cstr);
+
+		pListElement->SetAttribute("Action", m_storedRules[i].actionType);
+		pListElement->SetAttribute("Direction", m_storedRules[i].direction);
+		pListElement->SetText("");
+
+		pElement->InsertEndChild(pListElement);
+	}
+
+	pRoot->InsertEndChild(pElement);
+	tinyxml2::XMLError eResult = xmlDoc.SaveFile("SavedData.xml");
+
+	//tinyxml2::XMLCheckResult(eResult);
+	/*CellType* newCellType  = new CellType(m_cellTypes.size(), m_storedRules);
 	string result;
 	result += "C:";
+
 	for (int i = 1; i < m_hexagons.size(); ++i)
 	{
 		if (m_hexagons[i]->GetState() == Hexagon::HexagonState::Empty)
@@ -215,32 +257,107 @@ string HexagonGenerator::GenerateCellType()
 	result = newCellType->GetID();
 
 	m_cellTypes.push_back(newCellType);
-	m_storedRules.empty();
+	m_storedRules.empty();*/
 
 
-	return result;
+	return "xml";
 }
 
 void HexagonGenerator::SaveRule()
 {
 	CellRule newRule;
-	int code =0 ;
+
+	int code = 0;
 	int index = 0;
+	int ringsRead = 0;
 
 	newRule.actionType = ActionType::Move;
 	newRule.direction = 1;
 
-	for (int i = 1; i < m_hexagons.size(); ++i)
+	/*
+	The recursive generation causes a slight issues with the indexing of cells when we have more than 1 ring.
+	Instead of                 We get
+	0  0  14 15 16             0  0  15 16 17
+	0  13  5  6 17             0  14  5  6 18
+	12  4  1  7 18             13  4  1  7 19
+	11  3  2 19  0             12  3  2 10  0
+	10  9  8  0  0             11  9  8  0  0
+
+	This is why when saving the rule we skip the 3rd element of the new ring and read the 4th, appending the 3rd at the end of the ring.
+	So we read ....8 9 11.....18 19 10. This is so the code of the rule has a logical way of being read.
+	*/
+
+	vector<Hexagon*>::iterator it = m_hexagons.begin() + 1;
+
+	for (unsigned int i = 1; i <= m_rings; ++i)
 	{
-		if (m_hexagons[i]->GetState() == Hexagon::HexagonState::Enemy)
+		unsigned int ringElements = 3 * pow(2, i);
+		unsigned int j = 0;
+		Hexagon* backup;
+		if (i > 1)
 		{
-			code += pow(2, index);
+			while (j < 2)
+			{
+				if ((*it)->GetState() == Hexagon::HexagonState::Enemy)
+				{
+					code += pow(2, index);
+				}
+				else if ((*it)->GetState() == Hexagon::HexagonState::Ally)
+				{
+					code += pow(2, index + 1);
+				}
+
+				index += 2;
+				it++;
+				j++;
+			}
+
+			backup = (*it);
+			it++;
+			j++;
+
+			if ((*it)->GetState() == Hexagon::HexagonState::Enemy)
+			{
+				code += pow(2, index);
+			}
+			else if ((*it)->GetState() == Hexagon::HexagonState::Ally)
+			{
+				code += pow(2, index + 1);
+			}
+
+			index += 2;
+			it++;
+			j++;
+
 		}
-		else if (m_hexagons[i]->GetState() == Hexagon::HexagonState::Ally)
+		while(j < ringElements)
 		{
-			code += pow(2, index + 1);
+			if ((*it)->GetState() == Hexagon::HexagonState::Enemy)
+			{
+				code += pow(2, index);
+			}
+			else if ((*it)->GetState() == Hexagon::HexagonState::Ally)
+			{
+				code += pow(2, index + 1);
+			}
+
+			index += 2;
+			it++;
+			j++;
 		}
-		index += 2;
+
+		if (i > 1)
+		{
+			if (backup->GetState() == Hexagon::HexagonState::Enemy)
+			{
+				code += pow(2, index);
+			}
+			else if (backup->GetState() == Hexagon::HexagonState::Ally)
+			{
+				code += pow(2, index + 1);
+			}
+			index += 2;
+		}
 	}
 
 	newRule.code = code;

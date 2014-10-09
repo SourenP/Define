@@ -156,8 +156,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		return 1;
 	}
 
-	
-
 	ActivateConsole();
 
 	hc = new HexagonGenerator;
