@@ -35,117 +35,61 @@ Level::Level(int windowSize)
 		c < 0 ? rowMin-- : rowMax--;
 	}
 	
-	m_cellTypeFile.open("files/CellTypes.txt");
-	LoadCellTypes(m_cellTypeFile);
-	m_cellTypeFile.close();
+	LoadCellTypes("files/SavedData.xml");
 
 	//testing
-	InitializeCells();
+	//InitializeCells();
 }
 
-void Level::LoadCellTypes(ifstream& file)
+void Level::LoadCellTypes(string file)
 {
-	int code = 0, direction, R, G, B, rank = 11;
+	string bitCode;
+	int code = 0, direction, R = 255, G = 0, B = 0, rank = 11;
 	bool noColor = false;
 	ActionType actionType;
 	char trash;
 	CellType* newCellType;
+	vector<CellRule> cellRules;
 
-	while (!file.eof())
+	XMLError error = m_cellTypeFile.LoadFile(file.c_str());
+	
+	XMLNode * pRoot = m_cellTypeFile.FirstChild();	
+	XMLElement* pCellTypes = pRoot->FirstChildElement("CellTypes");
+
+	XMLElement* pCellType = pCellTypes->FirstChildElement("CellType");
+	while (pCellType != nullptr)
 	{
-		file >> trash;
-		code = 0;
-		while (trash != ':')
+		//if (pElement == nullptr) return XML_ERROR_PARSING_ELEMENT;
+		XMLElement* pRule = pCellType->FirstChildElement("Rule");
+		cellRules.clear();
+		while (pRule != nullptr)
 		{
-			file >> trash;
-		}
+			bitCode = pRule->Attribute("Code");
+			pRule->QueryAttribute("Direction", &direction);
+			pRule->QueryAttribute("Action Type", &code);
+			actionType = ActionType(code);
 
-		/*
-		Iterate over binary code, converting into an int
-		*/
-		rank = 11;
-		while (trash != 'A')
-		{
-			file >> trash;
-			if (trash == '1')
+			code = 0;
+			for (unsigned int i = 0; i < 6; ++i)
 			{
-				code += pow(2, rank);
+
+				if (bitCode[0] == '1')
+				{
+					code += pow(2, rank);
+				}
+				rank--;
 			}
-			rank--;
-		}
-		/*
-		Read until ActionType
-		*/
-		while (trash != ':')
-		{
-			file >> trash;
-		}
+			CellRule newRule;
+			newRule.code = code;
+			newRule.direction = direction;
+			newRule.actionType = actionType;
 
-		/*
-		Assign ActionType
-		*/
-		int temp;
-		file >> temp;
-		actionType = static_cast<ActionType>(temp);
-		/*
-		Read direction of action
-		*/
-		file >> trash;
-		while (trash != ':')
-		{
-			file >> trash;
+			cellRules.push_back(newRule);
+			pRule = pRule->NextSiblingElement("Rule");
 		}
-		file >> direction;
-
-		file >> trash;
-		while (trash != ':')
-		{
-			file >> trash;
-			if (file.eof())
-			{
-				noColor = true;
-				break;
-			}
-
-		}
-		/*
-		If no color  was chosen break loop
-		*/
-		if (noColor)
-			break;
-		/*
-		Read R, G, B
-		*/
-		file >> R;
-		file >> trash;
-		while (trash != ':')
-		{
-			file >> trash;
-		}
-
-		file >> G;
-		file >> trash;
-		while (trash != ':')
-		{
-			file >> trash;
-		}
-
-		file >> B;
-		CellRule rule;
-		rule.code = code;
-		rule.actionType = actionType;
-		rule.direction = direction - 1;
-
-		if (noColor)
-		{
-			//newCellType = new CellType(m_cellTypes.size(), rule);
-		}
-		else
-			//newCellType = new CellType(m_cellTypes.size(), rule, sf::Color(R, G, B));
-
+		newCellType = new CellType(m_cellTypes.size(), cellRules, sf::Color(R, G, B));
 		m_cellTypes.push_back(newCellType);
-		if (file.eof())
-			break;
+		pCellType = pCellType->NextSiblingElement("CellType");
 	}
 }
 

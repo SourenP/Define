@@ -15,7 +15,7 @@ public:
 	sf::Color GetColor();
 	int GetPriority();
 	int GetNumberOfRules();
-	CellRule GetRule(int index); //Get the rule by index. Engine should loop over all of the cells rules
+	vector<CellRule> GetRules(); //Get the rule by index. Engine should loop over all of the cells rules
 
 private:
 	//static int m_gid;	// increasing global celltype id

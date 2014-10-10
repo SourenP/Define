@@ -11,11 +11,18 @@
 #include "Cell.h"
 #include "CellType.h"
 #include "define_structs.h"
+#include "tinyxml2.h"
 
 using std::vector;
 using std::priority_queue;
 using std::cin;
 using std::ifstream;
+using std::string;
+
+using tinyxml2::XMLDocument;
+using tinyxml2::XMLError;
+using tinyxml2::XMLNode;
+using tinyxml2::XMLElement;
 
 class Level
 {
@@ -36,17 +43,17 @@ public:
 	
 	int GetCellIndex(sf::Vector3i coordinates) const; //Returns cells index in m_cells
 	const Cell& GetNextCell(); //Returns next cell on m_turnHeap
-	const Cell& GetCell(int index) const; //Returns a cell from m_cells by index
-	const Cell& GetCell(sf::Vector3i coordinates) const; //Returns a cell from m_cells using sf::Vector3i coordiantes
+	inline const Cell& GetCell(int index) const; //Returns a cell from m_cells by index
+	inline const Cell& GetCell(sf::Vector3i coordinates) const; //Returns a cell from m_cells using sf::Vector3i coordiantes
 
 	const bool IsOutOfBounds(sf::Vector3i coordinates) const;//Checks if position is out of bounds
 
-	const vector<Cell*>& GetCellContainer() const; //Retrurns m_cells
-	const vector<Tile*>& GetTileContainer() const; //Returns m_tiles
-	vector<vector<int>> GetTileIDs() const; //Return m_tileIDs
+	inline const vector<Cell*>& GetCellContainer() const; //Retrurns m_cells
+	inline const vector<Tile*>& GetTileContainer() const; //Returns m_tiles
+	inline vector<vector<int>> GetTileIDs() const; //Return m_tileIDs
 	const vector<int> GetNeighborsByTeam(const Cell& cell) const; //Generates a size 6 vector of the neighbors of the cell based on the cells team
 
-	sf::Vector2i IndexFromCoordinates(sf::Vector3i coordinates) const; //Converts coordinates from x,y,z to i,j for 
+	inline sf::Vector2i IndexFromCoordinates(sf::Vector3i coordinates) const; //Converts coordinates from x,y,z to i,j for 
 																	  //use with m_tileID's
 
 private:
@@ -58,7 +65,7 @@ private:
 	void KillCell(sf::Vector3i targetCell); //Kills cell by setting m_alive to false
 
 	void InitializeCells(); //TEST CASE INITALIZER
-	void LoadCellTypes(ifstream& file); //Reads cell types from file
+	void LoadCellTypes(string file); //Reads cell types from file
 
 	priority_queue<HeapNode, vector<HeapNode>, compareHeapNodes> m_turnHeap; //Heap for storing cell turns
 	vector<Tile*> m_tiles; //Stores tiles
@@ -68,7 +75,7 @@ private:
 	Tile* GetTile(sf::Vector3i coordinates); //Uses x,y,z to retrieve a tile
 
 	int cellCount = 0;
-	ifstream m_cellTypeFile; //File containing CellTypes
+	XMLDocument m_cellTypeFile; //File containing CellTypes
 };
 
 #endif

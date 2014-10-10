@@ -28,8 +28,8 @@ public:
 	RECT& CycleClickedHexagon(const POINT& mouseCoordinates);
 
 	void SaveRule(); //Saves rule to CellType
-	string GenerateCellType(); //Save CellType
-
+	string SaveCellType(); //Save CellType
+	void SaveToXML(); //Save CellTypes to XML
 	void DrawHexagons(HDC& hdc) const; //Draws all hexagons
 
 private:

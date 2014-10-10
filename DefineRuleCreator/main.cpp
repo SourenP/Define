@@ -10,9 +10,11 @@
 
 #define ACCEPT_RULE_BUTTON 101
 #define ACCEPT_CELLTYPE_BUTTON 102
+#define SAVE_BUTTON 103
 
 HWND hAcceptRuleButton;
 HWND hAcceptCellTypeButton;
+HWND hSaveButton;
 int windowWidth = 500;
 int windowHeight = 500;
 
@@ -27,9 +29,9 @@ void GenerateCellType()
 		cout << "whoops";
 	}
 	
-	string newRule = hc->GenerateCellType();
-	file << newRule;
-	file.close();
+//	string newRule = hc->GenerateCellType();
+//	file << newRule;
+	//file.close();
 }
 
 void ActivateConsole()
@@ -57,6 +59,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		hAcceptCellTypeButton = CreateWindowEx(WS_EX_WINDOWEDGE, L"BUTTON", L"Accept Cell Type",
 			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 20, 90, 80, 30, hWnd, (HMENU)ACCEPT_CELLTYPE_BUTTON,
 			GetModuleHandle(NULL), NULL);
+		hSaveButton = CreateWindowEx(WS_EX_WINDOWEDGE, L"BUTTON", L"Save",
+			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 20, 130, 80, 30, hWnd, (HMENU)SAVE_BUTTON,
+			GetModuleHandle(NULL), NULL);
 		break;
 	case WM_COMMAND:
 		switch LOWORD(wParam) //the ID is is wParam
@@ -65,12 +70,17 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			{
 				// Static labels dont do messages
 				//we can set the text directly though
-				GenerateCellType();
+				hc->SaveCellType();
 				break;
 			}
 			case ACCEPT_RULE_BUTTON:
 			{
 				hc->SaveRule();
+				break;
+			}
+			case SAVE_BUTTON:
+			{
+				hc->SaveToXML();
 				break;
 			}
 		}

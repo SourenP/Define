@@ -22,7 +22,7 @@ int CellType::GetNumberOfRules()
 	return m_rules.size();
 }
 
-CellRule CellType::GetRule(int index)
+vector<CellRule> CellType::GetRules()
 {
-	return m_rules[index];
+	return m_rules;
 }

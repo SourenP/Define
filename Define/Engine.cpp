@@ -6,7 +6,7 @@ const Changes Engine::PerformMove(const Cell& currentCell, const vector<int> nei
 	sf::Vector3i destination = origin;
 	Changes changes;	
 	CellType type = currentCell.GetCellType();
-	CellRule rule = type.GetRule(1);
+	CellRule rule = type.GetRules()[0];
 	
 	int surroundings = GenerateBinaryFormOfNeighbors(neighbors, currentCell.GetTeam());
 

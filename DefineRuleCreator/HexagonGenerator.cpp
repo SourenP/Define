@@ -190,77 +190,69 @@ pair<int, int> HexagonGenerator::RoundToNearestHexagon(double i, double j)
 	return pair<int, int>(rx + m_hexMap.size()/2, rz + m_hexMap.size()/2);
 }
 
-string HexagonGenerator::GenerateCellType()
-{		
-
+void HexagonGenerator::SaveToXML()
+{
 	tinyxml2::XMLDocument xmlDoc;
-	
+
 	tinyxml2::XMLNode * pRoot = xmlDoc.NewElement("CellTypeDoc");
 	xmlDoc.InsertFirstChild(pRoot);
 
-	tinyxml2::XMLElement * pElement = xmlDoc.NewElement("CellTypes");
-	for (unsigned int i = 0; i < m_storedRules.size(); ++i)
+	tinyxml2::XMLElement * pCellTypes = xmlDoc.NewElement("CellTypes");
+	for (unsigned int i = 0; i < m_cellTypes.size(); ++i)
 	{
-		tinyxml2::XMLElement * pListElement = xmlDoc.NewElement("CellType");
-		string bitCode = "";
-		long decimalCode = m_storedRules[i].code, multiplier = 1, remainder;
-		do
+		tinyxml2::XMLElement* pCellType = xmlDoc.NewElement("CellType");
+		pCellType->SetAttribute("Color", "Green");
+		vector<CellRule> cellRules = m_cellTypes[i]->GetRules();
+		for (unsigned int j = 0; j < cellRules.size(); ++j)
 		{
-			if ((decimalCode & 1) == 0)
-				bitCode += "0";
-			else
-				bitCode += "1";
+			tinyxml2::XMLElement* pRule = xmlDoc.NewElement("Rule");
+			string bitCode = "";
+			long decimalCode = cellRules[j].code, multiplier = 1, remainder;
+			do
+			{
+				if ((decimalCode & 1) == 0)
+					bitCode += "0";
+				else
+					bitCode += "1";
 
-			decimalCode >>= 1;
-		} while (decimalCode);
+				decimalCode >>= 1;
+			} while (decimalCode);
 
-		int missingBits = ((m_hexagons.size() - 1) * 2) - bitCode.size();
-		if (missingBits > 0)
-		{
-			bitCode.append(missingBits, '0');
+			int missingBits = ((m_hexagons.size() - 1) * 2) - bitCode.size();
+			if (missingBits > 0)
+			{
+				bitCode.append(missingBits, '0');
+			}
+
+			char *cstr = &bitCode[0];
+
+			pRule->SetAttribute("Code", cstr);
+			pRule->SetAttribute("Action", cellRules[j].actionType);
+			pRule->SetAttribute("Direction", cellRules[j].direction);
+			pRule->SetText("");
+
+			pCellType->InsertEndChild(pRule);
 		}
 
-		char *cstr = &bitCode[0];
-		pListElement->SetAttribute("Code", cstr);
-
-		pListElement->SetAttribute("Action", m_storedRules[i].actionType);
-		pListElement->SetAttribute("Direction", m_storedRules[i].direction);
-		pListElement->SetText("");
-
-		pElement->InsertEndChild(pListElement);
+		pCellTypes->InsertEndChild(pCellType);
 	}
 
-	pRoot->InsertEndChild(pElement);
-	tinyxml2::XMLError eResult = xmlDoc.SaveFile("SavedData.xml");
+	pRoot->InsertEndChild(pCellTypes);
+	tinyxml2::XMLError eResult = xmlDoc.SaveFile("../Define/files/SavedData.xml");
+	
+}
 
-	//tinyxml2::XMLCheckResult(eResult);
-	/*CellType* newCellType  = new CellType(m_cellTypes.size(), m_storedRules);
-	string result;
-	result += "C:";
-
-	for (int i = 1; i < m_hexagons.size(); ++i)
-	{
-		if (m_hexagons[i]->GetState() == Hexagon::HexagonState::Empty)
-		{
-			result += "00";
-		}
-		else if (m_hexagons[i]->GetState() == Hexagon::HexagonState::Enemy)
-		{
-			result += "01";
-		}
-		else
-		{
-			result += "10";
-		}
-	}
-
-	result = newCellType->GetID();
-
+string HexagonGenerator::SaveCellType()
+{	
+	if (m_storedRules.empty())
+		return "no rules";
+	
+	CellType* newCellType = new CellType(0, m_storedRules, sf::Color(255, 0, 0));
 	m_cellTypes.push_back(newCellType);
-	m_storedRules.empty();*/
 
+	m_storedRules.clear();
 
-	return "xml";
+	return "Success";
 }
 
 void HexagonGenerator::SaveRule()
