@@ -17,7 +17,7 @@ Move - move towards goal
 Retreat - move towards spawn
 Used by Cell, Level and Engine
 */
-enum ActionType { Attack = 1, Move = 2, Retreat = 3};
+enum ActionType { Attack = 0, Move = 1, Retreat = 2};
 
 /*
 Stores all changes that occured as a result of the last move

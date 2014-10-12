@@ -27,8 +27,8 @@ public:
 	void GenerateHexagons(int screenWidth, int screenHeight, double radius = DEFAULT_RADIUS, unsigned int rings = DEFAULT_RINGS); //Creates hexigons, centered in the middle of the window. The number of rings of hexagons is based on the rings varaiable. 
 	RECT& CycleClickedHexagon(const POINT& mouseCoordinates);
 
-	void SaveRule(); //Saves rule to CellType
-	string SaveCellType(); //Save CellType
+	void SaveRule(int direction, ActionType actionType); //Saves rule to CellType
+	string SaveCellType(sf::Color color); //Save CellType
 	void SaveToXML(); //Save CellTypes to XML
 	void DrawHexagons(HDC& hdc) const; //Draws all hexagons
 

@@ -201,7 +201,10 @@ void HexagonGenerator::SaveToXML()
 	for (unsigned int i = 0; i < m_cellTypes.size(); ++i)
 	{
 		tinyxml2::XMLElement* pCellType = xmlDoc.NewElement("CellType");
-		pCellType->SetAttribute("Color", "Green");
+		sf::Color color = m_cellTypes[i]->GetColor();
+		pCellType->SetAttribute("R", color.r);
+		pCellType->SetAttribute("G", color.g);
+		pCellType->SetAttribute("B", color.b);
 		vector<CellRule> cellRules = m_cellTypes[i]->GetRules();
 		for (unsigned int j = 0; j < cellRules.size(); ++j)
 		{
@@ -242,12 +245,12 @@ void HexagonGenerator::SaveToXML()
 	
 }
 
-string HexagonGenerator::SaveCellType()
+string HexagonGenerator::SaveCellType(sf::Color color)
 {	
 	if (m_storedRules.empty())
 		return "no rules";
 	
-	CellType* newCellType = new CellType(0, m_storedRules, sf::Color(255, 0, 0));
+	CellType* newCellType = new CellType(0, m_storedRules, color);
 	m_cellTypes.push_back(newCellType);
 
 	m_storedRules.clear();
@@ -255,7 +258,7 @@ string HexagonGenerator::SaveCellType()
 	return "Success";
 }
 
-void HexagonGenerator::SaveRule()
+void HexagonGenerator::SaveRule(int direction, ActionType actionType)
 {
 	CellRule newRule;
 
@@ -263,8 +266,8 @@ void HexagonGenerator::SaveRule()
 	int index = 0;
 	int ringsRead = 0;
 
-	newRule.actionType = ActionType::Move;
-	newRule.direction = 1;
+	newRule.actionType = actionType;
+	newRule.direction = direction;
 
 	/*
 	The recursive generation causes a slight issues with the indexing of cells when we have more than 1 ring.

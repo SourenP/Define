@@ -6,22 +6,28 @@ const Changes Engine::PerformMove(const Cell& currentCell, const vector<int> nei
 	sf::Vector3i destination = origin;
 	Changes changes;	
 	CellType type = currentCell.GetCellType();
-	CellRule rule = type.GetRules()[0];
+	vector<CellRule> rules = type.GetRules();
 	
 	int surroundings = GenerateBinaryFormOfNeighbors(neighbors, currentCell.GetTeam());
-
-	if (surroundings == rule.code)
+	CellRule currRule;
+	for (unsigned int i = 0; i < rules.size(); ++i)
 	{
-		destination.x += neighborOffsets[rule.direction][0];
-		destination.y += neighborOffsets[rule.direction][1];
-		destination.z += neighborOffsets[rule.direction][2];
-		if (rule.actionType == ActionType::Attack)
+		currRule = rules[i];
+		if (surroundings == currRule.code)
 		{
-			sf::Vector3i kill = destination;
-			changes.kills.push_back(kill);
-		}		
-	}
+			destination.x += neighborOffsets[currRule.direction][0];
+			destination.y += neighborOffsets[currRule.direction][1];
+			destination.z += neighborOffsets[currRule.direction][2];
+			if (currRule.actionType == ActionType::Attack)
+			{
+				sf::Vector3i kill = destination;
+				changes.kills.push_back(kill);
+			}	
+			break;
+		}
 
+	}
+	
 	std::vector<std::vector<sf::Vector3i>> moves;
 	std::vector<sf::Vector3i> move;
 	move.push_back(origin);

@@ -1,39 +1,17 @@
 <CellTypeDoc>
     <CellTypes>
-        <CellType Color="Green">
-            <Rule Code="010101010101" Action="2" Direction="1"></Rule>
-            <Rule Code="000101010000" Action="2" Direction="1"></Rule>
-            <Rule Code="000000000000" Action="2" Direction="1"></Rule>
+        <CellType R="0" G="0" B="0">
+            <Rule Code="010101010101" Action="1" Direction="0"></Rule>
+            <Rule Code="010101010101" Action="1" Direction="0"></Rule>
+            <Rule Code="010101010101" Action="1" Direction="0"></Rule>
+            <Rule Code="010101010101" Action="0" Direction="0"></Rule>
+            <Rule Code="010101010101" Action="0" Direction="0"></Rule>
+            <Rule Code="010101010101" Action="0" Direction="0"></Rule>
         </CellType>
-        <CellType Color="Green">
-            <Rule Code="010101010101" Action="2" Direction="1"></Rule>
-            <Rule Code="000101010000" Action="2" Direction="1"></Rule>
-            <Rule Code="000000000000" Action="2" Direction="1"></Rule>
-            <Rule Code="000000000000" Action="2" Direction="1"></Rule>
-            <Rule Code="000000000000" Action="2" Direction="1"></Rule>
-            <Rule Code="000000000000" Action="2" Direction="1"></Rule>
-            <Rule Code="000000000000" Action="2" Direction="1"></Rule>
-        </CellType>
-        <CellType Color="Green">
-            <Rule Code="010101010101" Action="2" Direction="1"></Rule>
-            <Rule Code="000101010000" Action="2" Direction="1"></Rule>
-            <Rule Code="000000000000" Action="2" Direction="1"></Rule>
-            <Rule Code="000000000000" Action="2" Direction="1"></Rule>
-            <Rule Code="000000000000" Action="2" Direction="1"></Rule>
-            <Rule Code="000000000000" Action="2" Direction="1"></Rule>
-            <Rule Code="000000000000" Action="2" Direction="1"></Rule>
-        </CellType>
-        <CellType Color="Green">
-            <Rule Code="010101010101" Action="2" Direction="1"></Rule>
-            <Rule Code="000101010000" Action="2" Direction="1"></Rule>
-            <Rule Code="000000000000" Action="2" Direction="1"></Rule>
-            <Rule Code="000000000000" Action="2" Direction="1"></Rule>
-            <Rule Code="000000000000" Action="2" Direction="1"></Rule>
-            <Rule Code="000000000000" Action="2" Direction="1"></Rule>
-            <Rule Code="000000000000" Action="2" Direction="1"></Rule>
-            <Rule Code="000000000000" Action="2" Direction="1"></Rule>
-            <Rule Code="000000000000" Action="2" Direction="1"></Rule>
-            <Rule Code="000000000000" Action="2" Direction="1"></Rule>
+        <CellType R="0" G="0" B="0">
+            <Rule Code="010101010101" Action="0" Direction="4"></Rule>
+            <Rule Code="010101010101" Action="0" Direction="4"></Rule>
+            <Rule Code="010101010101" Action="0" Direction="4"></Rule>
         </CellType>
     </CellTypes>
 </CellTypeDoc>

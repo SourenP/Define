@@ -38,7 +38,7 @@ Level::Level(int windowSize)
 	LoadCellTypes("files/SavedData.xml");
 
 	//testing
-	//InitializeCells();
+	InitializeCells();
 }
 
 void Level::LoadCellTypes(string file)
@@ -60,6 +60,10 @@ void Level::LoadCellTypes(string file)
 	while (pCellType != nullptr)
 	{
 		//if (pElement == nullptr) return XML_ERROR_PARSING_ELEMENT;
+		pCellType->QueryAttribute("R", &R);
+		pCellType->QueryAttribute("G", &G);
+		pCellType->QueryAttribute("B", &B);
+
 		XMLElement* pRule = pCellType->FirstChildElement("Rule");
 		cellRules.clear();
 		while (pRule != nullptr)

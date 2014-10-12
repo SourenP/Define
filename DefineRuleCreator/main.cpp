@@ -11,12 +11,21 @@
 #define ACCEPT_RULE_BUTTON 101
 #define ACCEPT_CELLTYPE_BUTTON 102
 #define SAVE_BUTTON 103
+#define ACTION_TYPE_ATTACK_BUTTON 104
+#define ACTION_TYPE_MOVE_BUTTON 105
+#define DIRECTION_INPUT_BOX 106
+#define RGB_INPUT_BOX 107
 
 HWND hAcceptRuleButton;
 HWND hAcceptCellTypeButton;
 HWND hSaveButton;
+HWND hActionTypeMove;
+HWND hActionTypeAttack;
+HWND hDirectionInputBox;
+HWND hRGBInputBox;
 int windowWidth = 500;
 int windowHeight = 500;
+ActionType actionType;
 
 static HexagonGenerator* hc;
 
@@ -43,6 +52,69 @@ void ActivateConsole()
 	freopen_s(&conout, "conout$", "w", stderr);
 }
 
+void CreateButtons(HWND &hWnd)
+{
+	hAcceptRuleButton = CreateWindowEx(WS_EX_WINDOWEDGE, L"BUTTON", L"Accept Rule",
+		WS_CHILD | WS_VISIBLE | BS_PUSHLIKE, 20, 50, 80, 30, hWnd, (HMENU)ACCEPT_RULE_BUTTON,
+		GetModuleHandle(NULL), NULL);
+	hAcceptCellTypeButton = CreateWindowEx(WS_EX_WINDOWEDGE, L"BUTTON", L"Accept Cell Type",
+		WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 0, 90, 120, 30, hWnd, (HMENU)ACCEPT_CELLTYPE_BUTTON,
+		GetModuleHandle(NULL), NULL);
+	hSaveButton = CreateWindowEx(WS_EX_WINDOWEDGE, L"BUTTON", L"Save",
+		WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 20, 130, 80, 30, hWnd, (HMENU)SAVE_BUTTON,
+		GetModuleHandle(NULL), NULL);
+	hActionTypeMove = CreateWindowEx(WS_EX_WINDOWEDGE, L"BUTTON", L"Move",
+		WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 120, 20, 80, 30, hWnd, (HMENU)ACTION_TYPE_MOVE_BUTTON,
+		GetModuleHandle(NULL), NULL);
+	hActionTypeAttack = CreateWindowEx(WS_EX_WINDOWEDGE, L"BUTTON", L"Attack",
+		WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 230, 20, 80, 30, hWnd, (HMENU)ACTION_TYPE_ATTACK_BUTTON,
+		GetModuleHandle(NULL), NULL);
+	hDirectionInputBox = CreateWindowEx(WS_EX_CLIENTEDGE, L"EDIT", L"D",
+		WS_CHILD | WS_VISIBLE | ES_NUMBER, 320, 20, 20, 30, hWnd, (HMENU)DIRECTION_INPUT_BOX,
+		GetModuleHandle(NULL), NULL);
+	hRGBInputBox = CreateWindowEx(WS_EX_CLIENTEDGE, L"EDIT", L"0,0,0",
+		WS_CHILD | WS_VISIBLE, 320, 60, 120, 30, hWnd, (HMENU)RGB_INPUT_BOX,
+		GetModuleHandle(NULL), NULL);
+	
+}
+
+int GetDirectionFromInputBox(HWND &hWnd)
+{
+	return GetDlgItemInt(hWnd, DIRECTION_INPUT_BOX, NULL, NULL);
+}
+
+sf::Color GetRGBFromInputBox(HWND& hWnd)
+{
+	sf::Color result;
+	int RGB[3], marker = 0, j = 0;
+	int textLength = GetWindowTextLength(hRGBInputBox);
+	string temp, text;
+	temp.resize(textLength, '\0');
+	
+	GetWindowTextA(hRGBInputBox, &temp[0], textLength + 1);
+
+	for (int i = 0; i < textLength; ++i)
+	{
+		if (temp[i] == ',')
+		{
+			RGB[j] = atoi(text.c_str());
+			j++;
+			marker = i;
+			text = "";
+		}
+		else
+		{
+			text += temp[i];
+		}
+	}
+	RGB[j] = atoi(text.c_str());
+	result.r = RGB[0];
+	result.g = RGB[1];
+	result.b = RGB[2];
+
+	return result;
+}
+
 //LPCWSTR szWindowClass = L"test";
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -53,16 +125,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	switch(message)
 	{
 	case WM_CREATE:
-		hAcceptRuleButton = CreateWindowEx(WS_EX_WINDOWEDGE, L"BUTTON", L"Accept Rule",
-			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 20, 50, 80, 30, hWnd, (HMENU)ACCEPT_RULE_BUTTON,
-			GetModuleHandle(NULL), NULL);
-		hAcceptCellTypeButton = CreateWindowEx(WS_EX_WINDOWEDGE, L"BUTTON", L"Accept Cell Type",
-			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 20, 90, 80, 30, hWnd, (HMENU)ACCEPT_CELLTYPE_BUTTON,
-			GetModuleHandle(NULL), NULL);
-		hSaveButton = CreateWindowEx(WS_EX_WINDOWEDGE, L"BUTTON", L"Save",
-			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON, 20, 130, 80, 30, hWnd, (HMENU)SAVE_BUTTON,
-			GetModuleHandle(NULL), NULL);
-		break;
+		CreateButtons(hWnd);
 	case WM_COMMAND:
 		switch LOWORD(wParam) //the ID is is wParam
 		{
@@ -70,17 +133,41 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			{
 				// Static labels dont do messages
 				//we can set the text directly though
-				hc->SaveCellType();
+				hc->SaveCellType(GetRGBFromInputBox(hWnd));
 				break;
 			}
 			case ACCEPT_RULE_BUTTON:
 			{
-				hc->SaveRule();
+				hc->SaveRule(GetDirectionFromInputBox(hWnd), actionType);
+				//SendMessage(hAcceptRuleButton, BM_SETSTATE, true, 0);
+				//Button_SetCheck(hAcceptRuleButton, BST_CHECKED);
 				break;
 			}
 			case SAVE_BUTTON:
 			{
 				hc->SaveToXML();
+				break;
+			}
+			case ACTION_TYPE_MOVE_BUTTON:
+			{
+				actionType = ActionType::Move;
+				SendMessage(hActionTypeMove, BM_SETSTATE, true, 0);
+				SendMessage(hActionTypeAttack, BM_SETSTATE, false, 0);
+				break;
+			}
+			case ACTION_TYPE_ATTACK_BUTTON:
+			{
+				actionType = ActionType::Attack;
+				SendMessage(hActionTypeMove, BM_SETSTATE, false, 0);
+				SendMessage(hActionTypeAttack, BM_SETSTATE, true, 0);
+				LPWSTR szInput;
+
+				//GetWindowText(GetDlgItem(hWnd, DIRECTION_INPUT_BOX), szInput, MAX_PATH);
+				break;
+			}
+			case DIRECTION_INPUT_BOX:
+			{
+//				SendMessage(hDirectionInputBox, WM_SETTEXT, NULL, (LPARAM)"A");
 				break;
 			}
 		}
@@ -90,6 +177,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		ScreenToClient(hWnd, &mouse);
 		wind = hc->CycleClickedHexagon(mouse);
 		InvalidateRect(hWnd,&wind, true);
+		break;
+	case WM_SETFOCUS:
+		cout << "focus" << endl;
 		break;
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);
