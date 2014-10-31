@@ -36,8 +36,6 @@ Icon
 .Trashes
 
 #Visual Studio Files
-Define.sln
-Define.sdf
 Debug/
 Define/Debug
 Define.vcxproj.filters
