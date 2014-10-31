@@ -62,7 +62,7 @@ private:
 	Level& operator=(const Level&);
 
 	bool MoveCell(sf::Vector3i origin, sf::Vector3i destination); //Moves cell using x,y,z coordinates
-	void KillCell(sf::Vector3i targetCell); //Kills cell by setting m_alive to false
+	bool KillCell(sf::Vector3i targetCell); //Kills cell by setting m_alive to false
 
 	void InitializeCells(); //TEST CASE INITALIZER
 	void LoadCellTypes(string file); //Reads cell types from file

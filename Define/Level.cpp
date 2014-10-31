@@ -107,9 +107,9 @@ void Level::InitializeCells()
 	CellType *green = new CellType(m_cellTypes.size(), rule);
 	*/
 
-	CreateCell(*m_cellTypes[0], sf::Vector3i(-3, -3, -3), 1);
-	CreateCell(*m_cellTypes[1], sf::Vector3i(0, 2, -2), 2);
-	CreateCell(*m_cellTypes[2], sf::Vector3i(0, 5, -5), 1);
+	CreateCell(*m_cellTypes[0], sf::Vector3i(0, 0, 0), 1);
+	//CreateCell(*m_cellTypes[1], sf::Vector3i(0, 2, -2), 2);
+	//CreateCell(*m_cellTypes[2], sf::Vector3i(0, 5, -5), 1);
 
 	//CreateCell(*m_cellTypes[3], sf::Vector3i(3, 3, -2), 1);
 	//CreateCell(*m_cellTypes[4], sf::Vector3i(-3, -3, 2), 1);
@@ -179,16 +179,22 @@ bool Level::MoveCell(sf::Vector3i origin, sf::Vector3i destination)
 	}
 }
 
-void Level::KillCell(sf::Vector3i targetCell)
+bool Level::KillCell(sf::Vector3i targetCell)
 {
-	sf::Vector2i tileIndex = IndexFromCoordinates(targetCell);
-
-	int tileID = m_tileIDs[tileIndex.x][tileIndex.y];
-	int cellIndex = m_tiles[tileID]->GetCellIndex();
-	if (cellIndex != -1)
+	if (IsOutOfBounds(targetCell))
+		return 0;
+	else
 	{
-		m_cells[cellIndex]->SetIsAlive(false);
-		m_tiles[tileID]->SetEmpty();
+		sf::Vector2i tileIndex = IndexFromCoordinates(targetCell);
+
+		int tileID = m_tileIDs[tileIndex.x][tileIndex.y];
+		int cellIndex = m_tiles[tileID]->GetCellIndex();
+		if (cellIndex != -1)
+		{
+			m_cells[cellIndex]->SetIsAlive(false);
+			m_tiles[tileID]->SetEmpty();
+		}
+		return 1;
 	}
 	
 }
