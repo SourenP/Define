@@ -36,9 +36,14 @@ Level::Level(int windowSize)
 	}
 	
 	LoadCellTypes("files/SavedData.xml");
-
+	m_isBeingSetup = true;
 	//testing
-	InitializeCells();
+	//InitializeCells();
+}
+
+bool Level::ProcessMouseInput(int mousex, int mouseY)
+{
+	return true;
 }
 
 void Level::LoadCellTypes(string file)
