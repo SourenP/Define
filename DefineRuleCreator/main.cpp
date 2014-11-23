@@ -85,34 +85,7 @@ int GetDirectionFromInputBox(HWND &hWnd)
 
 sf::Color GetRGBFromInputBox(HWND& hWnd)
 {
-	sf::Color result;
-	int RGB[3], marker = 0, j = 0;
-	int textLength = GetWindowTextLength(hRGBInputBox);
-	string temp, text;
-	temp.resize(textLength, '\0');
-	
-	GetWindowTextA(hRGBInputBox, &temp[0], textLength + 1);
-
-	for (int i = 0; i < textLength; ++i)
-	{
-		if (temp[i] == ',')
-		{
-			RGB[j] = atoi(text.c_str());
-			j++;
-			marker = i;
-			text = "";
-		}
-		else
-		{
-			text += temp[i];
-		}
-	}
-	RGB[j] = atoi(text.c_str());
-	result.r = RGB[0];
-	result.g = RGB[1];
-	result.b = RGB[2];
-
-	return result;
+	return sf::Color::Red;
 }
 
 //LPCWSTR szWindowClass = L"test";

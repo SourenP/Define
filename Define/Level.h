@@ -17,6 +17,7 @@
 using std::vector;
 using std::priority_queue;
 using std::cin;
+using std::cout;
 using std::ifstream;
 using std::string;
 
@@ -31,7 +32,7 @@ public:
 	Level(int windowSize);
 	~Level();
 
-	static const int MAP_SIDE_LENGTH = 3; //Number of tiles on side of map
+	static const int MAP_SIDE_LENGTH = 4; //Number of tiles on side of map
 	static const int MAP_DIAMETER = (2 * MAP_SIDE_LENGTH) - 1; //Diameter of map
 	static const int TILE_COUNT = MAP_SIDE_LENGTH * (3 * MAP_SIDE_LENGTH - 1) - MAP_DIAMETER; //Total number of tiles
 	
@@ -56,7 +57,7 @@ public:
 	inline const Cell& GetCell(int index) const; //Returns a cell from m_cells by index
 	inline const Cell& GetCell(sf::Vector3i coordinates) const; //Returns a cell from m_cells using sf::Vector3i coordiantes
 
-	inline sf::Vector2i IndexFromCoordinates(sf::Vector3i coordinates) const; //Converts coordinates from x,y,z to i,j for 
+	inline sf::Vector2i GetIndexFromCoordinates(sf::Vector3i coordinates) const; //Converts coordinates from x,y,z to i,j for 
 																	  //use with m_tileID's
 
 private:
@@ -65,7 +66,7 @@ private:
 
 	SetupUI m_setupUI;
 
-	sf::Vector2i RoundToNearestTile(double x, double y);
+	sf::Vector3i RoundToNearestTile(sf::Vector3f);
 
 	bool MoveCell(sf::Vector3i origin, sf::Vector3i destination); //Moves cell using x,y,z coordinates
 	bool KillCell(sf::Vector3i targetCell); //Kills cell by setting m_alive to false

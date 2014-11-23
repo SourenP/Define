@@ -83,9 +83,9 @@ Converts axial coordinates to cube
 class CoordinateConversions
 {
 public:
-	static sf::Vector3i ConvertAxialToCube(sf::Vector2i axialCoordinates)
+	static sf::Vector3f ConvertAxialToCube(sf::Vector2f axialCoordinates)
 	{
-		return sf::Vector3i(axialCoordinates.y, axialCoordinates.x, -axialCoordinates.x - axialCoordinates.y);
+		return sf::Vector3f(axialCoordinates.x, -axialCoordinates.x - axialCoordinates.y, axialCoordinates.y);
 	}
 private:
 

@@ -62,7 +62,7 @@ private:
 	vector<Hexagon*> m_hexagons; //Container for hexagons
 	vector<vector<int>> m_hexMap; //Map denoting filled hexes
 	queue<HexNode> seedQueue;
-	
+	POINT m_center;
 	vector<CellType*> m_cellTypes; //Stores all created Cell Types. A Cell Type is created when the "Accept Cell Type" button is clicked
 	vector<CellRule> m_storedRules; //Stores all the rules created. A CellRule is created when the "Accept Rule" button is clicked.
 									//When the "Accept Cell Type" button is clicked all CellRules are aded to the new CellType and this vector is emptied

@@ -7,7 +7,7 @@ void HexagonGenerator::GenerateHexagons(int screenWidth, int screenHeight,
 {
 	m_hexagonRadius = radius;
 	m_rings = rings;
-	POINT center = { screenWidth / 2 - radius, screenHeight / 2 - radius };
+	m_center = { screenWidth / 2 - radius, screenHeight / 2 - radius };
 	int mapSize = 1 + 2 * rings;
 	for (int i = 0; i < mapSize; ++i)
 	{
@@ -21,8 +21,8 @@ void HexagonGenerator::GenerateHexagons(int screenWidth, int screenHeight,
 	m_ringDistance = 2 * (sin(toRadians(60))*radius);
 
 	//Create primary seed
-	Hexagon* primarySeed = new Hexagon(center, m_hexagonRadius);
-	seedQueue.push(HexNode(center, pair<int, int>(mapSize / 2, mapSize / 2), rings));
+	Hexagon* primarySeed = new Hexagon(m_center, m_hexagonRadius);
+	seedQueue.push(HexNode(m_center, pair<int, int>(mapSize / 2, mapSize / 2), rings));
 	m_hexMap[mapSize / 2][mapSize / 2] = 1;
 	m_hexagons.push_back(primarySeed);
 	//While there is a hexNode that has not been visited, continue seeding
@@ -96,8 +96,8 @@ RECT& HexagonGenerator::CycleClickedHexagon(const POINT& mouseCoordinates)
 	int mouseX = mouseCoordinates.x;
 	int mouseY = mouseCoordinates.y;
 
-	double realIndexI = (((-1 * (mouseX - 225))/ 3) + ((sqrt(3) * (mouseY - 225)) / 3)) / m_hexagonRadius;
-	double realIndexJ = (2 * (mouseX - 225) / (3 * m_hexagonRadius));
+	double realIndexI = (((-1 * (mouseX - m_center.x)) / 3) + ((sqrt(3) * (mouseY - m_center.y)) / 3)) / m_hexagonRadius;
+	double realIndexJ = (2 * (mouseX - m_center.x) / (3 * m_hexagonRadius));
 	pair<int, int> roundedIndicies = RoundToNearestHexagon(realIndexI, realIndexJ);
 
 	if (IsOutOfMapBounds(roundedIndicies))

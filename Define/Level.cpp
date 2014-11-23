@@ -50,14 +50,20 @@ bool Level::ProcessMouseInput(int mouseX, int mouseY)
 	float xMapOffset = (800 - xThickness) / 2.0;
 	float yMapOffset = 0;
 
-	double realIndexI = (((-1 * (mouseX - 400 - xMapOffset - tileRadius)) / 3) + ((sqrt(3) * (mouseY - 400  - tileRadius)) / 3)) / tileRadius;
-	double realIndexJ = (2 * (mouseX - 400 - xMapOffset - tileRadius) / (3 * tileRadius));
+	cout << mouseX<< ", " << mouseY << std::endl;
 
-	sf::Vector2i roundedIndicies = RoundToNearestTile(realIndexI, realIndexJ);
+	double realY = (((-1 * (mouseX - 400 - tileRadius)) / 3) + ((sqrt(3) * (mouseY - tileRadius - 400)) / 3)) / tileRadius;
+	double realX = (2 * (mouseX - 400 - tileRadius)) / (3 * tileRadius);
+	cout << realX << ", " << realY << std::endl;
 
-	sf::Vector3i cubeCoords = CoordinateConversions::ConvertAxialToCube(roundedIndicies);
+	sf::Vector3f cubeCoords = CoordinateConversions::ConvertAxialToCube(sf::Vector2f(realX, realY));
+	cout << cubeCoords.x << ", " << cubeCoords.y << ", " << cubeCoords.z << std::endl;
+	
+	sf::Vector3i roundedCoords = RoundToNearestTile(cubeCoords);
+	cout << roundedCoords.x << ", " << roundedCoords.y << ", " << roundedCoords.z<< std::endl;
 
-	if (IsOutOfBounds(cubeCoords))
+	cout << "**************************" << std::endl;
+	if (IsOutOfBounds(roundedCoords))
 	{
 		if (m_currSetupTile != 0)
 			m_currSetupTile->Unmark();
@@ -65,7 +71,8 @@ bool Level::ProcessMouseInput(int mouseX, int mouseY)
 	}
 	else
 	{
-		int tileID = m_tileIDs[roundedIndicies.x][roundedIndicies.y];
+		sf::Vector2i tileIndicies = GetIndexFromCoordinates(roundedCoords);
+		int tileID = m_tileIDs[tileIndicies.x][tileIndicies.y];
 		if (m_currSetupTile != 0)
 			m_currSetupTile->Unmark();
 		m_currSetupTile = (m_tiles[tileID]);
@@ -218,7 +225,7 @@ bool Level::KillCell(sf::Vector3i targetCell)
 		return 0;
 	else
 	{
-		sf::Vector2i tileIndex = IndexFromCoordinates(targetCell);
+		sf::Vector2i tileIndex = GetIndexFromCoordinates(targetCell);
 
 		int tileID = m_tileIDs[tileIndex.x][tileIndex.y];
 		int cellIndex = m_tiles[tileID]->GetCellIndex();
@@ -234,7 +241,7 @@ bool Level::KillCell(sf::Vector3i targetCell)
 
 const bool Level::IsOutOfBounds(sf::Vector3i coordinates) const
 {
-	sf::Vector2i ij = IndexFromCoordinates(coordinates);
+	sf::Vector2i ij = GetIndexFromCoordinates(coordinates);
 	
 	if (ij.x < 0 || ij.x > MAP_DIAMETER - 1 || ij.y < 0 || ij.y > MAP_DIAMETER - 1 || (m_tileIDs[ij.x][ij.y] == -1))
 		return true;
@@ -243,14 +250,14 @@ const bool Level::IsOutOfBounds(sf::Vector3i coordinates) const
 
 Tile* Level::GetTile(sf::Vector3i coordinates)
 {
-	sf::Vector2i indices = IndexFromCoordinates(coordinates);
+	sf::Vector2i indices = GetIndexFromCoordinates(coordinates);
 	int currID = m_tileIDs[indices.x][indices.y];
 	return m_tiles[currID];
 }
 
 const Tile& Level::GetConstTile(sf::Vector3i coordinates) const
 {
-	sf::Vector2i indices = IndexFromCoordinates(coordinates);
+	sf::Vector2i indices = GetIndexFromCoordinates(coordinates);
 	int currID = m_tileIDs[indices.x][indices.y];
 	return *m_tiles[currID];
 }
@@ -327,7 +334,7 @@ vector<vector<int>> Level::GetTileIDs() const
 	return m_tileIDs;
 }
 
-sf::Vector2i Level::IndexFromCoordinates(sf::Vector3i coordinates) const
+sf::Vector2i Level::GetIndexFromCoordinates(sf::Vector3i coordinates) const
 {
 	return sf::Vector2i(coordinates.z + MAP_SIDE_LENGTH - 1, coordinates.x + MAP_SIDE_LENGTH - 1);
 }
@@ -353,15 +360,15 @@ Level::~Level()
 	m_cellTypes.clear();
 }
 
-sf::Vector2i Level::RoundToNearestTile(double i, double j)
+sf::Vector3i Level::RoundToNearestTile(sf::Vector3f realCoords)
 {
-	double x = i;
-	double z = j;
-	double y = -1 * x - z;
+	double x = realCoords.x;
+	double y = realCoords.y;
+	double z = realCoords.z;
 
-	double rx = round(x);
-	double ry = round(y);
-	double rz = round(z);
+	int rx = round(x);
+	int ry = round(y);
+	int rz = round(z);
 
 	double x_diff = abs(rx - x);
 	double y_diff = abs(ry - y);
@@ -374,7 +381,5 @@ sf::Vector2i Level::RoundToNearestTile(double i, double j)
 	else
 		rz = -rx - ry;
 
-	return sf::Vector2i(rx + m_tileIDs.size() / 2, rz + m_tileIDs.size() / 2);
-
-
+	return sf::Vector3i(rx, ry, rz);
 }

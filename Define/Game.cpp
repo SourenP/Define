@@ -11,7 +11,7 @@ Game::Game()
 	m_Level = new Level(m_windowSize);		
 	m_gameState = SettingUp;
 
-	while (m_gameState != Playing)
+	while (m_gameState == SettingUp)
 	{
 		Setup();
 	}
@@ -53,10 +53,10 @@ void Game::Setup()
 			if (event.type == sf::Event::MouseButtonPressed)
 			{
 				//cout << m_gameClock.getElapsedTime().asSeconds() << endl;
-				//m_Level->ProcessMouseInput(sf::Mouse::getPosition(m_mainWindow).x, sf::Mouse::getPosition(m_mainWindow).y);
+				if(!m_Level->ProcessMouseInput(event.mouseButton.x, event.mouseButton.y));
 				//m_Level->Draw(m_mainWindow);
 				m_setupUI.ProcessMouseEvent();
-				cout << m_gameClock.getElapsedTime().asSeconds() << endl;
+				//cout << m_gameClock.getElapsedTime().asSeconds() << endl;
 			}
 		}
 

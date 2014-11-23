@@ -34,6 +34,16 @@ void Tile::Unmark()
 void Tile::Draw(sf::RenderWindow& window)
 {
 	window.draw(m_hexagon);
+	sf::Text coords;
+	sf::Font f;
+	f.loadFromFile("arial.ttf");
+	coords.setPosition(m_hexagon.getPosition());
+	coords.setFont(f);
+	coords.setCharacterSize(18);
+	coords.setColor(sf::Color::Red);
+	coords.setString(std::to_string(m_coordinates.x) + ", " + std::to_string(m_coordinates.y) + ", " + std::to_string(m_coordinates.z));
+	coords.setPosition(m_hexagon.getPosition());
+	window.draw(coords);
 }
 
 sf::Vector3i Tile::GetCoordinates()
