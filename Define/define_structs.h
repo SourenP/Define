@@ -1,8 +1,17 @@
+#pragma once
+
 #ifndef DEFINE_STRUCT_H
 #define DEFINE_STRUCT_H
 
 #include "SFML\Graphics.hpp"
 #include <vector>
+
+
+struct SetupPlacement
+{
+	int cellTypeIndex;
+	sf::Vector3i tileCoords;
+};
 
 /*
 Offsets for get neighbors with x,y,z. First element is top and the list continues clockwise from there
@@ -67,5 +76,20 @@ public:
 		return a.priority < b.priority;
 	}
 };
+
+/*
+Converts axial coordinates to cube
+*/
+class CoordinateConversions
+{
+public:
+	static sf::Vector3i ConvertAxialToCube(sf::Vector2i axialCoordinates)
+	{
+		return sf::Vector3i(axialCoordinates.y, axialCoordinates.x, -axialCoordinates.x - axialCoordinates.y);
+	}
+private:
+
+};
+
 
 #endif

@@ -12,10 +12,13 @@ public:
 	void SetCell(const Cell& cell, int index);
 	void Tile::SetEmpty();
 	int GetCellIndex() const;
+	double GetRadius() const;
 	int Tile::GetCellTeam() const;
 	sf::Vector3i GetCoordinates();
 	const sf::Color DEFAULT_COLOR = sf::Color::White;
-	
+
+	void Unmark();
+	void MarkForSetup();
 private:
 	Tile(const Tile&);
 	Tile& operator=(const Tile&);

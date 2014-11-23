@@ -50,6 +50,19 @@ void Game::Setup()
 			{
 				m_gameState = Exiting;
 			}
+			if (event.type == sf::Event::MouseButtonPressed)
+			{
+				//cout << m_gameClock.getElapsedTime().asSeconds() << endl;
+				//m_Level->ProcessMouseInput(sf::Mouse::getPosition(m_mainWindow).x, sf::Mouse::getPosition(m_mainWindow).y);
+				//m_Level->Draw(m_mainWindow);
+				m_setupUI.ProcessMouseEvent();
+				cout << m_gameClock.getElapsedTime().asSeconds() << endl;
+			}
+		}
+
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		{
+			
 		}
 		m_setupUI.Update(m_remainingTime);
 		Draw();

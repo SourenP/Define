@@ -31,7 +31,7 @@ public:
 	Level(int windowSize);
 	~Level();
 
-	static const int MAP_SIDE_LENGTH = 10; //Number of tiles on side of map
+	static const int MAP_SIDE_LENGTH = 3; //Number of tiles on side of map
 	static const int MAP_DIAMETER = (2 * MAP_SIDE_LENGTH) - 1; //Diameter of map
 	static const int TILE_COUNT = MAP_SIDE_LENGTH * (3 * MAP_SIDE_LENGTH - 1) - MAP_DIAMETER; //Total number of tiles
 	
@@ -42,7 +42,7 @@ public:
 
 	const Tile& GetConstTile(sf::Vector3i coordinates) const; //Returns a tile from m_tiles
 	
-	bool ProcessMouseInput(int mouseX, int mouseY); //Processes Mouse X/Y durign Setup, returns true if setup is complete;
+	bool ProcessMouseInput(int mouseX, int mouseY); //Processes Mouse X/Y during Setup, returns true if setup is complete;
 
 	const bool IsOutOfBounds(sf::Vector3i coordinates) const;//Checks if position is out of bounds
 
@@ -65,6 +65,8 @@ private:
 
 	SetupUI m_setupUI;
 
+	sf::Vector2i RoundToNearestTile(double x, double y);
+
 	bool MoveCell(sf::Vector3i origin, sf::Vector3i destination); //Moves cell using x,y,z coordinates
 	bool KillCell(sf::Vector3i targetCell); //Kills cell by setting m_alive to false
 	Tile* GetTile(sf::Vector3i coordinates); //Uses x,y,z to retrieve a tile
@@ -76,6 +78,7 @@ private:
 	vector<Cell*> m_cells; //Stores cells
 	vector<CellType*> m_cellTypes; //Stores CellTypes
 	vector<vector<int>> m_tileIDs; //Matrix that is used to keep track of which cell is where. Each ID is the index of the cell in m_cells
+	Tile* m_currSetupTile;
 
 	bool m_isBeingSetup;
 	int cellCount = 0;

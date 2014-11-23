@@ -16,6 +16,21 @@ Tile::Tile(float radius, sf::Vector2f position, sf::Vector3i coordinates)
 	SetEmpty();
 }
 
+double Tile::GetRadius() const
+{
+	return m_hexagon.getRadius();
+}
+
+void Tile::MarkForSetup()
+{
+	m_hexagon.setOutlineColor(sf::Color::Red);
+}
+
+void Tile::Unmark()
+{
+	m_hexagon.setOutlineColor(sf::Color(200, 200, 200));
+}
+
 void Tile::Draw(sf::RenderWindow& window)
 {
 	window.draw(m_hexagon);

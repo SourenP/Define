@@ -41,9 +41,37 @@ Level::Level(int windowSize)
 	//InitializeCells();
 }
 
-bool Level::ProcessMouseInput(int mousex, int mouseY)
+bool Level::ProcessMouseInput(int mouseX, int mouseY)
 {
-	return true;
+	double tileRadius = m_tiles[0]->GetRadius();
+
+	float tileDiameter = 2 * tileRadius;
+	float xThickness = (MAP_DIAMETER - 1) * tileDiameter * 3.0 / 4.0 + tileDiameter;
+	float xMapOffset = (800 - xThickness) / 2.0;
+	float yMapOffset = 0;
+
+	double realIndexI = (((-1 * (mouseX - 400 - xMapOffset - tileRadius)) / 3) + ((sqrt(3) * (mouseY - 400  - tileRadius)) / 3)) / tileRadius;
+	double realIndexJ = (2 * (mouseX - 400 - xMapOffset - tileRadius) / (3 * tileRadius));
+
+	sf::Vector2i roundedIndicies = RoundToNearestTile(realIndexI, realIndexJ);
+
+	sf::Vector3i cubeCoords = CoordinateConversions::ConvertAxialToCube(roundedIndicies);
+
+	if (IsOutOfBounds(cubeCoords))
+	{
+		if (m_currSetupTile != 0)
+			m_currSetupTile->Unmark();
+		return false;
+	}
+	else
+	{
+		int tileID = m_tileIDs[roundedIndicies.x][roundedIndicies.y];
+		if (m_currSetupTile != 0)
+			m_currSetupTile->Unmark();
+		m_currSetupTile = (m_tiles[tileID]);
+		m_currSetupTile->MarkForSetup();
+		return true;
+	}
 }
 
 void Level::LoadCellTypes(string file)
@@ -323,4 +351,30 @@ Level::~Level()
 		delete m_cellTypes[k];
 	}
 	m_cellTypes.clear();
+}
+
+sf::Vector2i Level::RoundToNearestTile(double i, double j)
+{
+	double x = i;
+	double z = j;
+	double y = -1 * x - z;
+
+	double rx = round(x);
+	double ry = round(y);
+	double rz = round(z);
+
+	double x_diff = abs(rx - x);
+	double y_diff = abs(ry - y);
+	double z_diff = abs(rz - z);
+
+	if ((x_diff > y_diff) && (x_diff > z_diff))
+		rx = -ry - rz;
+	else if (y_diff > z_diff)
+		ry = -rx - rz;
+	else
+		rz = -rx - ry;
+
+	return sf::Vector2i(rx + m_tileIDs.size() / 2, rz + m_tileIDs.size() / 2);
+
+
 }

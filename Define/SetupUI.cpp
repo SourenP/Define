@@ -36,4 +36,16 @@ SetupUI::SetupUI()
 
 SetupUI::~SetupUI()
 {
+
 }
+
+void SetupUI::ProcessMouseEvent()
+{
+	string derp = "cl" + std::to_string(clicks);
+	clicks++;
+	m_label->SetText(derp);
+	
+	clicks++;
+}
+
+int SetupUI::clicks = 0;
