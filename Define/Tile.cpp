@@ -4,6 +4,7 @@
 Tile::Tile(float radius, sf::Vector2f position, sf::Vector3i coordinates)
 {
 	float height = radius * sqrt(3);
+
 	m_hexagon.setFillColor(DEFAULT_COLOR);
 	m_hexagon.setOutlineThickness(-radius/10);
 	m_hexagon.setOutlineColor(sf::Color(200,200,200));
@@ -12,6 +13,14 @@ Tile::Tile(float radius, sf::Vector2f position, sf::Vector3i coordinates)
 	m_hexagon.setOrigin(radius, radius);
 	m_hexagon.setRotation(30); 
 	m_hexagon.setPosition(position);
+
+	m_font.loadFromFile("arial.ttf");
+	m_text.setPosition(m_hexagon.getPosition());
+	m_text.setFont(m_font);
+	m_text.setCharacterSize(18);
+	m_text.setColor(sf::Color::Red);
+	m_text.setString("");
+
 	m_coordinates = coordinates;
 	SetEmpty();
 }
@@ -23,7 +32,7 @@ double Tile::GetRadius() const
 
 void Tile::MarkForSetup()
 {
-	m_hexagon.setOutlineColor(sf::Color::Red);
+	m_hexagon.setOutlineColor(sf::Color::Blue);
 }
 
 void Tile::Unmark()
@@ -34,16 +43,12 @@ void Tile::Unmark()
 void Tile::Draw(sf::RenderWindow& window)
 {
 	window.draw(m_hexagon);
-	sf::Text coords;
-	sf::Font f;
-	f.loadFromFile("arial.ttf");
-	coords.setPosition(m_hexagon.getPosition());
-	coords.setFont(f);
-	coords.setCharacterSize(18);
-	coords.setColor(sf::Color::Red);
-	coords.setString(std::to_string(m_coordinates.x) + ", " + std::to_string(m_coordinates.y) + ", " + std::to_string(m_coordinates.z));
-	coords.setPosition(m_hexagon.getPosition());
-	window.draw(coords);
+	window.draw(m_text);
+}
+
+void Tile::SetBorderColor(sf::Color color)
+{
+	m_hexagon.setOutlineColor(color);
 }
 
 sf::Vector3i Tile::GetCoordinates()
@@ -68,5 +73,10 @@ void Tile::SetEmpty()
 int Tile::GetCellIndex() const
 {
 	return m_cellIndex;
+}
+
+void Tile::SetText(string text)
+{
+	m_text.setString(text);
 }
 

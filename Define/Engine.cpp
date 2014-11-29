@@ -41,7 +41,7 @@ const Changes Engine::PerformMove(const Cell& currentCell, const vector<int> nei
 //vector<int> Engine::GetNeighborsByTeam(sf::Vector3i origin, const Level& level)
 //{
 //	vector<int> neighbors;
-//	for (int i = 0; i < 6; i++)
+//	for (unsigned inti = 0; i < 6; i++)
 //	{
 //		sf::Vector3i currNeighborCoordinates(origin.x + neighborOffsets[i][0], origin.y + neighborOffsets[i][1],
 //									origin.z + neighborOffsets[i][2]);
@@ -66,7 +66,7 @@ int Engine::GenerateBinaryFormOfNeighbors(vector<int> neighbors, int team)
 {
 	int code = 0;
 	int rank = 0;
-	for (int i = 5; i >= 0; --i)
+	for (unsigned int i = 5; i >= 0; --i)
 	{
 		if (neighbors[i] == team)
 		{

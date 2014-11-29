@@ -38,19 +38,20 @@ public:
 	
 	void Draw(sf::RenderWindow&); //Draws tiles
 	void Update(Changes changes); //Updates cells and tiles based on most recent changes
-	
 	bool CreateCell(CellType& celltype, sf::Vector3i location, int team); //Creates a new Cell
-
-	const Tile& GetConstTile(sf::Vector3i coordinates) const; //Returns a tile from m_tiles
-	
-	bool ProcessMouseInput(int mouseX, int mouseY); //Processes Mouse X/Y during Setup, returns true if setup is complete;
-
+	void AddCell(int cellTypeIndex);
+	void PreviewCellTypeSelection(int cellTypeIndex);
+	bool ProcessMouseInput(int mouseX, int mouseY); //Processes Mouse X/Y during Setup, returns false if click was out of bounds;
 	const bool IsOutOfBounds(sf::Vector3i coordinates) const;//Checks if position is out of bounds
 
+
+	void ClearPreview();
+	//Getters
 	inline const vector<Cell*>& GetCellContainer() const; //Retrurns m_cells
 	inline const vector<Tile*>& GetTileContainer() const; //Returns m_tiles
+	const vector<CellType*>& GetCellTypeContainer() const;
 	inline vector<vector<int>> GetTileIDs() const; //Return m_tileIDs
-
+	const Tile& GetConstTile(sf::Vector3i coordinates) const; //Returns a tile from m_tiles
 	const vector<int> GetNeighborsByTeam(const Cell& cell) const; //Generates a size 6 vector of the neighbors of the cell based on the cells team
 	int GetCellIndex(sf::Vector3i coordinates) const; //Returns cells index in m_cells
 	const Cell& GetNextCell(); //Returns next cell on m_turnHeap

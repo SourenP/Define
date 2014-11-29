@@ -7,10 +7,12 @@ Game::Game()
 	sf::ContextSettings settings;
 	settings.antialiasingLevel = 8;
 	m_mainWindow.create(sf::VideoMode(m_windowSize, m_windowSize, 32), "Game!", sf::Style::Default, settings);
-
+	m_mainWindow.resetGLStates();
 	m_Level = new Level(m_windowSize);		
+
 	m_gameState = SettingUp;
 
+	m_setupUI.SetCellTypes(m_Level->GetCellTypeContainer());
 	while (m_gameState == SettingUp)
 	{
 		Setup();
@@ -28,7 +30,8 @@ Game::Game()
 void Game::Setup()
 {
 	sf::Event event;
-
+	float time;
+	sf::Clock clock;
 	int frames;
 	m_maxFrames = 5;
 	m_time = m_gameClock.restart().asSeconds();
@@ -38,37 +41,42 @@ void Game::Setup()
 
 	while ((m_remainingTime > m_minTimestep) && (frames < m_maxFrames))
 	{
-
-	/*	if (m_Level->Setup())
-		{
-			m_gameState = Playing;
-		};*/
-
 		while (m_mainWindow.pollEvent(event))
 		{
+			cout << event.type << endl;
+			m_setupUI.ProcessEvent(event);
+			cout << event.type << endl;
+			
 			if (event.type == sf::Event::Closed)
 			{
 				m_gameState = Exiting;
 			}
-			if (event.type == sf::Event::MouseButtonPressed)
+			else if (event.type == sf::Event::MouseButtonPressed)
 			{
+				m_Level->ClearPreview();
 				//cout << m_gameClock.getElapsedTime().asSeconds() << endl;
-				if(!m_Level->ProcessMouseInput(event.mouseButton.x, event.mouseButton.y));
+				if (!m_setupUI.WasUIClicked())
+					m_Level->ProcessMouseInput(event.mouseButton.x, event.mouseButton.y);
+				else
+				{
+					int selection = m_setupUI.GetComboBoxSelection();
+					if (selection != -1)
+						m_Level->PreviewCellTypeSelection(selection);
+				}
 				//m_Level->Draw(m_mainWindow);
-				m_setupUI.ProcessMouseEvent();
-				//cout << m_gameClock.getElapsedTime().asSeconds() << endl;
 			}
-		}
 
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-		{
-			
+			int selection = m_setupUI.GetCellTypeSelection();
+			if (selection != -1)
+				m_Level->AddCell(selection);
 		}
-		m_setupUI.Update(m_remainingTime);
-		Draw();
+		m_setupUI.Update(m_minTimestep);
 		m_remainingTime -= m_minTimestep;
 		frames++;
 	}
+
+	Draw();
+	m_setupUI.ResetUIStates();
 }
 
 void Game::GameLoop()

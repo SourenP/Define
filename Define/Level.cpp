@@ -3,7 +3,7 @@
 Level::Level(int windowSize)
 {
 	// Fill m_tileIDs with -1 
-	for (int i = 0; i < MAP_DIAMETER; i++)
+	for (unsigned int i = 0; i < MAP_DIAMETER; i++)
 	{
 		m_tileIDs.push_back(vector<int>(MAP_DIAMETER, -1));
 	}
@@ -87,7 +87,6 @@ void Level::LoadCellTypes(string file)
 	int code = 0, direction, R = 255, G = 0, B = 0, rank = 11;
 	bool noColor = false;
 	ActionType actionType;
-	char trash;
 	CellType* newCellType;
 	vector<CellRule> cellRules;
 
@@ -108,16 +107,16 @@ void Level::LoadCellTypes(string file)
 		cellRules.clear();
 		while (pRule != nullptr)
 		{
+			rank = 11;
 			bitCode = pRule->Attribute("Code");
 			pRule->QueryAttribute("Direction", &direction);
-			pRule->QueryAttribute("Action Type", &code);
+			pRule->QueryAttribute("Action", &code);
 			actionType = ActionType(code);
 
 			code = 0;
-			for (unsigned int i = 0; i < 6; ++i)
+			for (unsigned int i = 0; i < 12; ++i)
 			{
-
-				if (bitCode[0] == '1')
+				if (bitCode[i] == '1')
 				{
 					code += pow(2, rank);
 				}
@@ -180,17 +179,17 @@ bool Level::CreateCell(CellType& celltype, sf::Vector3i location, int team)
 
 void Level::Draw(sf::RenderWindow& rw)
 {
-	for (int i = 0; i < m_tiles.size(); i++)
+	for (unsigned int i = 0; i < m_tiles.size(); i++)
 		m_tiles[i]->Draw(rw);
 }
 
 void Level::Update(Changes changes)
 {
-	for (int i = 0; i < changes.kills.size(); i++)
+	for (unsigned int i = 0; i < changes.kills.size(); i++)
 	{
 		KillCell(changes.kills[i]);
 	}
-	for (int i = 0; i < changes.moves.size(); i++)
+	for (unsigned int i = 0; i < changes.moves.size(); i++)
 	{
 		sf::Vector3i origin = changes.moves[i][0];
 		sf::Vector3i target = changes.moves[i][1];
@@ -289,7 +288,7 @@ const vector<int> Level::GetNeighborsByTeam(const Cell& cell) const
 {
 	vector<int> neighbors;
 	sf::Vector3i origin = cell.GetLocation();
-	for (int i = 0; i < 6; i++)
+	for (unsigned int i = 0; i < 6; i++)
 	{
 		sf::Vector3i currNeighborCoordinates(origin.x + neighborOffsets[i][0], origin.y + neighborOffsets[i][1],
 									origin.z + neighborOffsets[i][2]);
@@ -329,6 +328,11 @@ const vector<Tile*>& Level::GetTileContainer() const
 	return m_tiles;
 }
 
+const vector<CellType*>& Level::GetCellTypeContainer() const
+{
+	return m_cellTypes;
+}
+
 vector<vector<int>> Level::GetTileIDs() const
 {
 	return m_tileIDs;
@@ -341,19 +345,19 @@ sf::Vector2i Level::GetIndexFromCoordinates(sf::Vector3i coordinates) const
 
 Level::~Level()
 {
-	for (int i = 0; i < m_tiles.size(); ++i)
+	for (unsigned int i = 0; i < m_tiles.size(); ++i)
 	{
 		delete m_tiles[i];
 	}
 	m_tiles.clear();
 
-	for (int j = 0; j < m_cells.size(); ++j)
+	for (unsigned int j = 0; j < m_cells.size(); ++j)
 	{
 		delete m_cells[j];
 	}
 	m_cells.clear();
 
-	for (int k = 0; k < m_cellTypes.size(); ++k)
+	for (unsigned int k = 0; k < m_cellTypes.size(); ++k)
 	{
 		delete m_cellTypes[k];
 	}
@@ -382,4 +386,68 @@ sf::Vector3i Level::RoundToNearestTile(sf::Vector3f realCoords)
 		rz = -rx - ry;
 
 	return sf::Vector3i(rx, ry, rz);
+}
+
+void Level::PreviewCellTypeSelection(int cellTypeIndex)
+{
+	CellType highlightedCellType = *m_cellTypes[cellTypeIndex];
+	
+	CellRule rule = highlightedCellType.GetRules()[0];
+
+	if (rule.actionType == ActionType::Move)
+		m_currSetupTile->SetText("Move");
+	else
+		m_currSetupTile->SetText("Attack");
+
+	int array[12];
+
+	for (int i = 0; i < 12; ++i)
+	{
+		array[i] = rule.code & (1 << i) ? 1 : 0;
+	}
+
+	sf::Vector3i origin = m_currSetupTile->GetCoordinates();
+	for (unsigned int i = 0; i < 6; i++)
+	{
+		sf::Vector3i currNeighborCoordinates(origin.x + neighborOffsets[i][0], origin.y + neighborOffsets[i][1],
+			origin.z + neighborOffsets[i][2]);
+		if (!IsOutOfBounds(currNeighborCoordinates))
+		{
+			Tile* currNeighbor = GetTile(currNeighborCoordinates);
+			int neighborCode = array[11 - 2 * i] + array[10 - 2 * i];
+			if (neighborCode == 1)
+				currNeighbor->SetBorderColor(sf::Color::Red);
+			else if (neighborCode == 2)
+				currNeighbor->SetBorderColor(sf::Color::Green);
+		}
+	}
+	sf::Vector3i directionNeighborCoordinates(origin.x + neighborOffsets[rule.direction][0], origin.y + neighborOffsets[rule.direction][1],
+		origin.z + neighborOffsets[rule.direction][2]);
+	if (!IsOutOfBounds(directionNeighborCoordinates))
+		GetTile(directionNeighborCoordinates)->SetText("Target");
+}
+
+void Level::ClearPreview()
+{
+	if (m_currSetupTile == 0)
+		return;
+
+	m_currSetupTile->SetText("");
+	sf::Vector3i origin = m_currSetupTile->GetCoordinates();
+	for (unsigned int i = 0; i < 6; i++)
+	{
+		sf::Vector3i currNeighborCoordinates(origin.x + neighborOffsets[i][0], origin.y + neighborOffsets[i][1],
+			origin.z + neighborOffsets[i][2]);
+		if (!IsOutOfBounds(currNeighborCoordinates))
+		{
+			Tile* currNeighbor = GetTile(currNeighborCoordinates);
+			currNeighbor->SetBorderColor(sf::Color(200, 200, 200));
+			currNeighbor->SetText("");
+		}
+	}
+}
+
+void Level::AddCell(int cellTypeIndex)
+{
+	CreateCell(*m_cellTypes[cellTypeIndex], m_currSetupTile->GetCoordinates(), 1);
 }

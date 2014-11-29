@@ -6,7 +6,9 @@
 #include "SFML\Graphics.hpp"
 #include <vector>
 
-
+/*
+Return value for SetupUI click processing, contains
+*/
 struct SetupPlacement
 {
 	int cellTypeIndex;
@@ -77,12 +79,14 @@ public:
 	}
 };
 
-/*
-Converts axial coordinates to cube
-*/
+
+
 class CoordinateConversions
 {
 public:
+	/*
+	Converts axial coordinates to cube
+	*/
 	static sf::Vector3f ConvertAxialToCube(sf::Vector2f axialCoordinates)
 	{
 		return sf::Vector3f(axialCoordinates.x, -axialCoordinates.x - axialCoordinates.y, axialCoordinates.y);

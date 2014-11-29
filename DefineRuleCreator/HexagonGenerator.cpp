@@ -9,10 +9,10 @@ void HexagonGenerator::GenerateHexagons(int screenWidth, int screenHeight,
 	m_rings = rings;
 	m_center = { screenWidth / 2 - radius, screenHeight / 2 - radius };
 	int mapSize = 1 + 2 * rings;
-	for (int i = 0; i < mapSize; ++i)
+	for (unsigned int i = 0; i < mapSize; ++i)
 	{
 		vector<int> temp;
-		for (int j = 0; j < mapSize; ++j)
+		for (unsigned int j = 0; j < mapSize; ++j)
 		{
 			temp.push_back(0);
 		}
@@ -34,7 +34,7 @@ void HexagonGenerator::GenerateHexagons(int screenWidth, int screenHeight,
 		SeedHexagon(next);
 	}
 
-	for (int i = 0; i < mapSize; ++i)
+	for (unsigned int i = 0; i < mapSize; ++i)
 	{
 		vector<int> temp;
 		for (int j = 0; j < mapSize; ++j)
