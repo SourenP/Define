@@ -66,7 +66,7 @@ int Engine::GenerateBinaryFormOfNeighbors(vector<int> neighbors, int team)
 {
 	int code = 0;
 	int rank = 0;
-	for (unsigned int i = 5; i >= 0; --i)
+	for (unsigned int i = 5; i > 0; --i)
 	{
 		if (neighbors[i] == team)
 		{

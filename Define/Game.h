@@ -26,7 +26,7 @@ private:
 	void Draw();
 	void Setup(); //Used for setting up gameboard
 
-	const float m_minTimestep = sf::seconds(1.f/60.f).asSeconds();
+	float m_minTimestep = sf::seconds(1.f/60.f).asSeconds();
 	int m_maxFrames = 5;
 	float m_remainingTime;
 	float m_time;

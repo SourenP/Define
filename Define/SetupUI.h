@@ -24,24 +24,35 @@ public:
 
 	int GetCellTypeSelection();
 	int GetComboBoxSelection();
+	int GetPlayer();
+
+	bool SetupComplete();
+
 	void ResetUIStates();
 	bool WasUIClicked();
 	void CheckMouseClick();
-	void OnComboSelect();
-	void OnCellTypeSelect();
+
 	void CompleteSetup();
 	~SetupUI();
 	
 private:
+
+	void OnComboSelect();
+	void OnCellTypeSelect();
+	void OnPlayerDone();
+
 	sf::IntRect m_PlayerInfo;
 	string m_PlayerInfoTxt;
 	
 	bool m_comboBoxClicked;
+	bool m_doneButtonClicked;
 	bool m_cellTypeSelected;
+	bool m_setupComplete;
 
 	vector<CellType*> m_availableCellTypes;
 	int m_selectedCellType;
-	static int clicks;
+	int m_currPlayer;
+
 	sfg::SFGUI sfgui;
 	sfg::Label::Ptr m_label;
 	sfg::Desktop m_desktop;

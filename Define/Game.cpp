@@ -9,7 +9,6 @@ Game::Game()
 	m_mainWindow.create(sf::VideoMode(m_windowSize, m_windowSize, 32), "Game!", sf::Style::Default, settings);
 	m_mainWindow.resetGLStates();
 	m_Level = new Level(m_windowSize);		
-
 	m_gameState = SettingUp;
 
 	m_setupUI.SetCellTypes(m_Level->GetCellTypeContainer());
@@ -18,7 +17,7 @@ Game::Game()
 		Setup();
 	}
 	//m_debug.Initialize();
-
+	m_minTimestep = 1.f / 2.f;
 	while (m_gameState != Exiting)
 	{	
 		GameLoop();
@@ -43,9 +42,7 @@ void Game::Setup()
 	{
 		while (m_mainWindow.pollEvent(event))
 		{
-			cout << event.type << endl;
 			m_setupUI.ProcessEvent(event);
-			cout << event.type << endl;
 			
 			if (event.type == sf::Event::Closed)
 			{
@@ -54,21 +51,29 @@ void Game::Setup()
 			else if (event.type == sf::Event::MouseButtonPressed)
 			{
 				m_Level->ClearPreview();
-				//cout << m_gameClock.getElapsedTime().asSeconds() << endl;
 				if (!m_setupUI.WasUIClicked())
 					m_Level->ProcessMouseInput(event.mouseButton.x, event.mouseButton.y);
 				else
 				{
+					
 					int selection = m_setupUI.GetComboBoxSelection();
 					if (selection != -1)
 						m_Level->PreviewCellTypeSelection(selection);
 				}
-				//m_Level->Draw(m_mainWindow);
 			}
 
 			int selection = m_setupUI.GetCellTypeSelection();
 			if (selection != -1)
-				m_Level->AddCell(selection);
+			{
+				int currPlayer = m_setupUI.GetPlayer();
+				m_Level->AddCell(selection, currPlayer);
+			}
+			if (m_setupUI.SetupComplete())
+			{
+				m_gameState = Playing;
+				break;
+			}
+				
 		}
 		m_setupUI.Update(m_minTimestep);
 		m_remainingTime -= m_minTimestep;

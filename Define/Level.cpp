@@ -447,7 +447,7 @@ void Level::ClearPreview()
 	}
 }
 
-void Level::AddCell(int cellTypeIndex)
+void Level::AddCell(int cellTypeIndex, int team)
 {
-	CreateCell(*m_cellTypes[cellTypeIndex], m_currSetupTile->GetCoordinates(), 1);
+	CreateCell(*m_cellTypes[cellTypeIndex], m_currSetupTile->GetCoordinates(), team);
 }
